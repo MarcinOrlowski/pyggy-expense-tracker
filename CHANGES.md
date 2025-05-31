@@ -2,6 +2,7 @@
 
 ## @dev
 
+- [#0007] Implemented reusable template components for dashboard and month views
 - [#0001] Replaced text navigation links with icon-based action buttons
 - Added sequential month creation (only next month after most recent)
 - Added user-selectable initial month (no preset default)
