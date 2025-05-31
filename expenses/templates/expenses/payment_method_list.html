@@ -1,0 +1,40 @@
+{% extends 'expenses/base.html' %}
+
+{% block title %}Payment Methods - Expense Tracker{% endblock %}
+
+{% block content %}
+<h1>Payment Methods</h1>
+
+<div class="card">
+    <div class="card-header">All Payment Methods ({{ payment_methods|length }})</div>
+    <div class="card-body">
+        {% if payment_methods %}
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Created</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for method in payment_methods %}
+                    <tr>
+                        <td>{{ method.name }}</td>
+                        <td>{{ method.created_at|date:"Y-m-d" }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No payment methods found. You can add payment methods through the Django admin interface.</p>
+        {% endif %}
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <a href="/admin/expenses/paymentmethod/" class="btn"><i class="fas fa-user-shield icon-left"></i>Manage Payment Methods (Admin)</a>
+        <a href="{% url 'dashboard' %}" class="btn btn-secondary"><i class="fas fa-arrow-left icon-left"></i>Back to Dashboard</a>
+    </div>
+</div>
+{% endblock %}

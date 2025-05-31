@@ -1,0 +1,89 @@
+{% extends 'expenses/base.html' %}
+
+{% block title %}{{ expense.title }} - Expense Tracker{% endblock %}
+
+{% block content %}
+<h1>{{ expense.title }}</h1>
+
+<div class="card">
+    <div class="card-header">
+        Expense Details
+        <span class="card-header-action">
+            <a href="{% url 'expense_edit' expense.pk %}" class="btn btn-sm" title="Edit Expense" aria-label="Edit Expense"><i class="fas fa-pen-to-square"></i></a>
+            <a href="{% url 'expense_delete' expense.pk %}" class="btn btn-danger btn-sm" title="Delete Expense" aria-label="Delete Expense"><i class="fas fa-trash-can"></i></a>
+        </span>
+    </div>
+    <div class="card-body">
+        <div class="grid-2-cols">
+            <div>
+                <p><strong>Payee:</strong> {% if expense.payee %}{{ expense.payee.name }}{% else %}-{% endif %}</p>
+                <p><strong>Type:</strong> {{ expense.get_expense_type_display }}</p>
+                <p><strong>Total Amount:</strong> ${{ expense.total_amount|floatformat:2 }}</p>
+            </div>
+            <div>
+                <p><strong>Started:</strong> {{ expense.started_at|date:"Y-m-d" }}</p>
+                {% if expense.expense_type == 'split_payment' %}
+                    <p><strong>Installments:</strong> {{ expense.installments_count }}</p>
+                {% endif %}
+                <p><strong>Status:</strong> 
+                    {% if expense.closed_at %}
+                        <span class="status-paid">Completed</span>
+                    {% else %}
+                        <span class="status-pending">Active</span>
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">Expense Items ({{ expense_items|length }})</div>
+    <div class="card-body">
+        {% if expense_items %}
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Month</th>
+                        <th>Due Date</th>
+                        <th class="amount-column">Amount</th>
+                        <th>Payment Date</th>
+                        <th class="actions-column">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in expense_items %}
+                    <tr class="{% if item.status == 'paid' %}expense-item-paid{% else %}expense-item-pending{% endif %}">
+                        <td>{{ item.month }}</td>
+                        <td>{{ item.due_date|date:"Y-m-d" }}</td>
+                        <td class="amount-column">${{ item.amount|floatformat:2 }}</td>
+                        <td>
+                            {% if item.payment_date %}
+                                {{ item.payment_date|date:"Y-m-d" }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                        <td class="actions-column">
+                            {% if item.status == 'pending' %}
+                                <a href="{% url 'expense_item_pay' item.pk %}" class="btn btn-success btn-sm" title="Mark as Paid" aria-label="Mark as Paid"><i class="fas fa-circle-check"></i></a>
+                            {% else %}
+                                <a href="{% url 'expense_item_unpay' item.pk %}" class="btn btn-warning btn-sm" title="Mark as Unpaid" aria-label="Mark as Unpaid"><i class="fas fa-rotate-left"></i></a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No expense items found. This expense may need to be processed for the current month.</p>
+        {% endif %}
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <a href="{% url 'expense_list' %}" class="btn btn-secondary"><i class="fas fa-arrow-left icon-left"></i>Back to Expenses</a>
+    </div>
+</div>
+{% endblock %}

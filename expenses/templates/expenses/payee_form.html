@@ -1,0 +1,34 @@
+{% extends 'expenses/base.html' %}
+
+{% block title %}{{ title }} - Expense Tracker{% endblock %}
+
+{% block content %}
+<h1>{{ title }}</h1>
+
+<div class="card">
+    <div class="card-body">
+        <form method="post">
+            {% csrf_token %}
+            
+            {% if form.non_field_errors %}
+                <div class="message error">
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+            
+            <div class="form-group">
+                <label for="{{ form.name.id_for_label }}">{{ form.name.label }}:</label>
+                {{ form.name }}
+                {% if form.name.errors %}
+                    <div class="message error">{{ form.name.errors }}</div>
+                {% endif %}
+            </div>
+            
+            <div class="form-actions">
+                <button type="submit" class="btn"><i class="fas fa-floppy-disk icon-left"></i>Save Payee</button>
+                <a href="{% url 'payee_list' %}" class="btn btn-secondary"><i class="fas fa-xmark icon-left"></i>Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,85 @@
+{% extends 'expenses/base.html' %}
+
+{% block title %}Dashboard - Expense Tracker{% endblock %}
+
+{% block content %}
+<h1>Dashboard</h1>
+
+<div class="card">
+    <div class="card-header">
+        {% if has_any_months %}
+            Current Month Summary
+            {% if current_month %}
+                - {{ current_month.year }}-{{ current_month.month|stringformat:"02d" }}
+            {% else %}
+                - {{ current_date.year }}-{{ current_date.month|stringformat:"02d" }} (Not processed yet)
+            {% endif %}
+        {% else %}
+            Welcome to Expense Tracker
+        {% endif %}
+    </div>
+    <div class="card-body">
+        {% if not has_any_months %}
+            <p>No months have been created yet. Start by processing your first month to begin tracking expenses.</p>
+            <p>Go to <strong>Months → Add initial month</strong> to choose your starting month.</p>
+        {% elif current_month %}
+            <div class="grid-3-cols mb-3">
+                <div>
+                    <p><strong>Total Month:</strong> ${{ total_month|floatformat:2 }}</p>
+                </div>
+                <div>
+                    <p><strong>Pending:</strong> ${{ total_pending|floatformat:2 }} ({{ pending_items|length }} items)</p>
+                </div>
+                <div>
+                    <p><strong>Paid:</strong> ${{ total_paid|floatformat:2 }} ({{ paid_items|length }} items)</p>
+                </div>
+            </div>
+
+            {% if pending_items or paid_items %}
+                <h3>Current Month Items</h3>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Due Date</th>
+                            <th class="amount-column">Amount</th>
+                            <th>Expense</th>
+                            <th>Payee</th>
+                            <th class="actions-column">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in pending_items %}
+                        <tr class="expense-item-pending">
+                            <td>{{ item.due_date|date:"Y-m-d" }}</td>
+                            <td class="amount-column">${{ item.amount|floatformat:2 }}</td>
+                            <td>{{ item.expense.title }}</td>
+                            <td>{% if item.expense.payee %}{{ item.expense.payee.name }}{% else %}-{% endif %}</td>
+                            <td class="actions-column">
+                                <a href="{% url 'expense_item_pay' item.pk %}" class="btn btn-success btn-sm" title="Mark as Paid" aria-label="Mark as Paid"><i class="fas fa-circle-check"></i></a>
+                                <a href="{% url 'expense_detail' item.expense.pk %}" class="btn btn-secondary btn-sm" title="View Details" aria-label="View Details"><i class="fas fa-eye"></i></a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        {% for item in paid_items %}
+                        <tr class="expense-item-paid">
+                            <td>{{ item.due_date|date:"Y-m-d" }}</td>
+                            <td class="amount-column">${{ item.amount|floatformat:2 }}</td>
+                            <td>{{ item.expense.title }}</td>
+                            <td>{% if item.expense.payee %}{{ item.expense.payee.name }}{% else %}-{% endif %}</td>
+                            <td class="actions-column">
+                                <a href="{% url 'expense_item_unpay' item.pk %}" class="btn btn-warning btn-sm" title="Mark as Unpaid" aria-label="Mark as Unpaid"><i class="fas fa-rotate-left"></i></a>
+                                <a href="{% url 'expense_detail' item.expense.pk %}" class="btn btn-secondary btn-sm" title="View Details" aria-label="View Details"><i class="fas fa-eye"></i></a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>No expense items this month.</p>
+            {% endif %}
+        {% else %}
+            <p>The current month hasn't been processed yet.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,108 @@
+{% extends 'expenses/base.html' %}
+
+{% block title %}Process Month - Expense Tracker{% endblock %}
+
+{% block content %}
+<h1>Process New Month</h1>
+
+<div class="card">
+    <div class="card-header">Generate Expense Items for New Month</div>
+    <div class="card-body">
+        {% if no_months_exist %}
+        <div class="alert alert-warning">
+            <strong>Note:</strong> No months exist in the system. Please choose your initial month.
+        </div>
+        <p>This will create the initial month and generate expense items for all active expenses.</p>
+        {% else %}
+        <div class="alert alert-info">
+            <strong>Current most recent month:</strong> {{ most_recent_month }}<br>
+            <strong>Next allowed month:</strong> {{ suggested_year }}-{{ suggested_month|stringformat:"02d" }}
+        </div>
+        <p>You can only create the next sequential month. This will generate expense items for all active expenses.</p>
+        {% endif %}
+        
+        <form method="post">
+            {% csrf_token %}
+            
+            <div class="grid-2-cols">
+                <div class="form-group">
+                    <label for="year">Year:</label>
+                    {% if no_months_exist %}
+                    <input type="number" name="year" id="year" value="{{ suggested_year }}" min="2020" max="2099" required>
+                    {% else %}
+                    <input type="number" name="year" id="year" value="{{ suggested_year }}" min="2020" max="2099" required readonly>
+                    {% endif %}
+                </div>
+                
+                <div class="form-group">
+                    <label for="month">Month:</label>
+                    {% if no_months_exist %}
+                    <select name="month" id="month" required>
+                        <option value="1" {% if suggested_month == 1 %}selected{% endif %}>1 (January)</option>
+                        <option value="2" {% if suggested_month == 2 %}selected{% endif %}>2 (February)</option>
+                        <option value="3" {% if suggested_month == 3 %}selected{% endif %}>3 (March)</option>
+                        <option value="4" {% if suggested_month == 4 %}selected{% endif %}>4 (April)</option>
+                        <option value="5" {% if suggested_month == 5 %}selected{% endif %}>5 (May)</option>
+                        <option value="6" {% if suggested_month == 6 %}selected{% endif %}>6 (June)</option>
+                        <option value="7" {% if suggested_month == 7 %}selected{% endif %}>7 (July)</option>
+                        <option value="8" {% if suggested_month == 8 %}selected{% endif %}>8 (August)</option>
+                        <option value="9" {% if suggested_month == 9 %}selected{% endif %}>9 (September)</option>
+                        <option value="10" {% if suggested_month == 10 %}selected{% endif %}>10 (October)</option>
+                        <option value="11" {% if suggested_month == 11 %}selected{% endif %}>11 (November)</option>
+                        <option value="12" {% if suggested_month == 12 %}selected{% endif %}>12 (December)</option>
+                    </select>
+                    {% else %}
+                    <select name="month" id="month" required disabled>
+                        <option value="{{ suggested_month }}" selected>{{ suggested_month }} ({{ suggested_month|date:"F" }})</option>
+                    </select>
+                    <input type="hidden" name="month" value="{{ suggested_month }}">
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="mt-3">
+                {% if no_months_exist %}
+                <button type="submit" class="btn" id="submit-btn"><i class="fas fa-gear icon-left"></i>Add initial month</button>
+                {% else %}
+                <button type="submit" class="btn"><i class="fas fa-gear icon-left"></i>Add next month {{ suggested_year }}-{{ suggested_month|stringformat:"02d" }}</button>
+                {% endif %}
+                <a href="{% url 'dashboard' %}" class="btn btn-secondary"><i class="fas fa-xmark icon-left"></i>Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">Information</div>
+    <div class="card-body">
+        <h3>What happens when you process a month?</h3>
+        <ul>
+            <li>A new month record is created (if it doesn't exist)</li>
+            <li>Expense items are generated for all active expenses that have started by that month</li>
+            <li>For endless recurring expenses: One item per month</li>
+            <li>For split payment expenses: Next installment (if not completed)</li>
+            <li>For one-time expenses: Single item in the start month only</li>
+        </ul>
+        
+        <p><strong>Note:</strong> If a month has already been processed, no new items will be created.</p>
+    </div>
+</div>
+
+{% if no_months_exist %}
+<script>
+function updateButtonText() {
+    const year = document.getElementById('year').value;
+    const month = document.getElementById('month').value;
+    const button = document.getElementById('submit-btn');
+    const monthPadded = month.toString().padStart(2, '0');
+    button.innerHTML = `<i class="fas fa-gear icon-left"></i>Add initial month ${year}-${monthPadded}`;
+}
+
+document.getElementById('year').addEventListener('input', updateButtonText);
+document.getElementById('month').addEventListener('change', updateButtonText);
+
+// Initialize button text
+updateButtonText();
+</script>
+{% endif %}
+{% endblock %}

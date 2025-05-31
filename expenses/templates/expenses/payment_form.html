@@ -1,0 +1,75 @@
+{% extends 'expenses/base.html' %}
+
+{% block title %}{{ title }} - Expense Tracker{% endblock %}
+
+{% block content %}
+<h1>{{ title }}</h1>
+
+<div class="card">
+    <div class="card-header">
+        Expense Item Details
+    </div>
+    <div class="card-body">
+        <p><strong>Expense:</strong> {{ expense_item.expense.title }}</p>
+        <p><strong>Payee:</strong> {% if expense_item.expense.payee %}{{ expense_item.expense.payee.name }}{% else %}-{% endif %}</p>
+        <p><strong>Month:</strong> {{ expense_item.month }}</p>
+        <p><strong>Due Date:</strong> {{ expense_item.due_date|date:"Y-m-d" }}</p>
+        <p><strong>Amount:</strong> ${{ expense_item.amount|floatformat:2 }}</p>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">Record Payment</div>
+    <div class="card-body">
+        <form method="post">
+            {% csrf_token %}
+            
+            {% if form.non_field_errors %}
+                <div class="message error">
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+            
+            <div class="form-group">
+                <label for="{{ form.status.id_for_label }}">{{ form.status.label }}:</label>
+                {{ form.status }}
+                {% if form.status.errors %}
+                    <div class="message error">{{ form.status.errors }}</div>
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                <label for="{{ form.payment_date.id_for_label }}">{{ form.payment_date.label }}:</label>
+                {{ form.payment_date }}
+                {% if form.payment_date.errors %}
+                    <div class="message error">{{ form.payment_date.errors }}</div>
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                <label for="{{ form.payment_method.id_for_label }}">{{ form.payment_method.label }}:</label>
+                {{ form.payment_method }}
+                {% if form.payment_method.errors %}
+                    <div class="message error">{{ form.payment_method.errors }}</div>
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                <label for="{{ form.payment_id.id_for_label }}">{{ form.payment_id.label }}:</label>
+                {{ form.payment_id }}
+                {% if form.payment_id.help_text %}
+                    <small>{{ form.payment_id.help_text }}</small>
+                {% endif %}
+                {% if form.payment_id.errors %}
+                    <div class="message error">{{ form.payment_id.errors }}</div>
+                {% endif %}
+            </div>
+            
+            <div class="form-actions">
+                <button type="submit" class="btn"><i class="fas fa-credit-card icon-left"></i>Save Payment</button>
+                <a href="{% url 'expense_detail' expense_item.expense.pk %}" class="btn btn-secondary"><i class="fas fa-xmark icon-left"></i>Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

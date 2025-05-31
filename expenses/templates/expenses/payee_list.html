@@ -1,0 +1,73 @@
+{% extends 'expenses/base.html' %}
+
+{% block title %}Payees - Expense Tracker{% endblock %}
+
+{% block content %}
+<h1>Payees</h1>
+
+<div class="card">
+    <div class="card-header">
+        {% if show_hidden %}
+            All Payees Including Hidden ({{ payees|length }})
+        {% else %}
+            Active Payees ({{ payees|length }})
+        {% endif %}
+        <span class="card-header-action">
+            <a href="{% url 'payee_create' %}" class="btn"><i class="fas fa-circle-plus icon-left"></i>Add New Payee</a>
+            {% if show_hidden %}
+                <a href="?show_hidden=false" class="btn btn-secondary"><i class="fas fa-eye-slash icon-left"></i>Hide Hidden</a>
+            {% else %}
+                <a href="?show_hidden=true" class="btn btn-secondary"><i class="fas fa-eye icon-left"></i>Show Hidden</a>
+            {% endif %}
+        </span>
+    </div>
+    <div class="card-body">
+        {% if payees %}
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Expenses</th>
+                        <th>Created</th>
+                        <th class="actions-column">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for payee in payees %}
+                    <tr>
+                        <td>{{ payee.name }}</td>
+                        <td>{{ payee.expense_count }}</td>
+                        <td>{{ payee.created_at|date:"Y-m-d" }}</td>
+                        <td class="actions-column">
+                            <a href="{% url 'payee_edit' payee.pk %}" class="btn btn-secondary btn-sm" title="Edit Payee" aria-label="Edit Payee"><i class="fas fa-pen-to-square"></i></a>
+                            {% if payee.is_hidden %}
+                                <form method="post" action="{% url 'payee_unhide' payee.pk %}" class="form-inline">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-success btn-sm" title="Make Visible" aria-label="Make Visible"><i class="fas fa-eye"></i></button>
+                                </form>
+                            {% else %}
+                                <form method="post" action="{% url 'payee_hide' payee.pk %}" class="form-inline">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-secondary btn-sm" title="Hide Payee" aria-label="Hide Payee"><i class="fas fa-eye-slash"></i></button>
+                                </form>
+                                {% if payee.expense_count == 0 %}
+                                    <a href="{% url 'payee_delete' payee.pk %}" class="btn btn-danger btn-sm" title="Delete Payee" aria-label="Delete Payee"><i class="fas fa-trash-can"></i></a>
+                                {% endif %}
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No payees found. <a href="{% url 'payee_create' %}"><i class="fas fa-circle-plus icon-left"></i>Create your first payee</a>.</p>
+        {% endif %}
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <a href="{% url 'dashboard' %}" class="btn btn-secondary"><i class="fas fa-arrow-left icon-left"></i>Back to Dashboard</a>
+    </div>
+</div>
+{% endblock %}
