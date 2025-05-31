@@ -10,6 +10,7 @@
                 <thead>
                     <tr>
                         <th>Due Date</th>
+                        <th class="days-column">Days</th>
                         <th class="amount-column">Amount</th>
                         <th>Expense</th>
                         <th class="actions-column">Actions</th>
@@ -19,6 +20,17 @@
                     {% for item in items %}
                     <tr class="{% if item.status == 'paid' %}expense-item-paid{% else %}expense-item-pending{% endif %}">
                         <td>{{ item.due_date|date:"Y-m-d" }}</td>
+                        <td class="days-column">
+                            {% if item.status == 'paid' %}
+                                {# Show nothing for paid items #}
+                            {% elif item.days_until_due < -99 %}
+                                <span class="text-danger">-</span>
+                            {% elif item.days_until_due < 0 %}
+                                <span class="text-danger">{{ item.days_until_due }}</span>
+                            {% else %}
+                                {{ item.days_until_due }}
+                            {% endif %}
+                        </td>
                         <td class="amount-column">${{ item.amount|floatformat:2 }}</td>
                         <td>
                             <a href="{% url 'expense_detail' item.expense.pk %}">{{ item.expense.title }}</a>

@@ -157,6 +157,13 @@ class ExpenseItem(models.Model):
         if self.status == 'pending' and self.payment_date:
             raise ValidationError('Pending items cannot have payment_date')
 
+    @property
+    def days_until_due(self):
+        """Calculate days until due date from today"""
+        today = date.today()
+        delta = (self.due_date - today).days
+        return delta
+
     def __str__(self):
         return f"{self.expense.title} - {self.month} - {self.status}"
 

@@ -2,6 +2,7 @@
 
 ## @dev
 
+- [#0008] Added Days column to dashboard expense items table showing days until due
 - [#0007] Implemented reusable template components for dashboard and month views
 - [#0001] Replaced text navigation links with icon-based action buttons
 - Added sequential month creation (only next month after most recent)
