@@ -37,7 +37,20 @@ def dashboard(request):
         total_month = 0
         current_month = None
     
+    # Combine pending and paid items for the table
+    all_expense_items = list(pending_items) + list(paid_items)
+    
+    # Create normalized summary data for the include
+    dashboard_summary = {
+        'total': total_month,
+        'paid': total_paid,
+        'pending': total_pending,
+        'paid_count': len(paid_items),
+        'pending_count': len(pending_items),
+    }
+    
     context = {
+        # Original context for backward compatibility
         'current_month': current_month,
         'pending_items': pending_items,
         'paid_items': paid_items,
@@ -46,6 +59,11 @@ def dashboard(request):
         'total_month': total_month,
         'current_date': current_date,
         'has_any_months': has_any_months,
+        # New normalized context for includes
+        'all_expense_items': all_expense_items,
+        'dashboard_summary': dashboard_summary,
+        'not_has_any_months': not has_any_months,
+        'not_current_month': current_month is None,
     }
     return render(request, 'expenses/dashboard.html', context)
 
@@ -187,12 +205,22 @@ def month_detail(request, year, month):
     paid_amount = sum(item.amount for item in expense_items if item.status == 'paid')
     pending_amount = total_amount - paid_amount
     
+    # Create normalized summary data for the include
+    month_summary = {
+        'total': total_amount,
+        'paid': paid_amount,
+        'pending': pending_amount,
+    }
+    
     context = {
+        # Original context for backward compatibility
         'month': month_obj,
         'expense_items': expense_items,
         'total_amount': total_amount,
         'paid_amount': paid_amount,
         'pending_amount': pending_amount,
+        # New normalized context for includes
+        'month_summary': month_summary,
     }
     return render(request, 'expenses/month_detail.html', context)
 
