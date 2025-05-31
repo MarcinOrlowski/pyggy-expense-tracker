@@ -1,5 +1,8 @@
 # Change Log
 
+## @dev
+
+- [#0001] Replaced text navigation links with icon-based action buttons
 - Added sequential month creation (only next month after most recent)
 - Added user-selectable initial month (no preset default)
 - Added month deletion restrictions (only most recent, no paid expenses)

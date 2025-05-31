@@ -1,6 +1,6 @@
 {% extends 'expenses/base.html' %}
 
-{% block title %}Dashboard - Expense Tracker{% endblock %}
+{% block title %}Dashboard - PyGGy{% endblock %}
 
 {% block content %}
 <h1>Dashboard</h1>
@@ -15,7 +15,7 @@
                 - {{ current_date.year }}-{{ current_date.month|stringformat:"02d" }} (Not processed yet)
             {% endif %}
         {% else %}
-            Welcome to Expense Tracker
+            Welcome to PyGGy
         {% endif %}
     </div>
     <div class="card-body">
@@ -36,7 +36,6 @@
             </div>
 
             {% if pending_items or paid_items %}
-                <h3>Current Month Items</h3>
                 <table class="table">
                     <thead>
                         <tr>
