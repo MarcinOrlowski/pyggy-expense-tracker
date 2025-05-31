@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -92,10 +93,27 @@
             color: var(--color-purple);
             text-decoration: none;
             transition: color 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
         .logo:hover {
             color: var(--color-cyan);
+        }
+
+        .logo-img {
+            height: 48px;
+            width: 48px;
+            object-fit: contain;
+            border-radius: 50%;
+            background-color: var(--bg-primary);
+            padding: 6px;
+            transition: all 0.3s;
+        }
+
+        .logo:hover .logo-img {
+            background-color: var(--color-purple-muted);
         }
 
         h1, h2, h3, h4, h5, h6 {
@@ -567,7 +585,10 @@
     <header>
         <div class="container">
             <nav>
-                <a href="{% url 'dashboard' %}" class="logo">PyGGy</a>
+                <a href="{% url 'dashboard' %}" class="logo">
+                    <img src="{% static 'img/logo.png' %}" alt="PyGGy Logo" class="logo-img">
+                    PyGGy
+                </a>
                 <div class="nav-actions">
                     <a href="{% url 'dashboard' %}" class="btn btn-icon" title="View Dashboard" aria-label="Go to Dashboard"><i class="fas fa-tachometer-alt"></i></a>
                     <a href="{% url 'expense_list' %}" class="btn btn-icon" title="View Expenses" aria-label="View Expenses List"><i class="fas fa-receipt"></i></a>
