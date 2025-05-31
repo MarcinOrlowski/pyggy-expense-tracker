@@ -17,28 +17,26 @@ def dashboard(request):
     
     try:
         current_month = Month.objects.get(year=current_date.year, month=current_date.month)
-        pending_items = ExpenseItem.objects.filter(
-            month=current_month,
-            status='pending'
-        ).select_related('expense', 'expense__payee')
-        paid_items = ExpenseItem.objects.filter(
-            month=current_month,
-            status='paid'
-        ).select_related('expense', 'expense__payee')
+        # Get all expense items for the current month, ordered by due date
+        all_expense_items = ExpenseItem.objects.filter(
+            month=current_month
+        ).select_related('expense', 'expense__payee').order_by('due_date')
+        
+        # Separate for counting and totals
+        pending_items = [item for item in all_expense_items if item.status == 'pending']
+        paid_items = [item for item in all_expense_items if item.status == 'paid']
         
         total_pending = sum(item.amount for item in pending_items)
         total_paid = sum(item.amount for item in paid_items)
         total_month = total_pending + total_paid
     except Month.DoesNotExist:
+        all_expense_items = []
         pending_items = []
         paid_items = []
         total_pending = 0
         total_paid = 0
         total_month = 0
         current_month = None
-    
-    # Combine pending and paid items for the table
-    all_expense_items = list(pending_items) + list(paid_items)
     
     # Create normalized summary data for the include
     dashboard_summary = {

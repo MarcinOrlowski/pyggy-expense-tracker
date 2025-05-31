@@ -3,7 +3,7 @@
 {% block title %}Dashboard - PyGGy{% endblock %}
 
 {% block content %}
-<h1>Dashboard</h1>
+<h1><i class="fas fa-tachometer-alt"></i> Dashboard</h1>
 
 <!-- Month Summary Widget -->
 {% include "expenses/includes/month_summary.html" with header_title="Current Month Summary" month=current_month current_date=current_date show_welcome=not_has_any_months not_processed=not_current_month period_label="Month" summary=dashboard_summary %}
