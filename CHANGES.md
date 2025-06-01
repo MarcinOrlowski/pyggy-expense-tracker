@@ -2,6 +2,7 @@
 
 ## @dev
 
+- [#0021] Added recurring with end date expense type allowing automatic expense item generation through specified end date month
 - [#0024] Reworked expense filter controls into single-line layout with stretching dropdowns and icon-only clear button
 - [#0022] Fixed Django static files configuration copying excessive files by relocating img/ folder to static/img/ and removing BASE_DIR from STATICFILES_DIRS, reducing static file collection from ~15,000 to 128 files
 - [#0019] Added optional notes field to expense entity with unlimited database storage, form-level 1024 character validation, textarea input with character counter, and notes indicator in expense list

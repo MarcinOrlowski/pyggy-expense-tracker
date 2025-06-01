@@ -11,6 +11,13 @@ class ExpenseForm(forms.ModelForm):
         help_text='Format: YYYY-MM-DD'
     )
     
+    end_date = forms.DateField(
+        widget=forms.DateInput(attrs={'type': 'date', 'value': ''}, format='%Y-%m-%d'),
+        input_formats=['%Y-%m-%d'],
+        help_text='Format: YYYY-MM-DD',
+        required=False
+    )
+    
     notes = forms.CharField(
         max_length=1024,
         required=False,
@@ -26,7 +33,7 @@ class ExpenseForm(forms.ModelForm):
     
     class Meta:
         model = Expense
-        fields = ['payee', 'title', 'expense_type', 'total_amount', 'installments_count', 'started_at', 'notes']
+        fields = ['payee', 'title', 'expense_type', 'total_amount', 'installments_count', 'started_at', 'end_date', 'notes']
         widgets = {
             'expense_type': forms.Select(attrs={'id': 'expense-type-select'}),
             'installments_count': forms.NumberInput(attrs={'min': '0'}),
@@ -46,12 +53,22 @@ class ExpenseForm(forms.ModelForm):
         expense_type = cleaned_data.get('expense_type')
         installments_count = cleaned_data.get('installments_count', 0)
         started_at = cleaned_data.get('started_at')
+        end_date = cleaned_data.get('end_date')
         
-        if expense_type == 'split_payment' and installments_count <= 0:
+        if expense_type == Expense.TYPE_SPLIT_PAYMENT and installments_count <= 0:
             raise ValidationError('Split payments must have installments count greater than 0')
         
-        if expense_type in ['endless_recurring', 'one_time'] and installments_count > 0:
+        if expense_type in [Expense.TYPE_ENDLESS_RECURRING, Expense.TYPE_ONE_TIME, Expense.TYPE_RECURRING_WITH_END] and installments_count > 0:
             raise ValidationError('Only split payments can have installments count greater than 0')
+        
+        if expense_type == Expense.TYPE_RECURRING_WITH_END:
+            if not end_date:
+                raise ValidationError('Recurring with end date expenses must have an end date')
+            if end_date and started_at and end_date < started_at:
+                raise ValidationError('End date must be on or after the start date')
+        
+        if expense_type != Expense.TYPE_RECURRING_WITH_END and end_date:
+            raise ValidationError('Only recurring with end date expenses can have an end date')
         
         # Validate start date is not earlier than current month
         if started_at:

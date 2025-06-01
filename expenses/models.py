@@ -79,10 +79,17 @@ class Month(models.Model):
 
 
 class Expense(models.Model):
+    # Expense type constants
+    TYPE_ENDLESS_RECURRING = 'endless_recurring'
+    TYPE_SPLIT_PAYMENT = 'split_payment'
+    TYPE_ONE_TIME = 'one_time'
+    TYPE_RECURRING_WITH_END = 'recurring_with_end'
+    
     EXPENSE_TYPES = [
-        ('endless_recurring', 'Endless Recurring'),
-        ('split_payment', 'Split Payment'),
-        ('one_time', 'One Time'),
+        (TYPE_ENDLESS_RECURRING, 'Endless Recurring'),
+        (TYPE_SPLIT_PAYMENT, 'Split Payment'),
+        (TYPE_ONE_TIME, 'One Time'),
+        (TYPE_RECURRING_WITH_END, 'Recurring with End Date'),
     ]
 
     payee = models.ForeignKey(Payee, on_delete=models.PROTECT, null=True, blank=True)
@@ -94,6 +101,7 @@ class Expense(models.Model):
     )
     installments_count = models.PositiveIntegerField(default=0)
     started_at = models.DateField()
+    end_date = models.DateField(null=True, blank=True)
     closed_at = models.DateTimeField(null=True, blank=True)
     notes = models.TextField(
         blank=True,
@@ -104,11 +112,20 @@ class Expense(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def clean(self):
-        if self.expense_type == 'split_payment' and self.installments_count <= 0:
+        if self.expense_type == self.TYPE_SPLIT_PAYMENT and self.installments_count <= 0:
             raise ValidationError('Split payments must have installments_count > 0')
         
-        if self.expense_type in ['endless_recurring', 'one_time'] and self.installments_count > 0:
+        if self.expense_type in [self.TYPE_ENDLESS_RECURRING, self.TYPE_ONE_TIME, self.TYPE_RECURRING_WITH_END] and self.installments_count > 0:
             raise ValidationError('Only split payments can have installments_count > 0')
+        
+        if self.expense_type == self.TYPE_RECURRING_WITH_END:
+            if not self.end_date:
+                raise ValidationError('Recurring with end date expenses must have an end date')
+            if self.end_date < self.started_at:
+                raise ValidationError('End date must be on or after the start date')
+        
+        if self.expense_type != self.TYPE_RECURRING_WITH_END and self.end_date:
+            raise ValidationError('Only recurring with end date expenses can have an end date')
         
         if self.closed_at and self.closed_at > timezone.now():
             raise ValidationError('closed_at cannot be in the future')
@@ -121,6 +138,18 @@ class Expense(models.Model):
                 current_month_start = date(most_recent_month.year, most_recent_month.month, 1)
                 if self.started_at < current_month_start:
                     raise ValidationError(f'Start date cannot be earlier than the current month ({most_recent_month})')
+
+    def calculate_payments_count(self):
+        """Calculate total number of payments for recurring_with_end expenses."""
+        if self.expense_type != self.TYPE_RECURRING_WITH_END or not self.end_date:
+            return 0
+        
+        start_year, start_month = self.started_at.year, self.started_at.month
+        end_year, end_month = self.end_date.year, self.end_date.month
+        
+        # Calculate months between start and end (inclusive)
+        total_months = (end_year - start_year) * 12 + (end_month - start_month) + 1
+        return max(0, total_months)
 
     def __str__(self):
         if self.payee:

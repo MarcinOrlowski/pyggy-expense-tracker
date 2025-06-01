@@ -26,6 +26,9 @@
                 {% if expense.expense_type == 'split_payment' %}
                     <p><strong>Installments:</strong> {{ expense.installments_count }}</p>
                 {% endif %}
+                {% if expense.expense_type == 'recurring_with_end' and expense.end_date %}
+                    <p><strong>End Date:</strong> {{ expense.end_date|date:"Y-m-d" }}</p>
+                {% endif %}
                 <p><strong>Status:</strong>
                     {% if expense.closed_at %}
                         <span class="status-paid">Completed</span>

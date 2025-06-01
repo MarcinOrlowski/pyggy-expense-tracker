@@ -70,6 +70,21 @@
                 {% endif %}
             </div>
 
+            <div class="form-group" id="end-date-group">
+                <label for="{{ form.end_date.id_for_label }}">{{ form.end_date.label }}:</label>
+                {{ form.end_date }}
+                <small>End date must be on or after the start date. The final payment will be generated in the month containing this date.</small>
+                <div id="payment-count-preview" style="display: none; margin-top: 8px;">
+                    <small><strong>Payment Preview:</strong> <span id="payment-count-text"></span></small>
+                </div>
+                {% if form.end_date.help_text %}
+                    <small>{{ form.end_date.help_text }}</small>
+                {% endif %}
+                {% if form.end_date.errors %}
+                    <div class="message error">{{ form.end_date.errors }}</div>
+                {% endif %}
+            </div>
+
             <div class="form-group">
                 <label for="{{ form.notes.id_for_label }}">{{ form.notes.label }}:</label>
                 {{ form.notes }}
@@ -94,8 +109,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const expenseTypeSelect = document.getElementById('expense-type-select');
     const installmentsGroup = document.getElementById('installments-group');
     const installmentsInput = document.querySelector('#installments-group input');
+    const endDateGroup = document.getElementById('end-date-group');
+    const endDateInput = document.querySelector('#end-date-group input');
 
-    function toggleInstallments() {
+    function toggleFields() {
+        // Handle installments field
         if (expenseTypeSelect.value === 'split_payment') {
             installmentsGroup.style.display = 'block';
             installmentsInput.required = true;
@@ -104,10 +122,57 @@ document.addEventListener('DOMContentLoaded', function() {
             installmentsInput.required = false;
             installmentsInput.value = '0';
         }
+        
+        // Handle end date field
+        if (expenseTypeSelect.value === 'recurring_with_end') {
+            endDateGroup.style.display = 'block';
+            endDateInput.required = true;
+        } else {
+            endDateGroup.style.display = 'none';
+            endDateInput.required = false;
+            endDateInput.value = '';
+        }
     }
 
-    expenseTypeSelect.addEventListener('change', toggleInstallments);
-    toggleInstallments(); // Initialize on page load
+    expenseTypeSelect.addEventListener('change', toggleFields);
+    toggleFields(); // Initialize on page load
+    
+    // Payment count preview for recurring_with_end
+    function calculatePaymentCount() {
+        const startDateInput = document.querySelector('input[name="started_at"]');
+        const endDateInput = document.querySelector('input[name="end_date"]');
+        const paymentCountPreview = document.getElementById('payment-count-preview');
+        const paymentCountText = document.getElementById('payment-count-text');
+        
+        if (expenseTypeSelect.value === 'recurring_with_end' && startDateInput.value && endDateInput.value) {
+            const startDate = new Date(startDateInput.value);
+            const endDate = new Date(endDateInput.value);
+            
+            if (endDate >= startDate) {
+                const startYear = startDate.getFullYear();
+                const startMonth = startDate.getMonth();
+                const endYear = endDate.getFullYear();
+                const endMonth = endDate.getMonth();
+                
+                const totalMonths = (endYear - startYear) * 12 + (endMonth - startMonth) + 1;
+                
+                if (totalMonths > 0) {
+                    paymentCountText.textContent = `${totalMonths} payment${totalMonths === 1 ? '' : 's'} will be generated`;
+                    paymentCountPreview.style.display = 'block';
+                } else {
+                    paymentCountPreview.style.display = 'none';
+                }
+            } else {
+                paymentCountPreview.style.display = 'none';
+            }
+        } else {
+            paymentCountPreview.style.display = 'none';
+        }
+    }
+    
+    document.querySelector('input[name="started_at"]').addEventListener('change', calculatePaymentCount);
+    endDateInput.addEventListener('change', calculatePaymentCount);
+    calculatePaymentCount(); // Initialize on page load
     
     // Character counter for notes field
     function setupNotesCounter() {

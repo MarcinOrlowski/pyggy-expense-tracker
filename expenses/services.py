@@ -55,6 +55,7 @@ def create_expense_items_for_month(expense: Expense, month: Month) -> List[Expen
     - endless_recurring: Create one item per month
     - split_payment: Create items until installments_count reached
     - one_time: Create single item only in start month
+    - recurring_with_end: Create one item per month until end date month
     """
     items = []
     expense_start_date = expense.started_at
@@ -68,7 +69,7 @@ def create_expense_items_for_month(expense: Expense, month: Month) -> List[Expen
     if expense_start_date > month_end_date:
         return items
 
-    if expense.expense_type == 'endless_recurring':
+    if expense.expense_type == expense.TYPE_ENDLESS_RECURRING:
         # Create one item per month
         try:
             # Handle case where start day doesn't exist in target month (e.g., Feb 30)
@@ -87,7 +88,30 @@ def create_expense_items_for_month(expense: Expense, month: Month) -> List[Expen
         )
         items.append(item)
 
-    elif expense.expense_type == 'split_payment':
+    elif expense.expense_type == expense.TYPE_RECURRING_WITH_END:
+        # Create one item per month until end date month (inclusive)
+        target_date = date(month.year, month.month, 1)
+        end_month_date = date(expense.end_date.year, expense.end_date.month, 1)
+        
+        if target_date <= end_month_date:
+            try:
+                # Handle case where start day doesn't exist in target month (e.g., Feb 30)
+                due_date = date(month.year, month.month, expense_start_date.day)
+            except ValueError:
+                # Use last day of month if start day doesn't exist
+                import calendar
+                last_day = calendar.monthrange(month.year, month.month)[1]
+                due_date = date(month.year, month.month, last_day)
+
+            item = ExpenseItem.objects.create(
+                expense=expense,
+                month=month,
+                due_date=due_date,
+                amount=expense.total_amount
+            )
+            items.append(item)
+
+    elif expense.expense_type == expense.TYPE_SPLIT_PAYMENT:
         # Check how many items we've already created
         existing_count = ExpenseItem.objects.filter(expense=expense).count()
 
@@ -110,7 +134,7 @@ def create_expense_items_for_month(expense: Expense, month: Month) -> List[Expen
             )
             items.append(item)
 
-    elif expense.expense_type == 'one_time':
+    elif expense.expense_type == expense.TYPE_ONE_TIME:
         # Only create if this is the start month and no items exist yet
         start_month_date = date(expense_start_date.year, expense_start_date.month, 1)
         target_month_date = date(month.year, month.month, 1)
@@ -130,7 +154,7 @@ def create_expense_items_for_month(expense: Expense, month: Month) -> List[Expen
 
 def calculate_installment_amount(expense: Expense) -> Decimal:
     """Calculate per-installment amount for split payments."""
-    if expense.expense_type != 'split_payment' or expense.installments_count <= 0:
+    if expense.expense_type != expense.TYPE_SPLIT_PAYMENT or expense.installments_count <= 0:
         raise ValueError("Can only calculate installments for split payment expenses")
 
     return expense.total_amount / expense.installments_count
@@ -144,11 +168,12 @@ def check_expense_completion(expense: Expense) -> bool:
     - one_time: Complete when single item is paid
     - split_payment: Complete when all installments paid
     - endless_recurring: Manual completion only
+    - recurring_with_end: Manual completion only
     """
     if expense.closed_at:
         return True  # Already completed
 
-    if expense.expense_type == 'one_time':
+    if expense.expense_type == expense.TYPE_ONE_TIME:
         # Complete when the single item is paid
         paid_items = ExpenseItem.objects.filter(expense=expense, status='paid').count()
         if paid_items > 0:
@@ -156,7 +181,7 @@ def check_expense_completion(expense: Expense) -> bool:
             expense.save()
             return True
 
-    elif expense.expense_type == 'split_payment':
+    elif expense.expense_type == expense.TYPE_SPLIT_PAYMENT:
         # Complete when all installments are paid
         paid_items = ExpenseItem.objects.filter(expense=expense, status='paid').count()
         if paid_items >= expense.installments_count:
@@ -164,7 +189,7 @@ def check_expense_completion(expense: Expense) -> bool:
             expense.save()
             return True
 
-    # endless_recurring expenses are only manually completed
+    # endless_recurring and recurring_with_end expenses are only manually completed
     return False
 
 
