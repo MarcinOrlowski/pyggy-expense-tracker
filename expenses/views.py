@@ -9,7 +9,7 @@ from .forms import ExpenseForm, PaymentForm, PayeeForm
 
 
 def dashboard(request):
-    """Display current month summary with pending and paid payments"""
+    """Display most recent active month summary with pending and paid payments"""
     import calendar
     
     current_date = date.today()
@@ -17,8 +17,10 @@ def dashboard(request):
     # Check if any months exist in the system
     has_any_months = Month.objects.exists()
     
-    try:
-        current_month = Month.objects.get(year=current_date.year, month=current_date.month)
+    # Get the most recent month from database instead of current calendar month
+    current_month = Month.get_most_recent()
+    
+    if current_month:
         # Get all expense items for the current month, ordered by due date
         all_expense_items = ExpenseItem.objects.filter(
             month=current_month
@@ -49,22 +51,30 @@ def dashboard(request):
             month=current_month
         ).exists()
         
-        # Add today to due_days if there are overdue items
+        # Add today to due_days if there are overdue items and we're showing current calendar month
         if has_overdue and current_date.month == current_month.month and current_date.year == current_month.year:
             due_days.add(current_date.day)
-    except Month.DoesNotExist:
+    else:
+        # No months exist in the system
         all_expense_items = []
         pending_items = []
         paid_items = []
         total_pending = 0
         total_paid = 0
         total_month = 0
-        current_month = None
         due_days = set()
     
-    # Build calendar weeks (Monday start)
+    # Build calendar weeks (Monday start) - show most recent month if available
     calendar.setfirstweekday(calendar.MONDAY)
-    cal = calendar.monthcalendar(current_date.year, current_date.month)
+    if current_month:
+        cal = calendar.monthcalendar(current_month.year, current_month.month)
+        display_year = current_month.year
+        display_month = current_month.month
+    else:
+        # Fallback to current calendar month if no months exist
+        cal = calendar.monthcalendar(current_date.year, current_date.month)
+        display_year = current_date.year
+        display_month = current_date.month
     
     # Create normalized summary data for the include
     dashboard_summary = {
@@ -90,8 +100,8 @@ def dashboard(request):
         'calendar_weeks': cal,
         'due_days': due_days,
         'today': current_date,
-        'month_name': calendar.month_name[current_date.month],
-        'year': current_date.year,
+        'month_name': calendar.month_name[display_month],
+        'year': display_year,
         'current_weekday': current_weekday,
     }
     return render(request, 'expenses/dashboard.html', context)
