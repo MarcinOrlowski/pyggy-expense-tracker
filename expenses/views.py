@@ -12,8 +12,7 @@ def dashboard(request):
     """Display current month summary with pending and paid payments"""
     import calendar
     
-    # For testing: pretend today is June 15, 2025
-    current_date = date(2025, 6, 15)  # date.today()
+    current_date = date.today()
     
     # Check if any months exist in the system
     has_any_months = Month.objects.exists()
