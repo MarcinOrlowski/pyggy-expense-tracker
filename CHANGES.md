@@ -2,6 +2,7 @@
 
 ## @dev
 
+- [#0024] Reworked expense filter controls into single-line layout with stretching dropdowns and icon-only clear button
 - [#0022] Fixed Django static files configuration copying excessive files by relocating img/ folder to static/img/ and removing BASE_DIR from STATICFILES_DIRS, reducing static file collection from ~15,000 to 128 files
 - [#0019] Added optional notes field to expense entity with unlimited database storage, form-level 1024 character validation, textarea input with character counter, and notes indicator in expense list
 - [#0017] Enhanced dashboard with prominent month summary display using Tektur Google Font, redesigned as individual cards with consistent styling, and integrated calendar widget

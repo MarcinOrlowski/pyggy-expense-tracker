@@ -6,36 +6,31 @@
 {% block content %}
 <h1><i class="fas fa-receipt"></i> Active Expenses</h1>
 
-<div class="card">
-    <div class="card-header">Filter Expenses</div>
-    <div class="card-body">
-        <form method="get">
-            <div class="flex-row">
-                <div class="form-group flex-1">
-                    <label for="type">Expense Type:</label>
-                    <select name="type" id="type">
-                        <option value="">All Types</option>
-                        {% for value, label in expense_types %}
-                            <option value="{{ value }}" {% if value == selected_type %}selected{% endif %}>{{ label }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <div class="form-group flex-1">
-                    <label for="payee">Payee:</label>
-                    <select name="payee" id="payee">
-                        <option value="">All Payees</option>
-                        {% for payee in payees %}
-                            <option value="{{ payee.pk }}" {% if payee.pk == selected_payee %}selected{% endif %}>{{ payee.name }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-            </div>
-            <div class="form-actions">
-                <button type="submit" class="btn"><i class="fas fa-filter icon-left"></i>Filter</button>
-                <a href="{% url 'expense_list' %}" class="btn btn-secondary"><i class="fas fa-eraser icon-left"></i>Clear</a>
-            </div>
-        </form>
-    </div>
+<div class="filter-bar">
+    <form method="get" class="filter-form">
+        <div class="filter-group">
+            <label for="type">Expense Type:</label>
+            <select name="type" id="type">
+                <option value="">All Types</option>
+                {% for value, label in expense_types %}
+                    <option value="{{ value }}" {% if value == selected_type %}selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="filter-group">
+            <label for="payee">Payee:</label>
+            <select name="payee" id="payee">
+                <option value="">All Payees</option>
+                {% for payee in payees %}
+                    <option value="{{ payee.pk }}" {% if payee.pk == selected_payee %}selected{% endif %}>{{ payee.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="filter-actions">
+            <a href="{% url 'expense_list' %}" class="btn btn-icon btn-secondary" title="Clear filters"><i class="fas fa-eraser"></i></a>
+            <button type="submit" class="btn btn-filter"><i class="fas fa-filter icon-left"></i>Filter</button>
+        </div>
+    </form>
 </div>
 
 <div class="card">
