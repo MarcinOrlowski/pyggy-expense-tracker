@@ -121,6 +121,12 @@ main {
     gap: 1rem;
 }
 
+.grid-4-cols {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 1rem;
+}
+
 // Flexbox layouts
 .flex-row {
     display: flex;

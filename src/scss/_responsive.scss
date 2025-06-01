@@ -33,6 +33,19 @@
         grid-template-columns: 1fr;
         gap: 1rem;
     }
+
+    .grid-4-cols {
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+        gap: 0.5rem;
+    }
+
+    .month-summary-amount {
+        font-size: 2.5rem;
+    }
+
+    .month-summary-label {
+        font-size: 0.9rem;
+    }
 }
 
 @media (max-width: 480px) {
@@ -43,5 +56,22 @@
     
     .calendar-day {
         font-size: 0.75rem;
+    }
+
+    .grid-4-cols {
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+        gap: 0.25rem;
+    }
+
+    .month-summary-amount {
+        font-size: 2rem;
+    }
+
+    .month-summary-label {
+        font-size: 0.85rem;
+    }
+
+    .month-summary-meta {
+        font-size: 0.8rem;
     }
 }

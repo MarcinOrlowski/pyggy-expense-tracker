@@ -1,6 +1,7 @@
 {% extends 'expenses/base.html' %}
+{% load currency_tags %}
 
-{% block title %}{{ expense.title }} - PyGGy{% endblock %}
+{% block title %}{{ expense.title }} {% endblock %}
 
 {% block content %}
 <h1><i class="fas fa-receipt"></i> {{ expense.title }}</h1>
@@ -18,14 +19,14 @@
             <div>
                 <p><strong>Payee:</strong> {% if expense.payee %}{{ expense.payee.name }}{% else %}-{% endif %}</p>
                 <p><strong>Type:</strong> {{ expense.get_expense_type_display }}</p>
-                <p><strong>Total Amount:</strong> ${{ expense.total_amount|floatformat:2 }}</p>
+                <p><strong>Total Amount:</strong> {{ expense.total_amount|currency }}</p>
             </div>
             <div>
                 <p><strong>Started:</strong> {{ expense.started_at|date:"Y-m-d" }}</p>
                 {% if expense.expense_type == 'split_payment' %}
                     <p><strong>Installments:</strong> {{ expense.installments_count }}</p>
                 {% endif %}
-                <p><strong>Status:</strong> 
+                <p><strong>Status:</strong>
                     {% if expense.closed_at %}
                         <span class="status-paid">Completed</span>
                     {% else %}
@@ -56,7 +57,7 @@
                     <tr class="{% if item.status == 'paid' %}expense-item-paid{% else %}expense-item-pending{% endif %}">
                         <td>{{ item.month }}</td>
                         <td>{{ item.due_date|date:"Y-m-d" }}</td>
-                        <td class="amount-column">${{ item.amount|floatformat:2 }}</td>
+                        <td class="amount-column">{{ item.amount|currency }}</td>
                         <td>
                             {% if item.payment_date %}
                                 {{ item.payment_date|date:"Y-m-d" }}

@@ -1,6 +1,6 @@
 {% extends 'expenses/base.html' %}
 
-{% block title %}{{ title }} - PyGGy{% endblock %}
+{% block title %}{{ title }} {% endblock %}
 
 {% block content %}
 <div class="card">
@@ -10,13 +10,13 @@
     <div class="card-body">
         <form method="post">
             {% csrf_token %}
-            
+
             {% if form.non_field_errors %}
                 <div class="message error">
                     {{ form.non_field_errors }}
                 </div>
             {% endif %}
-            
+
             <div class="form-group">
                 <label for="{{ form.payee.id_for_label }}">{{ form.payee.label }}:</label>
                 {{ form.payee }}
@@ -24,7 +24,7 @@
                     <div class="message error">{{ form.payee.errors }}</div>
                 {% endif %}
             </div>
-            
+
             <div class="form-group">
                 <label for="{{ form.title.id_for_label }}">{{ form.title.label }}:</label>
                 {{ form.title }}
@@ -32,7 +32,7 @@
                     <div class="message error">{{ form.title.errors }}</div>
                 {% endif %}
             </div>
-            
+
             <div class="form-group">
                 <label for="{{ form.expense_type.id_for_label }}">{{ form.expense_type.label }}:</label>
                 {{ form.expense_type }}
@@ -40,7 +40,7 @@
                     <div class="message error">{{ form.expense_type.errors }}</div>
                 {% endif %}
             </div>
-            
+
             <div class="form-group">
                 <label for="{{ form.total_amount.id_for_label }}">{{ form.total_amount.label }}:</label>
                 {{ form.total_amount }}
@@ -48,7 +48,7 @@
                     <div class="message error">{{ form.total_amount.errors }}</div>
                 {% endif %}
             </div>
-            
+
             <div class="form-group" id="installments-group">
                 <label for="{{ form.installments_count.id_for_label }}">{{ form.installments_count.label }}:</label>
                 {{ form.installments_count }}
@@ -57,7 +57,7 @@
                 {% endif %}
                 <small>Only required for split payment expenses</small>
             </div>
-            
+
             <div class="form-group">
                 <label for="{{ form.started_at.id_for_label }}">{{ form.started_at.label }}:</label>
                 {{ form.started_at }}
@@ -69,7 +69,7 @@
                     <div class="message error">{{ form.started_at.errors }}</div>
                 {% endif %}
             </div>
-            
+
             <div class="form-actions">
                 <button type="submit" class="btn"><i class="fas fa-floppy-disk icon-left"></i>Save Expense</button>
                 <a href="{% url 'expense_list' %}" class="btn btn-secondary"><i class="fas fa-xmark icon-left"></i>Cancel</a>
@@ -83,7 +83,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const expenseTypeSelect = document.getElementById('expense-type-select');
     const installmentsGroup = document.getElementById('installments-group');
     const installmentsInput = document.querySelector('#installments-group input');
-    
+
     function toggleInstallments() {
         if (expenseTypeSelect.value === 'split_payment') {
             installmentsGroup.style.display = 'block';
@@ -94,7 +94,7 @@ document.addEventListener('DOMContentLoaded', function() {
             installmentsInput.value = '0';
         }
     }
-    
+
     expenseTypeSelect.addEventListener('change', toggleInstallments);
     toggleInstallments(); // Initialize on page load
 });

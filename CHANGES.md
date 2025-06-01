@@ -2,6 +2,7 @@
 
 ## @dev
 
+- [#0017] Enhanced dashboard with prominent month summary display using Tektur Google Font, redesigned as individual cards with consistent styling, and integrated calendar widget
 - [#0014] Implemented application settings infrastructure with locale-aware currency formatting using babel library
 - [#0013] Extracted CSS from templates to organized SASS files with django-sass-processor integration
 - [#0004] Added calendar widget to dashboard with comprehensive payment due date visualization including color-coded indicators, weekend styling, and visual hierarchy for past/present/future days

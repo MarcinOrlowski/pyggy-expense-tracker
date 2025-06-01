@@ -1,6 +1,7 @@
 {% extends 'expenses/base.html' %}
+{% load currency_tags %}
 
-{% block title %}Unmark Payment - PyGGy{% endblock %}
+{% block title %}Unmark Payment {% endblock %}
 
 {% block content %}
 <h1>Unmark Payment</h1>
@@ -13,10 +14,10 @@
             <li><strong>Expense:</strong> {{ expense_item.expense.title }}</li>
             <li><strong>Payee:</strong> {% if expense_item.expense.payee %}{{ expense_item.expense.payee.name }}{% else %}-{% endif %}</li>
             <li><strong>Month:</strong> {{ expense_item.month }}</li>
-            <li><strong>Amount:</strong> ${{ expense_item.amount|floatformat:2 }}</li>
+            <li><strong>Amount:</strong> {{ expense_item.amount|currency }}</li>
         </ul>
         <p>This will mark the item as pending and clear the payment date and method.</p>
-        
+
         <form method="post" class="mt-3">
             {% csrf_token %}
             <button type="submit" class="btn btn-danger"><i class="fas fa-rotate-left icon-left"></i>Yes, Unmark Payment</button>

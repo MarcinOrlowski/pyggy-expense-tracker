@@ -1,6 +1,7 @@
 {% extends 'expenses/base.html' %}
+{% load currency_tags %}
 
-{% block title %}Expenses - PyGGy{% endblock %}
+{% block title %}Expenses {% endblock %}
 
 {% block content %}
 <h1><i class="fas fa-receipt"></i> Active Expenses</h1>
@@ -62,7 +63,7 @@
                         <td>{{ expense.title }}</td>
                         <td>{% if expense.payee %}{{ expense.payee.name }}{% else %}-{% endif %}</td>
                         <td>{{ expense.get_expense_type_display }}</td>
-                        <td class="amount-column">${{ expense.total_amount|floatformat:2 }}</td>
+                        <td class="amount-column">{{ expense.total_amount|currency }}</td>
                         <td>{{ expense.started_at|date:"Y-m-d" }}</td>
                         <td>
                             {% if expense.expense_type == 'split_payment' %}

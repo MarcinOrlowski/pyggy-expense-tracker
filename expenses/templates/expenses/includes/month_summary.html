@@ -17,13 +17,17 @@
         {% else %}
             <div class="grid-3-cols">
                 <div>
-                    <p><strong>Total {{ period_label|default:"Amount" }}:</strong> {{ summary.total|currency }}</p>
+                    <div class="month-summary-amount">{{ summary.total|currency }}</div>
+                    <div class="month-summary-label">Total {{ period_label|default:"Amount" }}</div>
                 </div>
                 <div>
-                    <p><strong>Paid:</strong> {{ summary.paid|currency }}{% if summary.paid_count %} ({{ summary.paid_count }} items){% endif %}</p>
+                    <div class="month-summary-amount">{{ summary.paid|currency }}</div>
+                    <div class="month-summary-label">Paid</div>
+                    {% if summary.paid_count %}<div class="month-summary-meta">({{ summary.paid_count }} items)</div>{% endif %}
                 </div>
                 <div>
-                    <p><strong>Pending:</strong> {{ summary.pending|currency }}{% if summary.pending_count %} ({{ summary.pending_count }} items){% endif %}</p>
+                    <div class="month-summary-amount">{{ summary.pending|currency }}</div>
+                    <div class="month-summary-label">Pending</div>
                 </div>
             </div>
         {% endif %}

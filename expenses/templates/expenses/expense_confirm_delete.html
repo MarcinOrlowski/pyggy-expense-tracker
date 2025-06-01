@@ -1,6 +1,6 @@
 {% extends 'expenses/base.html' %}
 
-{% block title %}Delete Expense - PyGGy{% endblock %}
+{% block title %}Delete Expense {% endblock %}
 
 {% block content %}
 <h1>Delete Expense</h1>
@@ -10,7 +10,7 @@
     <div class="card-body">
         <p>Are you sure you want to delete the expense "<strong>{{ expense.title }}</strong>"{% if expense.payee %} for {{ expense.payee.name }}{% endif %}?</p>
         <p class="message warning">This action cannot be undone and will also delete all associated expense items.</p>
-        
+
         <form method="post" class="mt-3">
             {% csrf_token %}
             <button type="submit" class="btn btn-danger"><i class="fas fa-trash-can icon-left"></i>Yes, Delete</button>

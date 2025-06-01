@@ -1,6 +1,6 @@
 {% extends 'expenses/base.html' %}
 
-{% block title %}Delete Month - PyGGy{% endblock %}
+{% block title %}Delete Month {% endblock %}
 
 {% block content %}
 <h1>Delete Month</h1>
@@ -9,15 +9,15 @@
     <div class="card-header bg-danger">Confirm Deletion</div>
     <div class="card-body">
         <p>Are you sure you want to delete month <strong>{{ month }}</strong>?</p>
-        
+
         {% if expense_items_count > 0 %}
         <div class="alert alert-warning">
             <strong>Warning:</strong> This action will delete {{ expense_items_count }} expense item{{ expense_items_count|pluralize }}.
         </div>
         {% endif %}
-        
+
         <p><strong>This action cannot be undone.</strong></p>
-        
+
         <form method="post">
             {% csrf_token %}
             <button type="submit" class="btn btn-danger"><i class="fas fa-trash-can icon-left"></i>Delete Month</button>
