@@ -70,6 +70,17 @@
                 {% endif %}
             </div>
 
+            <div class="form-group">
+                <label for="{{ form.notes.id_for_label }}">{{ form.notes.label }}:</label>
+                {{ form.notes }}
+                {% if form.notes.help_text %}
+                    <small>{{ form.notes.help_text }}</small>
+                {% endif %}
+                {% if form.notes.errors %}
+                    <div class="message error">{{ form.notes.errors }}</div>
+                {% endif %}
+            </div>
+
             <div class="form-actions">
                 <button type="submit" class="btn"><i class="fas fa-floppy-disk icon-left"></i>Save Expense</button>
                 <a href="{% url 'expense_list' %}" class="btn btn-secondary"><i class="fas fa-xmark icon-left"></i>Cancel</a>
@@ -97,6 +108,27 @@ document.addEventListener('DOMContentLoaded', function() {
 
     expenseTypeSelect.addEventListener('change', toggleInstallments);
     toggleInstallments(); // Initialize on page load
+    
+    // Character counter for notes field
+    function setupNotesCounter() {
+        const notesField = document.querySelector('textarea[name="notes"]');
+        if (notesField) {
+            const counter = document.createElement('small');
+            counter.className = 'character-counter';
+            notesField.parentNode.appendChild(counter);
+            
+            function updateCounter() {
+                const remaining = 1024 - notesField.value.length;
+                counter.textContent = `${remaining} characters remaining`;
+                counter.className = remaining < 50 ? 'character-counter warning' : 'character-counter';
+            }
+            
+            notesField.addEventListener('input', updateCounter);
+            updateCounter();
+        }
+    }
+    
+    setupNotesCounter();
 });
 </script>
 {% endblock %}

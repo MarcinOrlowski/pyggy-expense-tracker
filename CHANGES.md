@@ -2,6 +2,7 @@
 
 ## @dev
 
+- [#0019] Added optional notes field to expense entity with unlimited database storage, form-level 1024 character validation, textarea input with character counter, and notes indicator in expense list
 - [#0017] Enhanced dashboard with prominent month summary display using Tektur Google Font, redesigned as individual cards with consistent styling, and integrated calendar widget
 - [#0014] Implemented application settings infrastructure with locale-aware currency formatting using babel library
 - [#0013] Extracted CSS from templates to organized SASS files with django-sass-processor integration

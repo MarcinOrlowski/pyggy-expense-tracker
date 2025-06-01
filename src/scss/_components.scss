@@ -471,3 +471,39 @@ footer {
     margin-top: 0.25rem;
 }
 
+// Notes specific styles
+.notes-section {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(189, 147, 249, 0.3);
+}
+
+.notes-content {
+    background-color: var(--bg-secondary);
+    padding: 0.75rem;
+    border-radius: 4px;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    border: 1px solid rgba(189, 147, 249, 0.2);
+}
+
+.character-counter {
+    display: block;
+    text-align: right;
+    margin-top: 0.25rem;
+    color: var(--text-muted);
+    font-size: 0.875rem;
+}
+
+.character-counter.warning {
+    color: var(--color-orange);
+    font-weight: 500;
+}
+
+// Notes indicator in table
+.fas.fa-sticky-note {
+    color: var(--color-cyan);
+    margin-left: 0.5rem;
+    font-size: 0.875rem;
+}
+

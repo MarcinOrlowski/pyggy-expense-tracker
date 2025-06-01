@@ -60,7 +60,12 @@
                 <tbody>
                     {% for expense in expenses %}
                     <tr>
-                        <td>{{ expense.title }}</td>
+                        <td>
+                            {{ expense.title }}
+                            {% if expense.notes %}
+                                <i class="fas fa-sticky-note" title="Has notes"></i>
+                            {% endif %}
+                        </td>
                         <td>{% if expense.payee %}{{ expense.payee.name }}{% else %}-{% endif %}</td>
                         <td>{{ expense.get_expense_type_display }}</td>
                         <td class="amount-column">{{ expense.total_amount|currency }}</td>

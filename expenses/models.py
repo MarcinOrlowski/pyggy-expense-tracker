@@ -95,6 +95,11 @@ class Expense(models.Model):
     installments_count = models.PositiveIntegerField(default=0)
     started_at = models.DateField()
     closed_at = models.DateTimeField(null=True, blank=True)
+    notes = models.TextField(
+        blank=True,
+        null=True,
+        help_text="Optional notes or additional context about this expense"
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

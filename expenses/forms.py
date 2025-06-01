@@ -11,9 +11,22 @@ class ExpenseForm(forms.ModelForm):
         help_text='Format: YYYY-MM-DD'
     )
     
+    notes = forms.CharField(
+        max_length=1024,
+        required=False,
+        widget=forms.Textarea(attrs={
+            'rows': 4,
+            'cols': 50,
+            'maxlength': 1024,
+            'placeholder': 'Add additional notes or context about this expense',
+            'class': 'form-control'
+        }),
+        help_text="Optional notes or additional context about this expense (max 1024 characters)"
+    )
+    
     class Meta:
         model = Expense
-        fields = ['payee', 'title', 'expense_type', 'total_amount', 'installments_count', 'started_at']
+        fields = ['payee', 'title', 'expense_type', 'total_amount', 'installments_count', 'started_at', 'notes']
         widgets = {
             'expense_type': forms.Select(attrs={'id': 'expense-type-select'}),
             'installments_count': forms.NumberInput(attrs={'min': '0'}),

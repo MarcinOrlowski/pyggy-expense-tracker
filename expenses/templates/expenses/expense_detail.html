@@ -35,6 +35,13 @@
                 </p>
             </div>
         </div>
+
+        {% if expense.notes %}
+        <div class="notes-section">
+            <p><strong>Notes:</strong></p>
+            <div class="notes-content">{{ expense.notes|linebreaks }}</div>
+        </div>
+        {% endif %}
     </div>
 </div>
 
