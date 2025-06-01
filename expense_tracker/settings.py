@@ -145,3 +145,17 @@ SASS_PROCESSOR_ROOT = STATIC_ROOT
 SASS_PROCESSOR_INCLUDE_DIRS = [
     BASE_DIR / 'src' / 'scss',
 ]
+
+# Enable SASS processor and auto-compilation for development
+SASS_PROCESSOR_ENABLED = True
+SASS_PROCESSOR_AUTO_INCLUDE = True
+
+# Development-specific SASS settings
+if DEBUG:
+    # Enable source maps for development
+    SASS_PROCESSOR_OUTPUT_STYLE = 'expanded'
+    # Disable caching to ensure changes are detected
+    SASS_PROCESSOR_CACHE_TIMEOUT = 0
+else:
+    # Production settings
+    SASS_PROCESSOR_OUTPUT_STYLE = 'compressed'
