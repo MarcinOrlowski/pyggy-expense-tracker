@@ -1,3 +1,4 @@
+{% load currency_tags %}
 <div class="card">
     <div class="card-header">
         {{ table_title|default:"Expense Items" }}
@@ -31,7 +32,7 @@
                                 {{ item.days_until_due }}
                             {% endif %}
                         </td>
-                        <td class="amount-column">${{ item.amount|floatformat:2 }}</td>
+                        <td class="amount-column">{{ item.amount|currency }}</td>
                         <td>
                             <a href="{% url 'expense_detail' item.expense.pk %}">{{ item.expense.title }}</a>
                         </td>

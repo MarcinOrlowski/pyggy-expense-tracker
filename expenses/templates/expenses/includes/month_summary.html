@@ -1,3 +1,4 @@
+{% load currency_tags %}
 <div class="card">
     <div class="card-header">
         {{ header_title|default:"Month Summary" }}
@@ -16,13 +17,13 @@
         {% else %}
             <div class="grid-3-cols">
                 <div>
-                    <p><strong>Total {{ period_label|default:"Amount" }}:</strong> ${{ summary.total|floatformat:2 }}</p>
+                    <p><strong>Total {{ period_label|default:"Amount" }}:</strong> {{ summary.total|currency }}</p>
                 </div>
                 <div>
-                    <p><strong>Paid:</strong> ${{ summary.paid|floatformat:2 }}{% if summary.paid_count %} ({{ summary.paid_count }} items){% endif %}</p>
+                    <p><strong>Paid:</strong> {{ summary.paid|currency }}{% if summary.paid_count %} ({{ summary.paid_count }} items){% endif %}</p>
                 </div>
                 <div>
-                    <p><strong>Pending:</strong> ${{ summary.pending|floatformat:2 }}{% if summary.pending_count %} ({{ summary.pending_count }} items){% endif %}</p>
+                    <p><strong>Pending:</strong> {{ summary.pending|currency }}{% if summary.pending_count %} ({{ summary.pending_count }} items){% endif %}</p>
                 </div>
             </div>
         {% endif %}

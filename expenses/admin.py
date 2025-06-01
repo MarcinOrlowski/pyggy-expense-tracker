@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Payee, PaymentMethod, Month, Expense, ExpenseItem
+from .models import Payee, PaymentMethod, Month, Expense, ExpenseItem, Settings
 
 
 @admin.register(Payee)
@@ -45,3 +45,18 @@ class ExpenseItemAdmin(admin.ModelAdmin):
     
     def get_queryset(self, request):
         return super().get_queryset(request).select_related('expense', 'expense__payee', 'month', 'payment_method')
+
+
+@admin.register(Settings)
+class SettingsAdmin(admin.ModelAdmin):
+    list_display = ['currency', 'locale', 'updated_at']
+    fields = ['currency', 'locale']
+    readonly_fields = ['created_at', 'updated_at']
+    
+    def has_add_permission(self, request):
+        # Ensure only one instance
+        return not Settings.objects.exists()
+    
+    def has_delete_permission(self, request, obj=None):
+        # Prevent deletion
+        return False
