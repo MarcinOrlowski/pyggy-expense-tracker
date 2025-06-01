@@ -1,0 +1,47 @@
+// Responsive breakpoints
+@media (max-width: 768px) {
+    .nav-actions {
+        gap: 0.25rem;
+    }
+
+    .nav-actions .btn-icon {
+        min-width: 32px;
+        width: 32px;
+        height: 32px;
+        font-size: 0.875rem;
+    }
+
+    .table {
+        font-size: 0.9rem;
+    }
+
+    .table th,
+    .table td {
+        padding: 0.5rem;
+    }
+
+    .calendar-day {
+        font-size: 0.875rem;
+    }
+    
+    .calendar-weekday {
+        font-size: 0.75rem;
+        padding: 0.25rem;
+    }
+    
+    .grid-2-cols {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .calendar-grid {
+        gap: 1px;
+        padding: 1px;
+    }
+    
+    .calendar-day {
+        font-size: 0.75rem;
+    }
+}

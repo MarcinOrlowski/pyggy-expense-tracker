@@ -17,7 +17,7 @@ A Django-based expense tracking application designed to manage different types o
 ### Technical Highlights
 - Built with Django 5.2 LTS
 - SQLite database (PostgreSQL-ready)
-- Responsive HTML5/CSS3 interface
+- Responsive HTML5/CSS3 interface with SASS styling
 - Function-based views for simplicity
 - Comprehensive model validation
 
@@ -103,6 +103,11 @@ expense_tracker/          # Django project configuration
 │   ├── forms.py        # Django forms with validation
 │   ├── services.py     # Business logic layer
 │   └── templates/      # HTML templates
+├── src/scss/           # SASS source files
+│   ├── _variables.scss # Color palette and CSS variables
+│   ├── _base.scss     # Base styles and typography
+│   ├── _components.scss # UI components
+│   └── main.scss      # Main SASS import file
 ├── fixtures/           # Initial data fixtures
 └── project/           # Project documentation
     ├── PRD.md         # Product Requirements
@@ -141,6 +146,14 @@ expense_tracker/          # Django project configuration
 - All dates default to current month for convenience
 
 ## Development
+
+### SASS/CSS
+
+The project uses SASS for styling with django-sass-processor for automatic compilation:
+- Source files: `src/scss/` directory  
+- Styles are automatically compiled when running the development server
+- No manual compilation needed - Django handles it via `{% sass_src %}` template tag
+- To modify styles, edit the `.scss` files and refresh your browser
 
 ### Management Commands
 

@@ -1,0 +1,444 @@
+// Header and Navigation
+header {
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    padding: 1rem 0;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    border-bottom: 1px solid var(--color-purple);
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 1.5em;
+    font-weight: 700;
+    color: var(--color-purple);
+    text-decoration: none;
+    transition: color 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.logo:hover {
+    color: var(--color-cyan);
+}
+
+.logo-img {
+    height: 48px;
+    width: 48px;
+    object-fit: contain;
+    border-radius: 50%;
+    background-color: var(--bg-primary);
+    padding: 6px;
+    transition: all 0.3s;
+}
+
+.logo:hover .logo-img {
+    background-color: var(--color-purple-muted);
+}
+
+.nav-actions {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.nav-actions .btn-icon {
+    background-color: transparent;
+    border: none;
+    color: var(--text-secondary);
+    transition: all 0.3s;
+}
+
+.nav-actions .btn-icon:hover {
+    background-color: var(--color-purple-muted);
+    color: var(--color-purple);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(189, 147, 249, 0.3);
+}
+
+// Footer
+footer {
+    background: var(--bg-secondary);
+    color: var(--text-secondary);
+    text-align: center;
+    padding: 1rem 0;
+    margin-top: auto;
+    border-top: 1px solid var(--color-purple);
+}
+
+// Messages
+.messages {
+    margin-bottom: 1rem;
+}
+
+.message {
+    padding: 0.75rem 1rem;
+    margin-bottom: 0.5rem;
+    border-radius: 4px;
+    border-left: 4px solid;
+}
+
+.message.success {
+    background-color: var(--color-green-muted);
+    border-color: var(--color-green);
+    color: var(--color-green);
+}
+
+.message.error {
+    background-color: var(--color-red-muted);
+    border-color: var(--color-red);
+    color: var(--color-red);
+}
+
+.message.warning {
+    background-color: var(--color-yellow-muted);
+    border-color: var(--color-yellow);
+    color: var(--color-yellow);
+}
+
+// Cards
+.card {
+    background: var(--bg-tertiary);
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+    margin-bottom: 1rem;
+    border: 1px solid rgba(189, 147, 249, 0.2);
+}
+
+.card-header {
+    padding: 1rem;
+    border-bottom: 1px solid rgba(189, 147, 249, 0.3);
+    font-weight: 500;
+    background-color: var(--bg-secondary);
+    border-radius: 8px 8px 0 0;
+    color: var(--color-purple);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.card-header-action {
+    margin-left: auto;
+}
+
+.card-body {
+    padding: 1rem;
+    color: var(--text-primary);
+}
+
+// Buttons
+.btn {
+    display: inline-block;
+    padding: 0.375rem 0.75rem;
+    background-color: transparent;
+    color: var(--color-purple);
+    text-decoration: none;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.3s;
+}
+
+.btn:hover {
+    background-color: transparent;
+    color: var(--color-purple);
+    transform: scale(1.1);
+}
+
+.btn.btn-danger {
+    background-color: transparent;
+    border: none;
+    color: var(--color-red);
+}
+
+.btn.btn-danger:hover {
+    background-color: transparent;
+    color: var(--color-red);
+    transform: scale(1.1);
+}
+
+.btn.btn-success {
+    background-color: transparent;
+    border: none;
+    color: var(--color-green);
+}
+
+.btn.btn-success:hover {
+    background-color: transparent;
+    color: var(--color-green);
+    transform: scale(1.1);
+}
+
+.btn.btn-secondary {
+    background-color: transparent;
+    border: none;
+    color: var(--text-secondary);
+}
+
+.btn.btn-secondary:hover {
+    background-color: transparent;
+    color: var(--color-cyan);
+    transform: scale(1.1);
+}
+
+.btn.btn-warning {
+    background-color: transparent;
+    border: none;
+    color: var(--color-orange);
+}
+
+.btn.btn-warning:hover {
+    background-color: transparent;
+    color: var(--color-orange);
+    transform: scale(1.1);
+}
+
+// Icon button styles
+.btn-icon {
+    min-width: 38px;
+    width: 38px;
+    height: 38px;
+    padding: 0.5rem;
+    text-align: center;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-sm {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+}
+
+.icon-left {
+    margin-right: 0.375rem;
+}
+
+.icon-right {
+    margin-left: 0.375rem;
+}
+
+// Icon colors
+.btn i {
+    color: inherit;
+}
+
+.btn i.fas {
+    color: currentColor;
+}
+
+// Tables
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+
+.table th,
+.table td {
+    padding: 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid rgba(189, 147, 249, 0.2);
+    color: var(--text-primary);
+}
+
+.table th {
+    background-color: var(--bg-secondary);
+    font-weight: 500;
+    color: var(--color-purple);
+}
+
+.table tr:hover {
+    background-color: rgba(189, 147, 249, 0.1);
+}
+
+.table a {
+    color: var(--color-cyan);
+    text-decoration: none;
+}
+
+.table a:hover {
+    color: var(--color-purple);
+    text-decoration: underline;
+}
+
+// Right-aligned columns
+.table .text-right {
+    text-align: right;
+}
+
+.table .amount-column {
+    text-align: right;
+}
+
+.table .actions-column {
+    text-align: right;
+    white-space: nowrap;
+}
+
+// Remove padding from action buttons in tables
+.table .actions-column .btn {
+    padding: 0.25rem;
+    margin-left: 0.25rem;
+}
+
+.table .actions-column .btn:last-child {
+    margin-right: 0;
+}
+
+.table .days-column {
+    text-align: right;
+}
+
+// Forms
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.25rem;
+    font-weight: 500;
+    color: var(--color-cyan);
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid rgba(189, 147, 249, 0.3);
+    border-radius: 4px;
+    font-size: 1rem;
+    font-family: "Roboto Condensed", sans-serif;
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+    transition: all 0.3s;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--color-purple);
+    box-shadow: 0 0 0 2px var(--color-purple-muted);
+    background-color: var(--bg-primary);
+}
+
+.form-group small {
+    color: var(--text-muted);
+    font-size: 0.875rem;
+}
+
+.form-actions {
+    margin-top: 1rem;
+}
+
+// Form action buttons - traditional style
+.form-actions .btn {
+    background-color: var(--color-purple);
+    border: 1px solid var(--color-purple);
+    color: var(--bg-primary);
+    padding: 0.5rem 1rem;
+}
+
+.form-actions .btn:hover {
+    background-color: transparent;
+    color: var(--color-purple);
+    transform: none;
+    box-shadow: 0 0 10px var(--color-purple-muted);
+}
+
+.form-actions .btn.btn-secondary {
+    background-color: transparent;
+    border: 1px solid var(--text-secondary);
+    color: var(--text-secondary);
+}
+
+.form-actions .btn.btn-secondary:hover {
+    background-color: transparent;
+    border-color: var(--color-cyan);
+    color: var(--color-cyan);
+    transform: none;
+    box-shadow: 0 0 10px var(--color-blue-muted);
+}
+
+// Status badges
+.status-badge {
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.status-pending {
+    color: var(--color-yellow);
+    background-color: var(--color-yellow-muted);
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.875rem;
+    border: 1px solid var(--color-yellow);
+}
+
+.status-paid {
+    color: var(--color-green);
+    background-color: var(--color-green-muted);
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.875rem;
+    border: 1px solid var(--color-green);
+}
+
+// Expense Item Status Styles
+.expense-item-paid {
+    opacity: 0.6;
+    color: var(--text-muted);
+}
+
+.expense-item-paid td {
+    color: var(--text-muted);
+}
+
+.expense-item-paid:hover {
+    background-color: rgba(189, 147, 249, 0.05) !important;
+}
+
+.expense-item-pending {
+    opacity: 1;
+}
+
+// Apply strikethrough to all content in paid rows except actions
+.expense-item-paid td:not(:last-child) {
+    text-decoration: line-through;
+    text-decoration-color: var(--color-red);
+    text-decoration-thickness: 2px;
+}
+
+// Ensure links in paid rows maintain strikethrough
+.expense-item-paid td a {
+    text-decoration: line-through;
+    text-decoration-color: var(--color-red);
+    text-decoration-thickness: 2px;
+    color: var(--text-muted);
+}
+
+.expense-item-paid td a:hover {
+    color: var(--color-cyan);
+    text-decoration: line-through;
+    text-decoration-color: var(--color-red);
+}
+
+// Hidden visibility utility class
+.btn-hidden {
+    visibility: hidden;
+}

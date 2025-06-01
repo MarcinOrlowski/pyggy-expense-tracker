@@ -54,7 +54,7 @@
                             {% if payee.expense_count == 0 and not payee.is_hidden %}
                                 <a href="{% url 'payee_delete' payee.pk %}" class="btn btn-danger btn-sm" title="Delete Payee" aria-label="Delete Payee"><i class="fas fa-trash-can"></i></a>
                             {% else %}
-                                <span class="btn btn-danger btn-sm" style="visibility: hidden;"><i class="fas fa-trash-can"></i></span>
+                                <span class="btn btn-danger btn-sm btn-hidden"><i class="fas fa-trash-can"></i></span>
                             {% endif %}
                         </td>
                     </tr>
