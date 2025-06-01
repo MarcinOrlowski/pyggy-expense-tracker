@@ -90,6 +90,7 @@ if [ $? -eq 0 ]; then
     # Files and folders to copy to worktree
     COPY_ITEMS=(
         "venv/"
+        "db.sqlite3",
         "CLAUDE.md"
         "CLAUDE.local.md"
         ".claude/settings.local.json"
