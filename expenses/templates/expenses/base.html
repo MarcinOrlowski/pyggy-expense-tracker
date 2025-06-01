@@ -41,7 +41,7 @@
             /* Calendar-specific colors */
             --calendar-today-bg: #5849a6;  /* Darker purple for today */
             --calendar-today-hover: #473580;  /* Even darker on hover */
-            --calendar-cell-bg: var(--bg-tertiary);  /* Same as card bg */
+            --calendar-cell-bg: var(--bg-secondary);  /* Darker bg for calendar cells */
             --calendar-cell-hover: var(--bg-secondary);
             --calendar-past-bg: var(--bg-secondary);
             --calendar-future-bg: rgba(88, 73, 166, 0.25);  /* 25% of today color */
@@ -671,8 +671,8 @@
         
         /* Weekend headers have different background */
         .calendar-weekday--weekend {
-            background: var(--bg-tertiary);
-            color: var(--text-primary);
+            background: var(--bg-secondary);
+            color: var(--text-secondary);
         }
         
         /* Today's weekday header */
