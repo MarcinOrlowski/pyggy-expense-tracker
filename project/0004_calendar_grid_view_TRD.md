@@ -10,7 +10,6 @@ This document provides the technical implementation details for the calendar gri
 - **Template**: `expenses/templates/expenses/calendar.html`
 - **Include**: `expenses/templates/expenses/includes/calendar_grid.html`
 - **CSS**: Addition to existing stylesheet
-- **URL**: `/calendar/`
 
 ### 2.2 Data Flow
 1. View fetches current month from database
@@ -147,71 +146,35 @@ path('calendar/', views.calendar_view, name='calendar'),
 
 ### 3.4 CSS Implementation
 
-Add to existing styles:
-```css
-/* Calendar Container */
-.calendar-container {
-    max-width: 600px;
-    margin: 0 auto;
-}
+The calendar uses CSS variables for comprehensive theming:
 
-.calendar-header {
-    text-align: center;
-}
+#### Layout & Structure
+- CSS Grid with 7 columns for days of the week
+- Subtle diagonal stripe pattern background (135deg) for empty cells
+- 1px gaps between cells with muted color separators
+- Responsive design that stacks vertically on mobile (<768px)
+- Takes up 23% of dashboard width (2.5fr vs 0.75fr grid ratio)
 
-/* Calendar Grid */
-.calendar-grid {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 2px;
-    background: var(--text-muted);
-    padding: 2px;
-    border-radius: 4px;
-}
+#### Color Scheme & Visual Hierarchy
+- **Past days**: Grayed out (60% opacity) with `--bg-secondary` background
+- **Today**: Dark purple background (`#5849a6`) with prominent styling
+- **Future weekdays**: Light purple tint (`rgba(88, 73, 166, 0.25)`)
+- **Future weekends**: Darker purple tint (`rgba(50, 40, 100, 0.5)`) for distinction
 
-/* Weekday Headers */
-.calendar-weekday {
-    background: var(--bg-secondary);
-    padding: 0.5rem;
-    text-align: center;
-    font-weight: 600;
-    font-size: 0.875rem;
-    color: var(--text-primary);
-}
+#### Headers
+- **Regular weekday headers**: Standard background (`--bg-secondary`)
+- **Weekend headers**: Lighter background (`--bg-tertiary`)
+- **Current weekday header**: Purple highlight matching today's cell
 
-/* Calendar Days */
-.calendar-day {
-    aspect-ratio: 1;
-    background: var(--bg-primary);
-    border: 1px solid transparent;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    font-size: 1rem;
-    color: var(--text-primary);
-}
+#### Payment Indicators (6px circles in top-right corner)
+- **Green dot**: Future payments due (`--color-green`)
+- **Orange dot**: Payments due today (`--color-orange`)
+- **Bright red dot**: Overdue payments (`#ff2020`)
 
-.calendar-day--empty {
-    background: transparent;
-}
-
-.calendar-day--today {
-    border-color: var(--color-cyan);
-    border-width: 2px;
-}
-
-.calendar-day--has-due {
-    background: rgba(255, 184, 108, 0.2); /* orange with transparency */
-    color: var(--color-orange);
-    font-weight: bold;
-}
-
-/* Legend */
-.calendar-indicator-legend {
-    color: var(--color-orange);
-    font-size: 0.75rem;
-}
+#### Interactive Elements
+- Hover effects with scale transform and color changes
+- Smooth transitions (0.2s) for all interactions
+- Today's cell scales to 110% on hover
 
 /* Responsive Design */
 @media (max-width: 768px) {

@@ -10,7 +10,10 @@ from .forms import ExpenseForm, PaymentForm, PayeeForm
 
 def dashboard(request):
     """Display current month summary with pending and paid payments"""
-    current_date = date.today()
+    import calendar
+    
+    # For testing: pretend today is June 15, 2025
+    current_date = date(2025, 6, 15)  # date.today()
     
     # Check if any months exist in the system
     has_any_months = Month.objects.exists()
@@ -29,6 +32,27 @@ def dashboard(request):
         total_pending = sum(item.amount for item in pending_items)
         total_paid = sum(item.amount for item in paid_items)
         total_month = total_pending + total_paid
+        
+        # Calendar data
+        # Get days with unpaid items in current month
+        due_days = set(
+            current_month.expenseitem_set.filter(
+                payment_date__isnull=True,
+                due_date__isnull=False
+            ).values_list('due_date__day', flat=True)
+        )
+        
+        # Check if any overdue items exist from previous months
+        has_overdue = ExpenseItem.objects.filter(
+            payment_date__isnull=True,
+            due_date__lt=current_date
+        ).exclude(
+            month=current_month
+        ).exists()
+        
+        # Add today to due_days if there are overdue items
+        if has_overdue and current_date.month == current_month.month and current_date.year == current_month.year:
+            due_days.add(current_date.day)
     except Month.DoesNotExist:
         all_expense_items = []
         pending_items = []
@@ -37,6 +61,11 @@ def dashboard(request):
         total_paid = 0
         total_month = 0
         current_month = None
+        due_days = set()
+    
+    # Build calendar weeks (Monday start)
+    calendar.setfirstweekday(calendar.MONDAY)
+    cal = calendar.monthcalendar(current_date.year, current_date.month)
     
     # Create normalized summary data for the include
     dashboard_summary = {
@@ -47,21 +76,24 @@ def dashboard(request):
         'pending_count': len(pending_items),
     }
     
+    # Get current weekday (0=Monday, 6=Sunday)
+    current_weekday = current_date.weekday()
+    
     context = {
-        # Original context for backward compatibility
         'current_month': current_month,
-        'pending_items': pending_items,
-        'paid_items': paid_items,
-        'total_pending': total_pending,
-        'total_paid': total_paid,
-        'total_month': total_month,
         'current_date': current_date,
         'has_any_months': has_any_months,
-        # New normalized context for includes
         'all_expense_items': all_expense_items,
         'dashboard_summary': dashboard_summary,
         'not_has_any_months': not has_any_months,
         'not_current_month': current_month is None,
+        # Calendar context
+        'calendar_weeks': cal,
+        'due_days': due_days,
+        'today': current_date,
+        'month_name': calendar.month_name[current_date.month],
+        'year': current_date.year,
+        'current_weekday': current_weekday,
     }
     return render(request, 'expenses/dashboard.html', context)
 

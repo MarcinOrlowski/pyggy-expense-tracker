@@ -27,15 +27,25 @@ Currently, users can only view expense items in a list/table format. There's no 
 ### 5.1 Calendar Display
 - Display current month in a traditional 7-day grid format
 - Week starts on Monday
-- Show month and year header
+- Show header in "Calendar - YYYY-MM" format
 - Include day names (Mon-Sun) as column headers
+  - Weekend headers (Sat/Sun) have lighter background
+  - Current weekday header highlighted with purple background
 - Show all days of the month with proper week alignment
-- Empty cells for days outside current month
+- Empty cells for days outside current month show subtle diagonal stripe pattern
+- Widget incorporated into Dashboard page (23% width in 77%-23% split)
+- Visual hierarchy for different day types:
+  - Past days: Grayed out with reduced opacity
+  - Today: Dark purple background with light text
+  - Future weekdays: Light purple tint
+  - Future weekends: Darker purple tint for visual distinction
 
 ### 5.2 Payment Indicators
-- **Single Indicator**: Visual indicator (orange highlight/text) for days with any unpaid items due
-- **Overdue Items**: If previous months have overdue unpaid items, show indicator on today's date
-- **Current Day Highlight**: Highlight today's date with a distinct border (cyan)
+- **Future Due Payments**: Green dot indicator for payments due in future days
+- **Due Today**: Orange dot indicator for payments due on current day
+- **Overdue Payments**: Bright red dot indicator for past days with unpaid items
+- **Overdue from Previous Months**: Overdue items from previous months show on today's date
+- **Current Day Highlight**: Today's date has dark purple background
 - **No Payment Status**: No indicators for paid items or payment dates
 
 ### 5.3 Interactivity

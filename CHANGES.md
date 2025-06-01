@@ -2,6 +2,7 @@
 
 ## @dev
 
+- [#0004] Added calendar widget to dashboard with comprehensive payment due date visualization including color-coded indicators, weekend styling, and visual hierarchy for past/present/future days
 - [#0008] Added Days column to dashboard expense items table showing days until due
 - [#0007] Implemented reusable template components for dashboard and month views
 - [#0001] Replaced text navigation links with icon-based action buttons

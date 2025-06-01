@@ -1,4 +1,4 @@
-# PyGGy - Python Expense Tracker
+# PyGGy - Python (Monthly) Expense Tracker
 
 A Django-based expense tracking application designed to manage different types of expenses with monthly processing workflows. This proof-of-concept demonstrates core expense management functionality as a foundation for a comprehensive budget management system.
 

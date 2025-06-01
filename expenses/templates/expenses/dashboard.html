@@ -5,8 +5,24 @@
 {% block content %}
 <h1><i class="fas fa-tachometer-alt"></i> Dashboard</h1>
 
-<!-- Month Summary Widget -->
-{% include "expenses/includes/month_summary.html" with header_title="Current Month Summary" month=current_month current_date=current_date show_welcome=not_has_any_months not_processed=not_current_month period_label="Month" summary=dashboard_summary %}
+<div class="grid-2-cols mb-3">
+    <!-- Left Column: Month Summary -->
+    <div>
+        {% include "expenses/includes/month_summary.html" with header_title="Current Month" month=current_month current_date=current_date show_welcome=not_has_any_months not_processed=not_current_month period_label="Month" summary=dashboard_summary %}
+    </div>
+
+    <!-- Right Column: Calendar Widget -->
+    <div>
+        <div class="card">
+            <div class="card-header">
+                Calendar - {{ year }}-{{ today.month|stringformat:"02d" }}
+            </div>
+            <div class="card-body">
+                {% include 'expenses/includes/calendar_grid.html' %}
+            </div>
+        </div>
+    </div>
+</div>
 
 <!-- Current Month Expenses List -->
 {% if has_any_months and current_month %}
