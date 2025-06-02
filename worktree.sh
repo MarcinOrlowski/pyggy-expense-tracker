@@ -157,9 +157,9 @@ open_worktree() {
     local existing_worktree=$(git worktree list --porcelain | grep -B2 "branch refs/heads/$branch_name" | grep "^worktree" | cut -d' ' -f2)
     if [ -n "$existing_worktree" ]; then
         echo "A worktree with branch '$branch_name' already exists at: $existing_worktree"
-        echo -n "Do you want to cd to the existing worktree? (y/n): "
+        echo -n "Do you want to cd to the existing worktree? (Y/n): "
         read -r response
-        if [ "$response" = "y" ] || [ "$response" = "Y" ]; then
+        if [ "$response" = "y" ] || [ "$response" = "Y" ] || [ -z "$response" ]; then
             echo "Navigating to existing worktree..."
             # Check if venv exists in the existing worktree
             if [ -d "$existing_worktree/venv" ]; then
@@ -180,9 +180,9 @@ open_worktree() {
         # Check if this is actually a git worktree
         if git worktree list | grep -q "$worktree_path"; then
             echo "Worktree directory $worktree_path already exists."
-            echo -n "Do you want to cd to the existing worktree? (y/n): "
+            echo -n "Do you want to cd to the existing worktree? (Y/n): "
             read -r response
-            if [ "$response" = "y" ] || [ "$response" = "Y" ]; then
+            if [ "$response" = "y" ] || [ "$response" = "Y" ] || [ -z "$response" ]; then
                 echo "Navigating to existing worktree..."
                 # Check if venv exists in the existing worktree
                 if [ -d "$worktree_path/venv" ]; then
