@@ -161,6 +161,11 @@ class BudgetForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         self.instance_pk = kwargs.get('instance').pk if kwargs.get('instance') else None
         super().__init__(*args, **kwargs)
+        
+        # Disable start_date field if budget has existing months
+        if self.instance and self.instance.pk and self.instance.month_set.exists():
+            self.fields['start_date'].disabled = True
+            self.fields['start_date'].help_text = 'Cannot change start date when months exist'
     
     def clean_start_date(self):
         start_date = self.cleaned_data.get('start_date')
