@@ -89,7 +89,6 @@ As a [user type], I want to [action], so that [outcome]
 - ✅ Use simple, jargon-free language
 - ✅ Be specific about constraints (time, budget, technical)
 - ✅ Include "Done when" statements
-- ✅ Version your PRDs (v1.0, v1.1, etc.)
 - ✅ Keep user benefit front and center
 - ✅ Make acceptance criteria testable
 
@@ -114,11 +113,10 @@ Before finalizing your PRD, ensure:
 ## PRD Template
 
 ```markdown
-# [Feature Name] PRD v1.0
+# [Feature Name] PRD
 
 **Last Updated**: [Date]
-**Author**: [Name]
-**Status**: [Draft/In Review/Approved]
+**Ticket**: [Link to github ticket]
 
 ## Problem Statement
 [2-3 sentences maximum]

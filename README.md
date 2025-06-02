@@ -29,6 +29,28 @@ A Django-based expense tracking application designed to manage different types o
 
 ## Installation
 
+### Using Docker (Recommended)
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/MarcinOrlowski/pyggy-expense-tracker.git
+   cd pyggy-expense-tracker
+   ```
+
+2. **Start the application**
+   ```bash
+   docker compose up
+   ```
+
+3. **Create superuser (in a new terminal)**
+   ```bash
+   docker compose exec web python manage.py createsuperuser
+   ```
+
+See [DOCKER.md](DOCKER.md) for detailed Docker usage, including building and publishing images.
+
+### Manual Installation
+
 1. **Clone the repository**
    ```bash
    git clone https://github.com/MarcinOrlowski/pyggy-expense-tracker.git
