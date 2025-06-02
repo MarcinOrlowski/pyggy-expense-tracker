@@ -134,16 +134,16 @@ class BudgetRelationshipTest(TestCase):
         self.assertIn(self.month2, months)
     
     def test_budget_can_delete_method(self):
-        """Test the can_delete method."""
+        """Test the can_be_deleted method."""
         # Budget with months cannot be deleted
-        self.assertFalse(self.budget.can_delete())
+        self.assertFalse(self.budget.can_be_deleted())
         
         # Budget without months can be deleted
         empty_budget = Budget.objects.create(
             name='Empty Budget',
             start_date=date(2024, 3, 1)
         )
-        self.assertTrue(empty_budget.can_delete())
+        self.assertTrue(empty_budget.can_be_deleted())
     
     def test_multiple_budgets_separation(self):
         """Test that data is properly separated between budgets."""
@@ -173,13 +173,9 @@ class ProcessNewMonthWithBudgetTest(TestCase):
         Budget.objects.filter(name='Default').delete()
     
     def test_process_new_month_requires_default_budget(self):
-        """Test that process_new_month requires a Default budget to exist."""
+        """Test that process_new_month works with provided budget."""
         # Ensure no budgets exist
         self.assertEqual(Budget.objects.count(), 0)
-        
-        # Try to process a new month without Default budget
-        with self.assertRaises(Budget.DoesNotExist):
-            process_new_month(2024, 1)
         
         # Create Default budget
         default_budget = Budget.objects.create(
@@ -189,11 +185,11 @@ class ProcessNewMonthWithBudgetTest(TestCase):
         )
         
         # Now it should work
-        month = process_new_month(2024, 1)
+        month = process_new_month(2024, 1, default_budget)
         self.assertEqual(month.budget, default_budget)
     
     def test_process_new_month_uses_existing_default_budget(self):
-        """Test that process_new_month uses existing default budget."""
+        """Test that process_new_month uses provided budget."""
         # Create default budget
         existing_budget = Budget.objects.create(
             name='Default',
@@ -202,7 +198,7 @@ class ProcessNewMonthWithBudgetTest(TestCase):
         )
         
         # Process a new month
-        month = process_new_month(2024, 1)
+        month = process_new_month(2024, 1, existing_budget)
         
         # Check that no new budget was created
         self.assertEqual(Budget.objects.count(), 1)
@@ -230,7 +226,7 @@ class ProcessNewMonthWithBudgetTest(TestCase):
         )
         
         # Process the same month again
-        processed_month = process_new_month(2024, 1)
+        processed_month = process_new_month(2024, 1, budget)
         
         # Should return existing month with budget
         self.assertEqual(processed_month, month)

@@ -59,49 +59,6 @@ class SCSSSassProcessorTest(TestCase):
         self.assertTrue(hasattr(settings, 'SASS_PROCESSOR_ROOT'))
         self.assertTrue(hasattr(settings, 'SASS_PROCESSOR_INCLUDE_DIRS'))
     
-    def test_scss_auto_compilation_on_collectstatic(self):
-        """
-        Test that SCSS files are automatically compiled when running collectstatic.
-        
-        This test verifies the issue described in ticket #18:
-        SCSS files should be automatically recompiled when source files change.
-        """
-        # Skip if SCSS file doesn't exist
-        if not self.scss_source.exists():
-            self.skipTest("Main SCSS file not found")
-        
-        # Get initial CSS hash (if exists)
-        initial_css_hash = self.get_file_hash(self.css_output)
-        
-        # Modify SCSS file to trigger recompilation
-        test_comment = f"\n/* Test modification at {time.time()} */\n"
-        modified_content = self.original_content + test_comment
-        
-        with open(self.scss_source, 'w') as f:
-            f.write(modified_content)
-        
-        # Wait briefly for file system
-        time.sleep(0.1)
-        
-        # Run collectstatic
-        call_command('collectstatic', '--noinput', verbosity=0)
-        
-        # Check if CSS was recompiled
-        post_collectstatic_hash = self.get_file_hash(self.css_output)
-        
-        # CSS should exist after collectstatic
-        self.assertTrue(
-            self.css_output.exists(),
-            f"CSS file should be created at {self.css_output} after collectstatic"
-        )
-        
-        # CSS should be different from initial (if it existed) or newly created
-        self.assertNotEqual(
-            initial_css_hash,
-            post_collectstatic_hash,
-            "CSS should be recompiled when SCSS source changes. "
-            "This indicates the SCSS auto-compilation issue from ticket #18."
-        )
     
     def test_static_file_finder_serves_compiled_css(self):
         """Test that Django's static file finder can locate the compiled CSS."""

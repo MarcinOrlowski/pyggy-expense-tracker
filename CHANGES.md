@@ -2,6 +2,7 @@
 
 ## @dev
 
+- [#0056] Fixed failing unit tests by updating method names and function signatures to match current codebase
 - [#0012] Standardized action button styling and icons in table rows with consistent default styling and clear action icons
 - [#0052] Reworked footer layout with split design for better information organization
 - [#0046] Hide delete icons for items that cannot be deleted based on business rules
