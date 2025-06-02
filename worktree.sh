@@ -16,6 +16,14 @@
 
 set -e
 
+# Check if we're already in a worktree
+if git rev-parse --git-dir 2>/dev/null | grep -q "/\.git/worktrees/"; then
+    echo "Error: You are already in a worktree!"
+    echo "Cannot create a worktree from within another worktree."
+    echo "Please return to the main repository before creating a new worktree."
+    exit 1
+fi
+
 # Check if ticket number is provided
 if [ $# -ne 1 ]; then
     echo "Usage: $0 <ticket_number>"
@@ -73,11 +81,40 @@ fi
 
 echo "Branch name: $BRANCH_NAME"
 
+# Check if a worktree with this branch name already exists anywhere
+EXISTING_WORKTREE=$(git worktree list --porcelain | grep -B2 "branch refs/heads/$BRANCH_NAME" | grep "^worktree" | cut -d' ' -f2)
+if [ -n "$EXISTING_WORKTREE" ]; then
+    echo "A worktree with branch '$BRANCH_NAME' already exists at: $EXISTING_WORKTREE"
+    echo -n "Do you want to cd to the existing worktree? (y/n): "
+    read -r response
+    if [ "$response" = "y" ] || [ "$response" = "Y" ]; then
+        echo "Navigating to existing worktree..."
+        cd "$EXISTING_WORKTREE" && exec fish
+    else
+        echo "Aborted."
+        exit 1
+    fi
+fi
+
 # Check if worktree directory already exists
 WORKTREE_PATH=".worktree/$TICKET_ID"
 if [ -d "$WORKTREE_PATH" ]; then
-    echo "Error: Worktree directory $WORKTREE_PATH already exists"
-    exit 1
+    # Check if this is actually a git worktree
+    if git worktree list | grep -q "$WORKTREE_PATH"; then
+        echo "Worktree directory $WORKTREE_PATH already exists."
+        echo -n "Do you want to cd to the existing worktree? (y/n): "
+        read -r response
+        if [ "$response" = "y" ] || [ "$response" = "Y" ]; then
+            echo "Navigating to existing worktree..."
+            cd "$WORKTREE_PATH" && exec fish
+        else
+            echo "Aborted."
+            exit 1
+        fi
+    else
+        echo "Error: Directory $WORKTREE_PATH exists but is not a git worktree"
+        exit 1
+    fi
 fi
 
 # Check if branch name already exists
@@ -104,7 +141,7 @@ if [ $? -eq 0 ]; then
     # Files and folders to copy to worktree
     COPY_ITEMS=(
         "venv/"
-        "db.sqlite3",
+        "db.sqlite3"
         "CLAUDE.md"
         "CLAUDE.local.md"
         ".claude"
