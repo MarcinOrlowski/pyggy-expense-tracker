@@ -5,14 +5,15 @@ A Django-based expense tracking application designed to manage different types o
 ## Features
 
 ### Core Functionality
-- **Three Expense Types**:
+- **Four Expense Types**:
   - **Endless Recurring**: Monthly expenses without end date (utilities, subscriptions)
   - **Split Payments**: Fixed installments (loans, payment plans)
   - **One-time Payments**: Single payment expenses
+  - **Recurring with End Date**: Monthly expense expenses until time comes
 - **Monthly Processing**: Sequential month creation with automatic expense generation
 - **Payment Tracking**: Record actual payment dates and methods
+- **Multiple Budgets**: Let's you track multiple money pipelines at once
 - **Business Rules Enforcement**: Start date validation, automatic expense completion
-- **Django Admin Interface**: Optimized for expense management
 
 ### Technical Highlights
 - Built with Django 5.2 LTS
@@ -42,7 +43,7 @@ A Django-based expense tracking application designed to manage different types o
    docker compose up
    ```
 
-3. **Create superuser (in a new terminal)**
+3. **[Optional] Create superuser (in a new terminal)**
    ```bash
    docker compose exec web python manage.py createsuperuser
    ```
@@ -78,7 +79,7 @@ See [DOCKER.md](DOCKER.md) for detailed Docker usage, including building and pub
    python manage.py loaddata fixtures/initial_data.json
    ```
 
-6. **Create superuser for admin access**
+6. **(Optional) Create superuser for admin access**
    ```bash
    python manage.py createsuperuser
    ```
@@ -109,28 +110,6 @@ The project includes convenience scripts:
   chmod +x run.sh
   ./run.sh
   ```
-
-## Project Structure
-
-```
-expense_tracker/          # Django project configuration
-├── expenses/            # Main Django app
-│   ├── models.py       # Data models (Expense, ExpenseItem, Month, etc.)
-│   ├── views.py        # View functions
-│   ├── forms.py        # Django forms with validation
-│   ├── services.py     # Business logic layer
-│   └── templates/      # HTML templates
-├── src/scss/           # SASS source files
-│   ├── _variables.scss # Color palette and CSS variables
-│   ├── _base.scss     # Base styles and typography
-│   ├── _components.scss # UI components
-│   └── main.scss      # Main SASS import file
-├── fixtures/           # Initial data fixtures
-└── project/           # Project documentation
-    ├── PRD.md         # Product Requirements
-    ├── TRD.md         # Technical Requirements
-    └── *.md           # Additional documentation
-```
 
 ## Usage Guide
 
@@ -186,31 +165,5 @@ python manage.py test
 
 ### Database
 
-The project uses SQLite by default but is designed to work with PostgreSQL. Database configuration is in `expense_tracker/settings.py`.
+The project uses SQLite by default but is designed to work with PostgreSQL. Database configuration is in `pyggy/settings.py`.
 
-## Documentation
-
-Comprehensive project documentation is available in the `project/` directory:
-- **PRD.md**: Product Requirements Document
-- **TRD.md**: Technical Requirements Document
-- **architecture-spec.md**: System architecture details
-- **frontend-guidelines.md**: Frontend development guidelines
-
-## Future Enhancements
-
-This PoC is designed to support future features:
-- Multi-project support
-- Budget management and tracking
-- Advanced reporting and analytics
-- Tags and categorization
-- Receipt image storage
-- Mobile application
-- Bank statement import
-
-## Contributing
-
-This is a proof-of-concept project. For questions or contributions, please refer to the project documentation and follow Django best practices.
-
-## License
-
-[License information to be added]

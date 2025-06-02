@@ -20,6 +20,9 @@ docker compose build
 # Start the application
 docker compose up
 
+# Setup DB
+docker compose exec web python manage.py migrate
+
 # In another terminal, create a superuser
 docker compose exec web python manage.py createsuperuser
 
