@@ -135,12 +135,12 @@ Before finalizing your TRD, ensure:
 ## TRD Template
 
 ```markdown
-# [Feature Name] TRD v1.0
+# [Feature Name] TRD
 
 **Last Updated**: [Date]
-**Author**: [Name]
+**Ticket**: [Link to github ticket]
 **PRD Reference**: [PRD version]
-**Status**: [Draft/In Review/Approved]
+
 
 ## Technical Approach
 [1 paragraph describing overall implementation strategy]
