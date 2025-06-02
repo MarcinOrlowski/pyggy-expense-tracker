@@ -2,6 +2,7 @@
 
 ## @dev
 
+- [#0025] Added Font Awesome icons for expense types with hardcoded mapping and accessibility support
 - [#0041] Added Budget management UI (CRUD operations)
 - [#0029] Introduced Budget entity with Month relationship and expense tracking
 - [#0036] Improved worktree.sh script to check if worktree already exists and prevent creating worktrees from within worktrees
