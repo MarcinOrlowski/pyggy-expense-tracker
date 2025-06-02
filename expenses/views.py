@@ -8,17 +8,18 @@ from .models import Expense, ExpenseItem, Month, Payee, PaymentMethod, Budget
 from .forms import ExpenseForm, PaymentForm, PayeeForm, BudgetForm
 
 
-def dashboard(request):
-    """Display most recent active month summary with pending and paid payments"""
+def dashboard(request, budget_id):
+    """Display most recent active month summary with pending and paid payments for a specific budget"""
     import calendar
     
+    budget = get_object_or_404(Budget, id=budget_id)
     current_date = date.today()
     
-    # Check if any months exist in the system
-    has_any_months = Month.objects.exists()
+    # Check if any months exist in the budget
+    has_any_months = Month.objects.filter(budget=budget).exists()
     
-    # Get the most recent month from database instead of current calendar month
-    current_month = Month.get_most_recent()
+    # Get the most recent month from database for this budget
+    current_month = Month.objects.filter(budget=budget).order_by('-year', '-month').first()
     
     if current_month:
         # Get all expense items for the current month, ordered by due date
@@ -43,10 +44,11 @@ def dashboard(request):
             ).values_list('due_date__day', flat=True)
         )
         
-        # Check if any overdue items exist from previous months
+        # Check if any overdue items exist from previous months in this budget
         has_overdue = ExpenseItem.objects.filter(
             payment_date__isnull=True,
-            due_date__lt=current_date
+            due_date__lt=current_date,
+            month__budget=budget
         ).exclude(
             month=current_month
         ).exists()
@@ -89,6 +91,7 @@ def dashboard(request):
     current_weekday = current_date.weekday()
     
     context = {
+        'budget': budget,
         'current_month': current_month,
         'current_date': current_date,
         'has_any_months': has_any_months,
@@ -107,9 +110,15 @@ def dashboard(request):
     return render(request, 'expenses/dashboard.html', context)
 
 
-def expense_list(request):
-    """List active expenses with filtering options"""
-    expenses = Expense.objects.filter(closed_at__isnull=True).select_related('payee')
+def expense_list(request, budget_id):
+    """List active expenses with filtering options for a specific budget"""
+    budget = get_object_or_404(Budget, id=budget_id)
+    
+    # Get expenses that belong to months in this budget
+    expenses = Expense.objects.filter(
+        closed_at__isnull=True,
+        expenseitem__month__budget=budget
+    ).distinct().select_related('payee')
     
     # Simple filtering
     expense_type = request.GET.get('type')
@@ -124,6 +133,7 @@ def expense_list(request):
     payees = Payee.objects.filter(hidden_at__isnull=True)
     
     context = {
+        'budget': budget,
         'expenses': expenses,
         'payees': payees,
         'expense_types': Expense.EXPENSE_TYPES,
@@ -133,20 +143,22 @@ def expense_list(request):
     return render(request, 'expenses/expense_list.html', context)
 
 
-def expense_create(request):
+def expense_create(request, budget_id):
     """Create new expense with form validation"""
+    budget = get_object_or_404(Budget, id=budget_id)
+    
     if request.method == 'POST':
         form = ExpenseForm(request.POST)
         if form.is_valid():
             expense = form.save()
             # Handle expense items creation if it starts in current month
             from .services import handle_new_expense
-            handle_new_expense(expense)
+            handle_new_expense(expense, budget)
             messages.success(request, f'Expense "{expense.title}" created successfully.')
-            return redirect('expense_detail', pk=expense.pk)
+            return redirect('expense_detail', budget_id=budget_id, pk=expense.pk)
     else:
-        # Set default start date to current month's first day
-        most_recent_month = Month.get_most_recent()
+        # Set default start date to current month's first day for this budget
+        most_recent_month = Month.objects.filter(budget=budget).order_by('-year', '-month').first()
         if most_recent_month:
             default_date = date(most_recent_month.year, most_recent_month.month, 1)
         else:
@@ -157,28 +169,35 @@ def expense_create(request):
         })
     
     context = {
+        'budget': budget,
         'form': form,
         'title': 'Create New Expense'
     }
     return render(request, 'expenses/expense_form.html', context)
 
 
-def expense_detail(request, pk):
+def expense_detail(request, budget_id, pk):
     """Display expense details and related items"""
+    budget = get_object_or_404(Budget, id=budget_id)
     expense = get_object_or_404(Expense, pk=pk)
+    
+    # Filter expense items to only those belonging to months in this budget
     expense_items = ExpenseItem.objects.filter(
-        expense=expense
+        expense=expense,
+        month__budget=budget
     ).select_related('month', 'payment_method').order_by('due_date')
     
     context = {
+        'budget': budget,
         'expense': expense,
         'expense_items': expense_items,
     }
     return render(request, 'expenses/expense_detail.html', context)
 
 
-def expense_edit(request, pk):
+def expense_edit(request, budget_id, pk):
     """Edit existing expense"""
+    budget = get_object_or_404(Budget, id=budget_id)
     expense = get_object_or_404(Expense, pk=pk)
     
     if request.method == 'POST':
@@ -189,13 +208,14 @@ def expense_edit(request, pk):
             # If start date changed and now starts in current month, handle expense items
             if original_start_date != expense.started_at:
                 from .services import handle_new_expense
-                handle_new_expense(expense)
+                handle_new_expense(expense, budget)
             messages.success(request, f'Expense "{expense.title}" updated successfully.')
-            return redirect('expense_detail', pk=expense.pk)
+            return redirect('expense_detail', budget_id=budget_id, pk=expense.pk)
     else:
         form = ExpenseForm(instance=expense)
     
     context = {
+        'budget': budget,
         'form': form,
         'expense': expense,
         'title': f'Edit Expense: {expense.title}'
@@ -203,39 +223,44 @@ def expense_edit(request, pk):
     return render(request, 'expenses/expense_form.html', context)
 
 
-def expense_delete(request, pk):
+def expense_delete(request, budget_id, pk):
     """Delete expense with confirmation"""
+    budget = get_object_or_404(Budget, id=budget_id)
     expense = get_object_or_404(Expense, pk=pk)
     
     if request.method == 'POST':
         title = expense.title
         expense.delete()
         messages.success(request, f'Expense "{title}" deleted successfully.')
-        return redirect('expense_list')
+        return redirect('expense_list', budget_id=budget_id)
     
     context = {
+        'budget': budget,
         'expense': expense,
     }
     return render(request, 'expenses/expense_confirm_delete.html', context)
 
 
-def month_list(request):
-    """List all months"""
-    months = Month.objects.all()
+def month_list(request, budget_id):
+    """List all months for a specific budget"""
+    budget = get_object_or_404(Budget, id=budget_id)
+    months = Month.objects.filter(budget=budget)
     
-    # Get next allowed month for button text
-    next_allowed = Month.get_next_allowed_month()
+    # Get next allowed month for this budget
+    next_allowed = Month.get_next_allowed_month(budget=budget)
     
     context = {
+        'budget': budget,
         'months': months,
         'next_allowed_month': next_allowed,
     }
     return render(request, 'expenses/month_list.html', context)
 
 
-def month_detail(request, year, month):
+def month_detail(request, budget_id, year, month):
     """Display month details with expense items"""
-    month_obj = get_object_or_404(Month, year=year, month=month)
+    budget = get_object_or_404(Budget, id=budget_id)
+    month_obj = get_object_or_404(Month, year=year, month=month, budget=budget)
     expense_items = ExpenseItem.objects.filter(
         month=month_obj
     ).select_related('expense', 'expense__payee', 'payment_method')
@@ -252,6 +277,7 @@ def month_detail(request, year, month):
     }
     
     context = {
+        'budget': budget,
         # Original context for backward compatibility
         'month': month_obj,
         'expense_items': expense_items,
@@ -264,87 +290,94 @@ def month_detail(request, year, month):
     return render(request, 'expenses/month_detail.html', context)
 
 
-def month_delete(request, year, month):
+def month_delete(request, budget_id, year, month):
     """Delete month with validation"""
-    month_obj = get_object_or_404(Month, year=year, month=month)
+    budget = get_object_or_404(Budget, id=budget_id)
+    month_obj = get_object_or_404(Month, year=year, month=month, budget=budget)
     
-    # Check if this is the most recent month
-    most_recent = Month.get_most_recent()
+    # Check if this is the most recent month for this budget
+    most_recent = Month.get_most_recent(budget=budget)
     if most_recent != month_obj:
         messages.error(request, 'You can only delete the most recent month.')
-        return redirect('month_list')
+        return redirect('month_list', budget_id=budget_id)
     
     # Check if month has paid expenses
     if month_obj.has_paid_expenses():
         messages.error(request, f'Cannot delete month {month_obj} because it contains paid expenses.')
-        return redirect('month_list')
+        return redirect('month_list', budget_id=budget_id)
     
     if request.method == 'POST':
         month_str = str(month_obj)
         month_obj.delete()
         messages.success(request, f'Month {month_str} deleted successfully.')
-        return redirect('month_list')
+        return redirect('month_list', budget_id=budget_id)
     
     # Count expense items that will be deleted
     expense_items_count = month_obj.expenseitem_set.count()
     
     context = {
+        'budget': budget,
         'month': month_obj,
         'expense_items_count': expense_items_count,
     }
     return render(request, 'expenses/month_confirm_delete.html', context)
 
 
-def month_process(request):
-    """Process new month generation"""
+def month_process(request, budget_id):
+    """Process new month generation for a specific budget"""
+    budget = get_object_or_404(Budget, id=budget_id)
+    
     if request.method == 'POST':
         year = int(request.POST.get('year'))
         month = int(request.POST.get('month'))
         
-        # Check if this is the next allowed month
-        next_allowed = Month.get_next_allowed_month()
+        # Check if this is the next allowed month for this budget
+        next_allowed = Month.get_next_allowed_month(budget=budget)
         if not next_allowed:
-            # No months exist, this is initial seeding - allow any valid month
+            # No months exist for this budget, this is initial seeding - allow any valid month
             if not (2020 <= year <= 2099) or not (1 <= month <= 12):
                 messages.error(request, 'Please enter a valid year (2020-2099) and month (1-12).')
-                return redirect('month_process')
+                return redirect('month_process', budget_id=budget_id)
         else:
-            # Months exist, enforce sequential creation
+            # Months exist for this budget, enforce sequential creation
             if year != next_allowed['year'] or month != next_allowed['month']:
                 messages.error(request, f"You can only create month {next_allowed['year']}-{next_allowed['month']:02d} (the next sequential month).")
-                return redirect('month_process')
+                return redirect('month_process', budget_id=budget_id)
         
         try:
             from .services import process_new_month
-            month_obj = process_new_month(year, month)
+            month_obj = process_new_month(year, month, budget)
             messages.success(request, f'Month {month_obj} processed successfully.')
-            return redirect('month_detail', year=year, month=month)
+            return redirect('month_detail', budget_id=budget_id, year=year, month=month)
         except Exception as e:
             messages.error(request, f'Error processing month: {str(e)}')
     
     # Show form for selecting month to process
-    next_allowed = Month.get_next_allowed_month()
+    next_allowed = Month.get_next_allowed_month(budget=budget)
     if not next_allowed:
-        # No months exist, allow user to choose initial month
+        # No months exist for this budget, allow user to choose initial month
         from datetime import date
         today = date.today()
         context = {
+            'budget': budget,
             'suggested_year': today.year,
             'suggested_month': today.month,
             'no_months_exist': True,
         }
     else:
         context = {
+            'budget': budget,
             'suggested_year': next_allowed['year'],
             'suggested_month': next_allowed['month'],
-            'most_recent_month': Month.get_most_recent(),
+            'most_recent_month': Month.get_most_recent(budget=budget),
         }
     return render(request, 'expenses/month_process.html', context)
 
 
-def expense_item_pay(request, pk):
+def expense_item_pay(request, budget_id, pk):
     """Record payment for expense item"""
-    expense_item = get_object_or_404(ExpenseItem, pk=pk)
+    budget = get_object_or_404(Budget, id=budget_id)
+    expense_item = get_object_or_404(ExpenseItem, pk=pk, month__budget=budget)
     
     if request.method == 'POST':
         form = PaymentForm(request.POST, instance=expense_item)
@@ -355,7 +388,7 @@ def expense_item_pay(request, pk):
                 from .services import check_expense_completion
                 check_expense_completion(item.expense)
             messages.success(request, 'Payment recorded successfully.')
-            return redirect('expense_detail', pk=expense_item.expense.pk)
+            return redirect('expense_detail', budget_id=budget_id, pk=expense_item.expense.pk)
     else:
         form = PaymentForm(instance=expense_item, initial={
             'payment_date': datetime.now().strftime('%Y-%m-%dT%H:%M'),
@@ -363,6 +396,7 @@ def expense_item_pay(request, pk):
         })
     
     context = {
+        'budget': budget,
         'form': form,
         'expense_item': expense_item,
         'title': f'Record Payment: {expense_item.expense.title}'
@@ -370,9 +404,10 @@ def expense_item_pay(request, pk):
     return render(request, 'expenses/payment_form.html', context)
 
 
-def expense_item_unpay(request, pk):
+def expense_item_unpay(request, budget_id, pk):
     """Mark expense item as unpaid"""
-    expense_item = get_object_or_404(ExpenseItem, pk=pk)
+    budget = get_object_or_404(Budget, id=budget_id)
+    expense_item = get_object_or_404(ExpenseItem, pk=pk, month__budget=budget)
     
     if request.method == 'POST':
         expense_item.status = 'pending'
@@ -380,9 +415,10 @@ def expense_item_unpay(request, pk):
         expense_item.payment_method = None
         expense_item.save()
         messages.success(request, 'Payment unmarked successfully.')
-        return redirect('expense_detail', pk=expense_item.expense.pk)
+        return redirect('expense_detail', budget_id=budget_id, pk=expense_item.expense.pk)
     
     context = {
+        'budget': budget,
         'expense_item': expense_item,
     }
     return render(request, 'expenses/expense_item_confirm_unpay.html', context)
@@ -525,7 +561,9 @@ def budget_create(request):
             messages.success(request, f'Budget "{budget.name}" created successfully.')
             return redirect('budget_list')
     else:
-        form = BudgetForm()
+        form = BudgetForm(initial={
+            'start_date': date.today().strftime('%Y-%m-%d')
+        })
     
     context = {
         'form': form,

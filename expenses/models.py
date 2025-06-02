@@ -90,14 +90,16 @@ class Month(models.Model):
         return not self.has_paid_expenses()
     
     @classmethod
-    def get_most_recent(cls):
-        """Get the most recent month in the system"""
+    def get_most_recent(cls, budget=None):
+        """Get the most recent month in the system or for a specific budget"""
+        if budget:
+            return cls.objects.filter(budget=budget).first()
         return cls.objects.first()  # Due to ordering, first() returns most recent
     
     @classmethod
-    def get_next_allowed_month(cls):
+    def get_next_allowed_month(cls, budget=None):
         """Calculate the next month that can be created"""
-        most_recent = cls.get_most_recent()
+        most_recent = cls.get_most_recent(budget)
         if not most_recent:
             return None  # No months exist, need initial seeding
         

@@ -4,7 +4,7 @@
 **Ticket**: [#0044](https://github.com/MarcinOrlowski/pyggy-expense-tracker/issues/44)
 
 ## Technical Approach
-We'll implement budget scoping using Django's session framework to store the current budget ID, modify URL patterns to include budget_id parameter, and create a middleware/mixin to enforce budget filtering on all relevant queries. A context processor will make the current budget available in all templates, and a budget switcher dropdown in the base template will allow quick budget changes. All views will be updated to filter data based on the session's current budget, with automatic redirection to budget selection for users without a selected budget.
+We'll implement budget scoping by modifying URL patterns to include budget_id parameter and updating all views to filter data based on the budget from the URL. A context processor will make the current budget available in all templates by extracting it from the URL parameters. The current budget will be displayed in the header with a link to switch budgets. All views will be updated to filter data based on the budget_id from the URL, with automatic redirection to budget selection for users accessing the root URL.
 
 ## Data Model
 No new models required. Existing relationships:
@@ -46,21 +46,21 @@ Response: Redirect to /budgets/1/dashboard/
 
 ## Security & Performance
 - Authorization: Users can only access budgets that exist (404 for non-existent)
-- Session security: Django's built-in session framework with secure cookies
+- Session security: Django's built-in session framework with secure cookies (no need - not using auth)
 - Query performance: All queries already filter by relationships, minimal impact
 - URL validation: 404 response for invalid budget_id in URLs
 
 ## Technical Risks & Mitigations
-1. **Risk**: Existing URLs break for users → **Mitigation**: Redirect legacy URLs to current budget equivalent
-2. **Risk**: Session expiry loses budget context → **Mitigation**: Redirect to budget selection with friendly message
+1. **Risk**: Existing URLs break for users → **Mitigation**: No need. That's project under development.
+2. **Risk**: Session expiry loses budget context → **Mitigation**: why session keeps budget context? it's always referenced in URL?
 3. **Risk**: Complex template URL updates → **Mitigation**: Create template tag for budget-aware URL generation
 
 ## Implementation Plan
-- Phase 1 (S): Create context processor and session management - 2 hours
-- Phase 2 (M): Update URL patterns and views to handle budget_id - 4 hours
-- Phase 3 (M): Add budget switcher component and template updates - 3 hours
-- Phase 4 (S): Update all templates with new URL structure - 2 hours
-- Phase 5 (S): Add tests and fix edge cases - 2 hours
+- Phase 1 (S): Create context processor and session management
+- Phase 2 (M): Update URL patterns and views to handle budget_id
+- Phase 3 (M): Add current budget display and template updates
+- Phase 4 (S): Update all templates with new URL structure
+- Phase 5 (S): Add tests and fix edge cases
 
 Dependencies: None (uses existing Budget model)
 
@@ -116,4 +116,4 @@ def select_budget(request):
 
 ### 4. Template Updates:
 - Replace `{% url 'expenses:month_list' %}` with `{% url 'expenses:month_list' current_budget_id %}`
-- Add budget switcher dropdown in base.html header
+

@@ -10,13 +10,14 @@ from babel.core import Locale
 from .models import Expense, ExpenseItem, Month, Settings, Budget
 
 
-def process_new_month(year: int, month: int) -> Month:
+def process_new_month(year: int, month: int, budget: Budget) -> Month:
     """
     Create new month and generate expense items for active expenses.
 
     Args:
         year: Target year (2020-2099)
         month: Target month (1-12)
+        budget: The budget to create the month in
 
     Returns:
         Month: Created or existing month instance
@@ -32,11 +33,8 @@ def process_new_month(year: int, month: int) -> Month:
         raise ValueError("Month must be between 1 and 12")
 
     with transaction.atomic():
-        # Get the Default budget
-        default_budget = Budget.objects.get(name='Default')
-        
         month_obj, created = Month.objects.get_or_create(
-            budget=default_budget,
+            budget=budget,
             year=year,
             month=month
         )
@@ -197,16 +195,17 @@ def check_expense_completion(expense: Expense) -> bool:
     return False
 
 
-def handle_new_expense(expense: Expense) -> None:
+def handle_new_expense(expense: Expense, budget: Budget) -> None:
     """
     Handle newly created expense - create expense items if it starts in current month.
     
     Args:
         expense: The newly created expense
+        budget: The budget to use for finding the most recent month
     """
-    most_recent_month = Month.get_most_recent()
+    most_recent_month = Month.objects.filter(budget=budget).order_by('-year', '-month').first()
     if not most_recent_month:
-        return  # No months exist yet
+        return  # No months exist yet in this budget
     
     # Check if expense starts in the current month
     expense_start_date = expense.started_at
