@@ -66,10 +66,42 @@ nav {
 footer {
     background: var(--bg-secondary);
     color: var(--text-secondary);
-    text-align: center;
     padding: 1rem 0;
     margin-top: auto;
     border-top: 1px solid var(--color-purple);
+
+    .footer-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .footer-left,
+    .footer-right {
+        p {
+            margin: 0;
+        }
+
+        a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s ease;
+
+            &:hover {
+                color: var(--color-purple);
+            }
+        }
+    }
+
+    // Mobile responsive
+    @media (max-width: 768px) {
+        .footer-content {
+            flex-direction: column;
+            text-align: center;
+        }
+    }
 }
 
 // Messages
