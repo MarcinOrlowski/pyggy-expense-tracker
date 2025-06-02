@@ -2,6 +2,7 @@
 
 ## @dev
 
+- [#0029] Introduced Budget entity with Month relationship and expense tracking
 - [#0036] Improved worktree.sh script to check if worktree already exists and prevent creating worktrees from within worktrees
 - [#0021] Added recurring with end date expense type allowing automatic expense item generation through specified end date month
 - [#0024] Reworked expense filter controls into single-line layout with stretching dropdowns and icon-only clear button

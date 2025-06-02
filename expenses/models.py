@@ -4,6 +4,38 @@ from django.core.exceptions import ValidationError
 from django.utils import timezone
 from django.core.cache import cache
 from datetime import date
+from decimal import Decimal
+
+
+class Budget(models.Model):
+    name = models.CharField(max_length=255, unique=True)
+    start_date = models.DateField()
+    initial_amount = models.DecimalField(
+        max_digits=13, decimal_places=2, default=0,
+        validators=[MinValueValidator(0)]
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.name
+    
+    def get_total_expenses(self):
+        """Calculate total expenses across all linked months"""
+        total = Decimal('0.00')
+        for month in self.month_set.all():
+            month_expenses = month.expenseitem_set.aggregate(
+                total=models.Sum('amount')
+            )['total'] or Decimal('0.00')
+            total += month_expenses
+        return total
+    
+    def get_balance(self):
+        """Return initial_amount minus total expenses"""
+        return self.initial_amount - self.get_total_expenses()
+
+    class Meta:
+        ordering = ['name']
 
 
 class Payee(models.Model):
@@ -42,6 +74,7 @@ class Month(models.Model):
     month = models.PositiveSmallIntegerField(
         validators=[MinValueValidator(1), MaxValueValidator(12)]
     )
+    budget = models.ForeignKey(Budget, on_delete=models.PROTECT)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
