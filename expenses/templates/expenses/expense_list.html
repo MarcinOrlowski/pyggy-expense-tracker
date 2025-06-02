@@ -62,7 +62,7 @@
                             {% endif %}
                         </td>
                         <td>{% if expense.payee %}{{ expense.payee.name }}{% else %}-{% endif %}</td>
-                        <td>{{ expense.get_expense_type_display }}</td>
+                        <td><i class="fas {{ expense.get_expense_type_icon }}" aria-label="{{ expense.get_expense_type_display }}" title="{{ expense.get_expense_type_display }}"></i> {{ expense.get_expense_type_display }}</td>
                         <td class="amount-column">{{ expense.total_amount|currency }}</td>
                         <td>{{ expense.started_at|date:"Y-m-d" }}</td>
                         <td>
