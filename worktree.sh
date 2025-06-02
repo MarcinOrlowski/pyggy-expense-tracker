@@ -89,7 +89,13 @@ if [ -n "$EXISTING_WORKTREE" ]; then
     read -r response
     if [ "$response" = "y" ] || [ "$response" = "Y" ]; then
         echo "Navigating to existing worktree..."
-        cd "$EXISTING_WORKTREE" && exec fish
+        # Check if venv exists in the existing worktree
+        if [ -d "$EXISTING_WORKTREE/venv" ]; then
+            echo "✨ Activating Python virtual environment..."
+            cd "$EXISTING_WORKTREE" && exec fish -c "source venv/bin/activate.fish; exec fish"
+        else
+            cd "$EXISTING_WORKTREE" && exec fish
+        fi
     else
         echo "Aborted."
         exit 1
@@ -106,7 +112,13 @@ if [ -d "$WORKTREE_PATH" ]; then
         read -r response
         if [ "$response" = "y" ] || [ "$response" = "Y" ]; then
             echo "Navigating to existing worktree..."
-            cd "$WORKTREE_PATH" && exec fish
+            # Check if venv exists in the existing worktree
+            if [ -d "$WORKTREE_PATH/venv" ]; then
+                echo "✨ Activating Python virtual environment..."
+                cd "$WORKTREE_PATH" && exec fish -c "source venv/bin/activate.fish; exec fish"
+            else
+                cd "$WORKTREE_PATH" && exec fish
+            fi
         else
             echo "Aborted."
             exit 1
@@ -168,10 +180,20 @@ if [ $? -eq 0 ]; then
     
     echo "Starting fish shell in worktree directory..."
     echo "Type 'exit' to return to the main project directory"
+    
+    # Check if venv exists in the worktree
+    if [ -d "$WORKTREE_PATH/venv" ]; then
+        echo "✨ Activating Python virtual environment..."
+    fi
     echo ""
     
     # Spawn a new fish shell in the worktree directory
-    cd "$WORKTREE_PATH" && exec fish
+    # If venv exists, activate it within the fish shell
+    if [ -d "$WORKTREE_PATH/venv" ]; then
+        cd "$WORKTREE_PATH" && exec fish -c "source venv/bin/activate.fish; exec fish"
+    else
+        cd "$WORKTREE_PATH" && exec fish
+    fi
 else
     echo "Error: Failed to create worktree"
     exit 1
