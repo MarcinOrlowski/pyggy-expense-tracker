@@ -7,7 +7,7 @@ from datetime import date, datetime
 from typing import List
 from babel.numbers import format_currency as babel_format_currency
 from babel.core import Locale
-from .models import Expense, ExpenseItem, Month, Settings
+from .models import Expense, ExpenseItem, Month, Settings, Budget
 
 
 def process_new_month(year: int, month: int) -> Month:
@@ -32,9 +32,19 @@ def process_new_month(year: int, month: int) -> Month:
         raise ValueError("Month must be between 1 and 12")
 
     with transaction.atomic():
+        # Get or create default budget
+        default_budget, _ = Budget.objects.get_or_create(
+            name='Default',
+            defaults={
+                'start_date': date(year, month, 1),
+                'initial_amount': 0
+            }
+        )
+        
         month_obj, created = Month.objects.get_or_create(
             year=year,
-            month=month
+            month=month,
+            defaults={'budget': default_budget}
         )
 
         if created:
