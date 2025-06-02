@@ -123,6 +123,13 @@ class Expense(models.Model):
         (TYPE_RECURRING_WITH_END, 'Recurring with End Date'),
     ]
 
+    EXPENSE_TYPE_ICONS = {
+        TYPE_ENDLESS_RECURRING: 'fa-arrows-rotate',
+        TYPE_SPLIT_PAYMENT: 'fa-money-bill-transfer',
+        TYPE_ONE_TIME: 'fa-circle-dot',
+        TYPE_RECURRING_WITH_END: 'fa-calendar-check'
+    }
+
     payee = models.ForeignKey(Payee, on_delete=models.PROTECT, null=True, blank=True)
     title = models.CharField(max_length=255)
     expense_type = models.CharField(max_length=20, choices=EXPENSE_TYPES)
@@ -181,6 +188,10 @@ class Expense(models.Model):
         # Calculate months between start and end (inclusive)
         total_months = (end_year - start_year) * 12 + (end_month - start_month) + 1
         return max(0, total_months)
+
+    def get_expense_type_icon(self):
+        """Get Font Awesome icon class for the expense type."""
+        return self.EXPENSE_TYPE_ICONS.get(self.expense_type, 'fa-question-circle')
 
     def __str__(self):
         if self.payee:

@@ -34,6 +34,7 @@
                         </td>
                         <td class="amount-column">{{ item.amount|currency }}</td>
                         <td>
+                            <i class="fas {{ item.expense.get_expense_type_icon }}" aria-label="{{ item.expense.get_expense_type_display }}" title="{{ item.expense.get_expense_type_display }}"></i>
                             <a href="{% url 'expense_detail' budget.id item.expense.pk %}">{{ item.expense.title }}</a>
                         </td>
                         <td class="actions-column">

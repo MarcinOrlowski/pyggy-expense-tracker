@@ -18,7 +18,7 @@
         <div class="grid-2-cols">
             <div>
                 <p><strong>Payee:</strong> {% if expense.payee %}{{ expense.payee.name }}{% else %}-{% endif %}</p>
-                <p><strong>Type:</strong> {{ expense.get_expense_type_display }}</p>
+                <p><strong>Type:</strong> <i class="fas {{ expense.get_expense_type_icon }}" aria-label="{{ expense.get_expense_type_display }}"></i> {{ expense.get_expense_type_display }}</p>
                 <p><strong>Total Amount:</strong> {{ expense.total_amount|currency }}</p>
             </div>
             <div>
