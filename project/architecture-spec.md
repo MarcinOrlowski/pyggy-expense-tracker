@@ -216,18 +216,26 @@ def expense_create(request):
     
     return render(request, 'expenses/expense_form.html', {'form': form})
 
-def month_process(request):
-    """Process new month - create expense items for active expenses"""
-    if request.method == 'POST':
-        try:
-            month = create_next_sequential_month()
-            process_monthly_expenses(month)
-            messages.success(request, f'Month {month} processed successfully!')
-        except ValidationError as e:
-            messages.error(request, f'Cannot create month: {e}')
-        return redirect('dashboard')
+def month_process(request, budget_id):
+    """Process new month automatically - create expense items for active expenses"""
+    budget = get_object_or_404(Budget, id=budget_id)
     
-    return render(request, 'expenses/month_process.html')
+    try:
+        # Automatically determine next month to create
+        next_allowed = Month.get_next_allowed_month(budget=budget)
+        if not next_allowed:
+            # Use budget start_date for initial month
+            start_date = budget.start_date
+            year, month = start_date.year, start_date.month
+        else:
+            year, month = next_allowed['year'], next_allowed['month']
+        
+        month_obj = process_new_month(year, month, budget)
+        messages.success(request, f'Month {month_obj} processed successfully!')
+        return redirect('month_detail', budget_id=budget_id, year=year, month=month)
+    except Exception as e:
+        messages.error(request, f'Error processing month: {str(e)}')
+        return redirect('month_list', budget_id=budget_id)
 
 def month_delete(request, year, month):
     """Delete month if it's the most recent with no paid expenses"""

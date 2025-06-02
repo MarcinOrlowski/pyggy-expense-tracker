@@ -148,7 +148,7 @@ def expense_create(request, budget_id):
     budget = get_object_or_404(Budget, id=budget_id)
     
     if request.method == 'POST':
-        form = ExpenseForm(request.POST)
+        form = ExpenseForm(request.POST, budget=budget)
         if form.is_valid():
             expense = form.save()
             # Handle expense items creation if it starts in current month
@@ -166,7 +166,7 @@ def expense_create(request, budget_id):
         
         form = ExpenseForm(initial={
             'started_at': default_date.strftime('%Y-%m-%d')
-        })
+        }, budget=budget)
     
     context = {
         'budget': budget,
@@ -202,7 +202,7 @@ def expense_edit(request, budget_id, pk):
     
     if request.method == 'POST':
         original_start_date = expense.started_at
-        form = ExpenseForm(request.POST, instance=expense)
+        form = ExpenseForm(request.POST, instance=expense, budget=budget)
         if form.is_valid():
             expense = form.save()
             # If start date changed and now starts in current month, handle expense items
@@ -212,7 +212,7 @@ def expense_edit(request, budget_id, pk):
             messages.success(request, f'Expense "{expense.title}" updated successfully.')
             return redirect('expense_detail', budget_id=budget_id, pk=expense.pk)
     else:
-        form = ExpenseForm(instance=expense)
+        form = ExpenseForm(instance=expense, budget=budget)
     
     context = {
         'budget': budget,
@@ -327,51 +327,30 @@ def month_process(request, budget_id):
     """Process new month generation for a specific budget"""
     budget = get_object_or_404(Budget, id=budget_id)
     
-    if request.method == 'POST':
-        year = int(request.POST.get('year'))
-        month = int(request.POST.get('month'))
-        
-        # Check if this is the next allowed month for this budget
-        next_allowed = Month.get_next_allowed_month(budget=budget)
-        if not next_allowed:
-            # No months exist for this budget, this is initial seeding - allow any valid month
-            if not (2020 <= year <= 2099) or not (1 <= month <= 12):
-                messages.error(request, 'Please enter a valid year (2020-2099) and month (1-12).')
-                return redirect('month_process', budget_id=budget_id)
-        else:
-            # Months exist for this budget, enforce sequential creation
-            if year != next_allowed['year'] or month != next_allowed['month']:
-                messages.error(request, f"You can only create month {next_allowed['year']}-{next_allowed['month']:02d} (the next sequential month).")
-                return redirect('month_process', budget_id=budget_id)
-        
-        try:
-            from .services import process_new_month
-            month_obj = process_new_month(year, month, budget)
-            messages.success(request, f'Month {month_obj} processed successfully.')
-            return redirect('month_detail', budget_id=budget_id, year=year, month=month)
-        except Exception as e:
-            messages.error(request, f'Error processing month: {str(e)}')
-    
-    # Show form for selecting month to process
+    # Determine next month to create automatically
     next_allowed = Month.get_next_allowed_month(budget=budget)
+    
     if not next_allowed:
-        # No months exist for this budget, allow user to choose initial month
-        from datetime import date
-        today = date.today()
-        context = {
-            'budget': budget,
-            'suggested_year': today.year,
-            'suggested_month': today.month,
-            'no_months_exist': True,
-        }
+        # No months exist for this budget, use budget start_date for initial month
+        start_date = budget.start_date
+        year = start_date.year
+        month = start_date.month
     else:
-        context = {
-            'budget': budget,
-            'suggested_year': next_allowed['year'],
-            'suggested_month': next_allowed['month'],
-            'most_recent_month': Month.get_most_recent(budget=budget),
-        }
-    return render(request, 'expenses/month_process.html', context)
+        # Use next allowed month
+        year = next_allowed['year']
+        month = next_allowed['month']
+    
+    try:
+        from .services import process_new_month
+        month_obj = process_new_month(year, month, budget)
+        if not next_allowed:
+            messages.success(request, f'Initial month {month_obj} created successfully based on budget start date.')
+        else:
+            messages.success(request, f'Next month {month_obj} added successfully.')
+        return redirect('month_list', budget_id=budget_id)
+    except Exception as e:
+        messages.error(request, f'Error processing month: {str(e)}')
+        return redirect('month_list', budget_id=budget_id)
 
 
 def expense_item_pay(request, budget_id, pk):

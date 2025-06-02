@@ -15,7 +15,7 @@
     <div></div> <!-- Empty third column -->
     <div class="card">
         <div class="card-header">
-            Calendar - {{ year }}-{{ today.month|stringformat:"02d" }}
+            Calendar - {{ current_month.year }}-{{ current_month.month|stringformat:"02d" }}
         </div>
         <div class="card-body">
             {% include 'expenses/includes/calendar_grid.html' %}

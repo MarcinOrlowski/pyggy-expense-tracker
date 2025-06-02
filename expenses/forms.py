@@ -42,6 +42,7 @@ class ExpenseForm(forms.ModelForm):
         }
     
     def __init__(self, *args, **kwargs):
+        self.budget = kwargs.pop('budget', None)
         super().__init__(*args, **kwargs)
         # Only show non-hidden payees in the dropdown
         self.fields['payee'].queryset = Payee.objects.filter(hidden_at__isnull=True)
@@ -70,14 +71,14 @@ class ExpenseForm(forms.ModelForm):
         if expense_type != Expense.TYPE_RECURRING_WITH_END and end_date:
             raise ValidationError('Only recurring with end date expenses can have an end date')
         
-        # Validate start date is not earlier than current month
-        if started_at:
-            most_recent_month = Month.get_most_recent()
+        # Validate start date is not earlier than currently active month for this budget
+        if started_at and self.budget:
+            most_recent_month = Month.get_most_recent(budget=self.budget)
             if most_recent_month:
-                # Get first day of the most recent month
+                # Get first day of the most recent month for this budget
                 current_month_start = date(most_recent_month.year, most_recent_month.month, 1)
                 if started_at < current_month_start:
-                    raise ValidationError(f'Start date cannot be earlier than the current month ({most_recent_month})')
+                    raise ValidationError(f'Start date cannot be earlier than the currently active month ({most_recent_month})')
         
         return cleaned_data
 
