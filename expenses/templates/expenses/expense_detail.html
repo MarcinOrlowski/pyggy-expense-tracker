@@ -79,9 +79,9 @@
                         </td>
                         <td class="actions-column">
                             {% if item.status == 'pending' %}
-                                <a href="{% url 'expense_item_pay' budget.id item.pk %}" class="btn btn-success btn-sm" title="Mark as Paid" aria-label="Mark as Paid"><i class="fas fa-circle-check"></i></a>
+                                <a href="{% url 'expense_item_pay' budget.id item.pk %}" class="btn btn-sm" title="Mark as Paid" aria-label="Mark as Paid"><i class="fas fa-check"></i></a>
                             {% else %}
-                                <a href="{% url 'expense_item_unpay' budget.id item.pk %}" class="btn btn-warning btn-sm" title="Mark as Unpaid" aria-label="Mark as Unpaid"><i class="fas fa-rotate-left"></i></a>
+                                <a href="{% url 'expense_item_unpay' budget.id item.pk %}" class="btn btn-sm" title="Mark as Unpaid" aria-label="Mark as Unpaid"><i class="fas fa-undo"></i></a>
                             {% endif %}
                         </td>
                     </tr>
