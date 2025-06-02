@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.template import Context, Template
 from decimal import Decimal
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch
 from expenses.models import Settings
 from expenses.templatetags.currency_tags import currency, currency_symbol, format_amount
 from expenses.services import SettingsService
@@ -138,8 +138,8 @@ class CurrencySymbolTagTest(TestCase):
     @patch('expenses.templatetags.currency_tags.get_currency_symbol')
     def test_currency_symbol_fallback_on_error(self, mock_get_symbol):
         """Test currency symbol falls back to currency code on error."""
-        # Make get_currency_symbol raise an exception
-        mock_get_symbol.side_effect = Exception("Symbol lookup failed")
+        # Make get_currency_symbol raise a LookupError
+        mock_get_symbol.side_effect = LookupError("Symbol lookup failed")
         
         result = currency_symbol()
         self.assertEqual(result, 'USD')

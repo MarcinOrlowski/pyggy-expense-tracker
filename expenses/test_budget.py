@@ -172,7 +172,16 @@ class ProcessNewMonthWithBudgetTest(TestCase):
         """Clear any existing default budget from migrations."""
         Budget.objects.filter(name='Default').delete()
     
-    def test_process_new_month_requires_default_budget(self):
+    def test_process_new_month_requires_budget_parameter(self):
+        """Test that process_new_month requires budget parameter."""
+        # This test documents that the function now requires a budget parameter
+        # If called without a budget, it should raise TypeError
+        with self.assertRaises(TypeError) as context:
+            process_new_month(2024, 1)  # Missing budget parameter
+        
+        self.assertIn("missing 1 required positional argument: 'budget'", str(context.exception))
+    
+    def test_process_new_month_with_budget(self):
         """Test that process_new_month works with provided budget."""
         # Ensure no budgets exist
         self.assertEqual(Budget.objects.count(), 0)

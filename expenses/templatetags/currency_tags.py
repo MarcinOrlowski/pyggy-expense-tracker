@@ -26,7 +26,7 @@ def currency_symbol():
     
     try:
         return get_currency_symbol(settings.currency, settings.locale)
-    except:
+    except (ValueError, LookupError, KeyError):
         return settings.currency
 
 
