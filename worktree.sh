@@ -80,6 +80,20 @@ if [ -d "$WORKTREE_PATH" ]; then
     exit 1
 fi
 
+# Check if branch name already exists
+if git show-ref --verify --quiet "refs/heads/$BRANCH_NAME"; then
+    echo "Error: Branch '$BRANCH_NAME' already exists in the repository"
+    echo "Please choose a different ticket or manually handle the existing branch"
+    exit 1
+fi
+
+# Also check remote branches
+if git ls-remote --heads origin "$BRANCH_NAME" | grep -q "$BRANCH_NAME"; then
+    echo "Error: Branch '$BRANCH_NAME' already exists on remote"
+    echo "Please choose a different ticket or manually handle the existing branch"
+    exit 1
+fi
+
 # Create the worktree
 echo "Creating worktree at $WORKTREE_PATH with branch $BRANCH_NAME..."
 git worktree add "$WORKTREE_PATH" -b "$BRANCH_NAME" dev
@@ -93,7 +107,7 @@ if [ $? -eq 0 ]; then
         "db.sqlite3",
         "CLAUDE.md"
         "CLAUDE.local.md"
-        ".claude/settings.local.json"
+        ".claude"
     )
     
     echo "Copying required files to worktree..."
