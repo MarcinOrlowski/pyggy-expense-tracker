@@ -48,6 +48,14 @@ class ExpenseForm(forms.ModelForm):
         self.fields['payee'].queryset = Payee.objects.filter(hidden_at__isnull=True)
         self.fields['payee'].required = False
         self.fields['payee'].empty_label = "Select payee (optional)"
+        
+        # Update total_amount field attributes for split payments
+        self.fields['total_amount'].widget.attrs.update({
+            'data-split-label': 'Monthly Installment Amount',
+            'data-split-help': 'Amount for each monthly installment',
+            'data-other-label': 'Total Amount', 
+            'data-other-help': 'Total amount for this expense'
+        })
     
     def clean(self):
         cleaned_data = super().clean()

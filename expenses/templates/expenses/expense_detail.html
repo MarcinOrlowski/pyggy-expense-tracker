@@ -21,12 +21,20 @@
             <div>
                 <p><strong>Payee:</strong> {% if expense.payee %}{{ expense.payee.name }}{% else %}-{% endif %}</p>
                 <p><strong>Type:</strong> <i class="fas {{ expense.get_expense_type_icon }}" aria-label="{{ expense.get_expense_type_display }}"></i> {{ expense.get_expense_type_display }}</p>
-                <p><strong>Total Amount:</strong> {{ expense.total_amount|currency }}</p>
+                {% if expense.expense_type == 'split_payment' %}
+                    <p><strong>Monthly Installment:</strong> {{ expense.total_amount|currency }}</p>
+                {% else %}
+                    <p><strong>Total Amount:</strong> {{ expense.total_amount|currency }}</p>
+                {% endif %}
             </div>
             <div>
                 <p><strong>Started:</strong> {{ expense.started_at|date:"Y-m-d" }}</p>
                 {% if expense.expense_type == 'split_payment' %}
                     <p><strong>Installments:</strong> {{ expense.installments_count }}</p>
+                    <p><strong>Total Amount:</strong> 
+                        {% widthratio expense.total_amount expense.installments_count 1 as calculated_total %}
+                        {{ calculated_total|currency }}
+                    </p>
                 {% endif %}
                 {% if expense.expense_type == 'recurring_with_end' and expense.end_date %}
                     <p><strong>End Date:</strong> {{ expense.end_date|date:"Y-m-d" }}</p>
