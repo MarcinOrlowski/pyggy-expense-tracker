@@ -34,15 +34,15 @@
                         </td>
                         <td class="amount-column">{{ item.amount|currency }}</td>
                         <td>
-                            <a href="{% url 'expense_detail' item.expense.pk %}">{{ item.expense.title }}</a>
+                            <a href="{% url 'expense_detail' budget.id item.expense.pk %}">{{ item.expense.title }}</a>
                         </td>
                         <td class="actions-column">
                             {% if item.status == 'pending' %}
-                                <a href="{% url 'expense_item_pay' item.pk %}" class="btn btn-success btn-sm" title="Mark as Paid" aria-label="Mark as Paid"><i class="fas fa-circle-check"></i></a>
+                                <a href="{% url 'expense_item_pay' budget.id item.pk %}" class="btn btn-success btn-sm" title="Mark as Paid" aria-label="Mark as Paid"><i class="fas fa-circle-check"></i></a>
                             {% else %}
-                                <a href="{% url 'expense_item_unpay' item.pk %}" class="btn btn-warning btn-sm" title="Mark as Unpaid" aria-label="Mark as Unpaid"><i class="fas fa-rotate-left"></i></a>
+                                <a href="{% url 'expense_item_unpay' budget.id item.pk %}" class="btn btn-warning btn-sm" title="Mark as Unpaid" aria-label="Mark as Unpaid"><i class="fas fa-rotate-left"></i></a>
                             {% endif %}
-                            <a href="{% url 'expense_detail' item.expense.pk %}" class="btn btn-secondary btn-sm" title="View Details" aria-label="View Details"><i class="fas fa-eye"></i></a>
+                            <a href="{% url 'expense_detail' budget.id item.expense.pk %}" class="btn btn-secondary btn-sm" title="View Details" aria-label="View Details"><i class="fas fa-eye"></i></a>
                         </td>
                     </tr>
                     {% endfor %}

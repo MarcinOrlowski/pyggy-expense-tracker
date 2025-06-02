@@ -21,7 +21,7 @@
         <form method="post">
             {% csrf_token %}
             <button type="submit" class="btn btn-danger"><i class="fas fa-trash-can icon-left"></i>Delete Month</button>
-            <a href="{% url 'month_list' %}" class="btn btn-secondary"><i class="fas fa-xmark icon-left"></i>Cancel</a>
+            <a href="{% url 'month_list' budget.id %}" class="btn btn-secondary"><i class="fas fa-xmark icon-left"></i>Cancel</a>
         </form>
     </div>
 </div>

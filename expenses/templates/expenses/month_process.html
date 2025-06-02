@@ -66,7 +66,7 @@
                 {% else %}
                 <button type="submit" class="btn"><i class="fas fa-gear icon-left"></i>Add next month {{ suggested_year }}-{{ suggested_month|stringformat:"02d" }}</button>
                 {% endif %}
-                <a href="{% url 'dashboard' %}" class="btn btn-secondary"><i class="fas fa-xmark icon-left"></i>Cancel</a>
+                <a href="{% url 'dashboard' budget.id %}" class="btn btn-secondary"><i class="fas fa-xmark icon-left"></i>Cancel</a>
             </div>
         </form>
     </div>

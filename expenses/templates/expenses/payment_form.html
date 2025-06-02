@@ -68,7 +68,7 @@
 
             <div class="form-actions">
                 <button type="submit" class="btn"><i class="fas fa-credit-card icon-left"></i>Save Payment</button>
-                <a href="{% url 'expense_detail' expense_item.expense.pk %}" class="btn btn-secondary"><i class="fas fa-xmark icon-left"></i>Cancel</a>
+                <a href="{% url 'expense_detail' budget.id expense_item.expense.pk %}" class="btn btn-secondary"><i class="fas fa-xmark icon-left"></i>Cancel</a>
             </div>
         </form>
     </div>
