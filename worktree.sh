@@ -106,13 +106,21 @@ if [ $? -eq 0 ]; then
         fi
     done
     
-    echo "Changing to worktree directory..."
-    cd "$WORKTREE_PATH"
-    echo "Current directory: $(pwd)"
     echo ""
-    echo "You are now in the worktree for ticket #$TICKET_ID"
-    echo "Branch: $BRANCH_NAME"
-    echo "To return to main project: cd ../.."
+    echo "✅ Worktree created successfully for ticket #$TICKET_ID"
+    echo "📁 Location: $WORKTREE_PATH"
+    echo "🌿 Branch: $BRANCH_NAME"
+    echo ""
+    
+    # Get absolute path for the worktree
+    WORKTREE_ABS_PATH=$(cd "$WORKTREE_PATH" && pwd)
+    
+    echo "Starting fish shell in worktree directory..."
+    echo "Type 'exit' to return to the main project directory"
+    echo ""
+    
+    # Spawn a new fish shell in the worktree directory
+    cd "$WORKTREE_PATH" && exec fish
 else
     echo "Error: Failed to create worktree"
     exit 1
