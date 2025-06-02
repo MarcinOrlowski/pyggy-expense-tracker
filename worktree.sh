@@ -101,7 +101,7 @@ info_worktree() {
     fi
     
     local branch_name=$(derive_branch_name "$ticket_id" "$ticket_title")
-    local worktree_path=".worktree/$ticket_id"
+    local worktree_path="../pyggy-worktree/$ticket_id"
     
     # Display ticket information
     echo ""
