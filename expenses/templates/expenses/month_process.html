@@ -1,9 +1,9 @@
 {% extends 'expenses/base.html' %}
 
-{% block title %}Process Month {% endblock %}
+{% block title %}Add Month{% endblock %}
 
 {% block content %}
-<h1><i class="fas fa-cog"></i> Process New Month</h1>
+<h1><i class="fas fa-cog"></i> Add New Month</h1>
 
 <div class="card">
     <div class="card-header">Generate Expense Items for New Month</div>
@@ -66,7 +66,7 @@
                 {% else %}
                 <button type="submit" class="btn"><i class="fas fa-gear icon-left"></i>Add next month {{ suggested_year }}-{{ suggested_month|stringformat:"02d" }}</button>
                 {% endif %}
-                <a href="{% url 'dashboard' %}" class="btn btn-secondary"><i class="fas fa-xmark icon-left"></i>Cancel</a>
+                <a href="{% url 'dashboard' budget.id %}" class="btn btn-secondary"><i class="fas fa-xmark icon-left"></i>Cancel</a>
             </div>
         </form>
     </div>
@@ -75,7 +75,7 @@
 <div class="card">
     <div class="card-header">Information</div>
     <div class="card-body">
-        <h3>What happens when you process a month?</h3>
+        <h3>What happens when you add a month?</h3>
         <ul>
             <li>A new month record is created (if it doesn't exist)</li>
             <li>Expense items are generated for all active expenses that have started by that month</li>
@@ -84,7 +84,7 @@
             <li>For one-time expenses: Single item in the start month only</li>
         </ul>
 
-        <p><strong>Note:</strong> If a month has already been processed, no new items will be created.</p>
+        <p><strong>Note:</strong> If a month has already been added, no new items will be created.</p>
     </div>
 </div>
 

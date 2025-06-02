@@ -20,21 +20,20 @@
                     <tr>
                         <th>Name</th>
                         <th>Start Date</th>
-                        <th>Initial Amount</th>
-                        <th>Months</th>
                         <th class="text-right">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for budget in budgets %}
                         <tr>
-                            <td>{{ budget.name }}</td>
+                            <td>
+                                <a href="{% url 'dashboard' budget.pk %}">{{ budget.name }}</a>
+                            </td>
                             <td>{{ budget.start_date|date:"Y-m-d" }}</td>
-                            <td class="text-right">{{ budget.initial_amount|currency }}</td>
-                            <td class="text-right">{{ budget.month_set.count }}</td>
                             <td class="text-right">
-                                <a href="{% url 'budget_edit' budget.pk %}" class="btn btn-sm"><i class="fas fa-edit"></i></a>
-                                <a href="{% url 'budget_delete' budget.pk %}" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></a>
+                                <a href="{% url 'dashboard' budget.pk %}" class="btn btn-sm btn-primary" title="Open Budget"><i class="fas fa-folder-open"></i></a>
+                                <a href="{% url 'budget_edit' budget.pk %}" class="btn btn-sm" title="Edit Budget"><i class="fas fa-edit"></i></a>
+                                <a href="{% url 'budget_delete' budget.pk %}" class="btn btn-sm btn-danger" title="Delete Budget"><i class="fas fa-trash"></i></a>
                             </td>
                         </tr>
                     {% endfor %}

@@ -286,6 +286,13 @@ footer {
     white-space: nowrap;
 }
 
+// Also align headers for amount and status columns
+.table th.amount-column,
+.table th.actions-column,
+.table th.status-column {
+    text-align: right;
+}
+
 // Remove padding from action buttons in tables
 .table .actions-column .btn {
     padding: 0.25rem;

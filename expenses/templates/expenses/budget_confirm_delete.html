@@ -36,7 +36,7 @@
     <div class="card-header">Associated Months</div>
     <div class="card-body">
         <p>Please delete all months in this budget before deleting the budget.</p>
-        <a href="{% url 'month_list' %}" class="btn"><i class="fas fa-link icon-left"></i>View Months</a>
+        <a href="{% url 'month_list' budget.id %}" class="btn"><i class="fas fa-link icon-left"></i>View Months</a>
     </div>
 </div>
 {% endif %}

@@ -2,33 +2,34 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    # Dashboard
-    path('', views.dashboard, name='dashboard'),
-    
-    # Expense Management
-    path('expenses/', views.expense_list, name='expense_list'),
-    path('expenses/create/', views.expense_create, name='expense_create'),
-    path('expenses/<int:pk>/', views.expense_detail, name='expense_detail'),
-    path('expenses/<int:pk>/edit/', views.expense_edit, name='expense_edit'),
-    path('expenses/<int:pk>/delete/', views.expense_delete, name='expense_delete'),
-    
-    # Month Processing
-    path('months/', views.month_list, name='month_list'),
-    path('months/<int:year>/<int:month>/', views.month_detail, name='month_detail'),
-    path('months/<int:year>/<int:month>/delete/', views.month_delete, name='month_delete'),
-    path('months/process/', views.month_process, name='month_process'),
-    
-    # Payment Processing
-    path('expense-items/<int:pk>/pay/', views.expense_item_pay, name='expense_item_pay'),
-    path('expense-items/<int:pk>/unpay/', views.expense_item_unpay, name='expense_item_unpay'),
-    
-    # Budget Management
+    # Budget Management (default page)
+    path('', views.budget_list, name='budget_list'),
     path('budgets/', views.budget_list, name='budget_list'),
     path('budgets/create/', views.budget_create, name='budget_create'),
     path('budgets/<int:pk>/edit/', views.budget_edit, name='budget_edit'),
     path('budgets/<int:pk>/delete/', views.budget_delete, name='budget_delete'),
     
-    # Reference Data
+    # Budget-scoped URLs
+    path('budgets/<int:budget_id>/dashboard/', views.dashboard, name='dashboard'),
+    
+    # Expense Management (budget-scoped)
+    path('budgets/<int:budget_id>/expenses/', views.expense_list, name='expense_list'),
+    path('budgets/<int:budget_id>/expenses/create/', views.expense_create, name='expense_create'),
+    path('budgets/<int:budget_id>/expenses/<int:pk>/', views.expense_detail, name='expense_detail'),
+    path('budgets/<int:budget_id>/expenses/<int:pk>/edit/', views.expense_edit, name='expense_edit'),
+    path('budgets/<int:budget_id>/expenses/<int:pk>/delete/', views.expense_delete, name='expense_delete'),
+    
+    # Month Processing (budget-scoped)
+    path('budgets/<int:budget_id>/months/', views.month_list, name='month_list'),
+    path('budgets/<int:budget_id>/months/<int:year>/<int:month>/', views.month_detail, name='month_detail'),
+    path('budgets/<int:budget_id>/months/<int:year>/<int:month>/delete/', views.month_delete, name='month_delete'),
+    path('budgets/<int:budget_id>/months/process/', views.month_process, name='month_process'),
+    
+    # Payment Processing (budget-scoped)
+    path('budgets/<int:budget_id>/expense-items/<int:pk>/pay/', views.expense_item_pay, name='expense_item_pay'),
+    path('budgets/<int:budget_id>/expense-items/<int:pk>/unpay/', views.expense_item_unpay, name='expense_item_unpay'),
+    
+    # Reference Data (no budget context needed)
     path('payees/', views.payee_list, name='payee_list'),
     path('payees/create/', views.payee_create, name='payee_create'),
     path('payees/<int:pk>/edit/', views.payee_edit, name='payee_edit'),

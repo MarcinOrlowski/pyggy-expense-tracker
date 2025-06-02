@@ -1,6 +1,6 @@
 {% extends 'expenses/base.html' %}
 
-{% block title %}{{ month }} {% endblock %}
+{% block title %}{{ month }}{% endblock %}
 
 {% block content %}
 <h1><i class="fas fa-calendar-alt"></i> Month {{ month.year }}-{{ month.month|stringformat:"02d" }}</h1>
@@ -13,7 +13,7 @@
 
 <div class="card">
     <div class="card-body">
-        <a href="{% url 'month_list' %}" class="btn btn-secondary"><i class="fas fa-arrow-left icon-left"></i>Back to Months</a>
+        <a href="{% url 'month_list' budget.id %}" class="btn btn-secondary"><i class="fas fa-arrow-left icon-left"></i>Back to Months</a>
     </div>
 </div>
 {% endblock %}

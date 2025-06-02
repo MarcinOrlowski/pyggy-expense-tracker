@@ -1,7 +1,7 @@
 {% extends 'expenses/base.html' %}
 {% load currency_tags %}
 
-{% block title %}{{ expense.title }} {% endblock %}
+{% block title %}{{ expense.title }}{% endblock %}
 
 {% block content %}
 <h1><i class="fas fa-receipt"></i> {{ expense.title }}</h1>
@@ -10,8 +10,8 @@
     <div class="card-header">
         Expense Details
         <span class="card-header-action">
-            <a href="{% url 'expense_edit' expense.pk %}" class="btn btn-sm" title="Edit Expense" aria-label="Edit Expense"><i class="fas fa-pen-to-square"></i></a>
-            <a href="{% url 'expense_delete' expense.pk %}" class="btn btn-danger btn-sm" title="Delete Expense" aria-label="Delete Expense"><i class="fas fa-trash-can"></i></a>
+            <a href="{% url 'expense_edit' budget.id expense.pk %}" class="btn btn-sm" title="Edit Expense" aria-label="Edit Expense"><i class="fas fa-pen-to-square"></i></a>
+            <a href="{% url 'expense_delete' budget.id expense.pk %}" class="btn btn-danger btn-sm" title="Delete Expense" aria-label="Delete Expense"><i class="fas fa-trash-can"></i></a>
         </span>
     </div>
     <div class="card-body">
@@ -77,9 +77,9 @@
                         </td>
                         <td class="actions-column">
                             {% if item.status == 'pending' %}
-                                <a href="{% url 'expense_item_pay' item.pk %}" class="btn btn-success btn-sm" title="Mark as Paid" aria-label="Mark as Paid"><i class="fas fa-circle-check"></i></a>
+                                <a href="{% url 'expense_item_pay' budget.id item.pk %}" class="btn btn-success btn-sm" title="Mark as Paid" aria-label="Mark as Paid"><i class="fas fa-circle-check"></i></a>
                             {% else %}
-                                <a href="{% url 'expense_item_unpay' item.pk %}" class="btn btn-warning btn-sm" title="Mark as Unpaid" aria-label="Mark as Unpaid"><i class="fas fa-rotate-left"></i></a>
+                                <a href="{% url 'expense_item_unpay' budget.id item.pk %}" class="btn btn-warning btn-sm" title="Mark as Unpaid" aria-label="Mark as Unpaid"><i class="fas fa-rotate-left"></i></a>
                             {% endif %}
                         </td>
                     </tr>
@@ -87,14 +87,14 @@
                 </tbody>
             </table>
         {% else %}
-            <p>No expense items found. This expense may need to be processed for the current month.</p>
+            <p>No expense items found. This expense may need a month to be added to the budget.</p>
         {% endif %}
     </div>
 </div>
 
 <div class="card">
     <div class="card-body">
-        <a href="{% url 'expense_list' %}" class="btn btn-secondary"><i class="fas fa-arrow-left icon-left"></i>Back to Expenses</a>
+        <a href="{% url 'expense_list' budget.id %}" class="btn btn-secondary"><i class="fas fa-arrow-left icon-left"></i>Back to Expenses</a>
     </div>
 </div>
 {% endblock %}

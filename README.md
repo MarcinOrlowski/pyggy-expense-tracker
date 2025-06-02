@@ -25,17 +25,17 @@ A Django-based expense tracking application designed to manage different types o
 
 - Python 3.12 or higher
 - Django 5.2.1
-- Virtual environment (recommended)
+- Virtual environment (recommended `venv`)
 
 ## Installation
 
 1. **Clone the repository**
    ```bash
-   git clone <repository-url>
-   cd python-expense-tracker
+   git clone https://github.com/MarcinOrlowski/pyggy-expense-tracker.git
+   cd pyggy-expense-tracker
    ```
 
-2. **Create and activate virtual environment**
+2. **Create and activate virtual environment (see separate scripts in `bin/` folder for Fish, ZSh etc)**
    ```bash
    python -m venv venv
    source venv/bin/activate  # On Windows: venv\Scripts\activate
@@ -61,11 +61,6 @@ A Django-based expense tracking application designed to manage different types o
    python manage.py createsuperuser
    ```
 
-7. **Seed initial month (required)**
-   ```bash
-   python manage.py seed_initial_month
-   ```
-
 ## Running the Application
 
 Start the development server:
@@ -75,7 +70,7 @@ python manage.py runserver
 
 Access the application:
 - Main application: http://127.0.0.1:8000/
-- Admin interface: http://127.0.0.1:8000/admin/
+- Django Admin interface: http://127.0.0.1:8000/admin/
 
 ## Quick Start Scripts
 
