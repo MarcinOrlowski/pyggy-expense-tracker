@@ -32,19 +32,13 @@ def process_new_month(year: int, month: int) -> Month:
         raise ValueError("Month must be between 1 and 12")
 
     with transaction.atomic():
-        # Get or create default budget
-        default_budget, _ = Budget.objects.get_or_create(
-            name='Default',
-            defaults={
-                'start_date': date(year, month, 1),
-                'initial_amount': 0
-            }
-        )
+        # Get the Default budget
+        default_budget = Budget.objects.get(name='Default')
         
         month_obj, created = Month.objects.get_or_create(
+            budget=default_budget,
             year=year,
-            month=month,
-            defaults={'budget': default_budget}
+            month=month
         )
 
         if created:

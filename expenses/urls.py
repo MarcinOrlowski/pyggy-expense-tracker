@@ -22,6 +22,12 @@ urlpatterns = [
     path('expense-items/<int:pk>/pay/', views.expense_item_pay, name='expense_item_pay'),
     path('expense-items/<int:pk>/unpay/', views.expense_item_unpay, name='expense_item_unpay'),
     
+    # Budget Management
+    path('budgets/', views.budget_list, name='budget_list'),
+    path('budgets/create/', views.budget_create, name='budget_create'),
+    path('budgets/<int:pk>/edit/', views.budget_edit, name='budget_edit'),
+    path('budgets/<int:pk>/delete/', views.budget_delete, name='budget_delete'),
+    
     # Reference Data
     path('payees/', views.payee_list, name='payee_list'),
     path('payees/create/', views.payee_create, name='payee_create'),

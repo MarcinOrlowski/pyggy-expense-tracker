@@ -4,38 +4,34 @@ from django.core.exceptions import ValidationError
 from django.utils import timezone
 from django.core.cache import cache
 from datetime import date
-from decimal import Decimal
 
 
 class Budget(models.Model):
-    name = models.CharField(max_length=255, unique=True)
+    name = models.CharField(max_length=100)
     start_date = models.DateField()
     initial_amount = models.DecimalField(
-        max_digits=13, decimal_places=2, default=0,
+        max_digits=10, decimal_places=2, default=0,
         validators=[MinValueValidator(0)]
     )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def clean(self):
+        if self.start_date and self.start_date < date.today():
+            # Allow past dates only if this budget has no months
+            if hasattr(self, 'pk') and self.pk:
+                if self.month_set.exists():
+                    raise ValidationError('Start date cannot be in the past when budget has existing months')
+
+    def can_delete(self):
+        """Check if this budget can be deleted (no associated months)"""
+        return not self.month_set.exists()
+
     def __str__(self):
         return self.name
-    
-    def get_total_expenses(self):
-        """Calculate total expenses across all linked months"""
-        total = Decimal('0.00')
-        for month in self.month_set.all():
-            month_expenses = month.expenseitem_set.aggregate(
-                total=models.Sum('amount')
-            )['total'] or Decimal('0.00')
-            total += month_expenses
-        return total
-    
-    def get_balance(self):
-        """Return initial_amount minus total expenses"""
-        return self.initial_amount - self.get_total_expenses()
 
     class Meta:
-        ordering = ['name']
+        ordering = ['name', 'created_at']
 
 
 class Payee(models.Model):
@@ -68,18 +64,18 @@ class PaymentMethod(models.Model):
 
 
 class Month(models.Model):
+    budget = models.ForeignKey(Budget, on_delete=models.CASCADE)
     year = models.PositiveSmallIntegerField(
         validators=[MinValueValidator(2020), MaxValueValidator(2099)]
     )
     month = models.PositiveSmallIntegerField(
         validators=[MinValueValidator(1), MaxValueValidator(12)]
     )
-    budget = models.ForeignKey(Budget, on_delete=models.PROTECT)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        unique_together = ['year', 'month']
+        unique_together = ['budget', 'year', 'month']
         ordering = ['-year', '-month']
 
     def __str__(self):
