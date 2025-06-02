@@ -1,7 +1,7 @@
 from django import forms
 from django.core.exceptions import ValidationError
 from datetime import date
-from .models import Expense, ExpenseItem, PaymentMethod, Payee, Month
+from .models import Expense, ExpenseItem, PaymentMethod, Payee, Month, Budget
 
 
 class ExpenseForm(forms.ModelForm):
@@ -133,3 +133,39 @@ class PayeeForm(forms.ModelForm):
                 'class': 'form-control'
             })
         }
+
+
+class BudgetForm(forms.ModelForm):
+    start_date = forms.DateField(
+        widget=forms.DateInput(attrs={'type': 'date'}, format='%Y-%m-%d'),
+        input_formats=['%Y-%m-%d'],
+        help_text='Format: YYYY-MM-DD'
+    )
+    
+    class Meta:
+        model = Budget
+        fields = ['name', 'start_date', 'initial_amount']
+        widgets = {
+            'name': forms.TextInput(attrs={
+                'placeholder': 'Enter budget name',
+                'class': 'form-control'
+            }),
+            'initial_amount': forms.NumberInput(attrs={
+                'step': '0.01', 
+                'min': '0',
+                'class': 'form-control'
+            })
+        }
+    
+    def __init__(self, *args, **kwargs):
+        self.instance_pk = kwargs.get('instance').pk if kwargs.get('instance') else None
+        super().__init__(*args, **kwargs)
+    
+    def clean_start_date(self):
+        start_date = self.cleaned_data.get('start_date')
+        if start_date and start_date < date.today():
+            # Allow past dates only if this budget has no months
+            if self.instance_pk:
+                if self.instance.month_set.exists():
+                    raise ValidationError('Start date cannot be in the past when budget has existing months')
+        return start_date

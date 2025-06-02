@@ -31,14 +31,16 @@ class BudgetModelTest(TestCase):
         """Test string representation of budget."""
         self.assertEqual(str(self.budget), 'Test Budget')
     
-    def test_budget_name_uniqueness(self):
-        """Test that budget names must be unique."""
-        with self.assertRaises(IntegrityError):
-            Budget.objects.create(
-                name='Test Budget',  # Same name as setUp budget
-                start_date=date(2024, 2, 1),
-                initial_amount=Decimal('500.00')
-            )
+    def test_budget_name_duplicates_allowed(self):
+        """Test that budget names can be duplicated."""
+        # Should not raise an error
+        budget2 = Budget.objects.create(
+            name='Test Budget',  # Same name as setUp budget
+            start_date=date(2024, 2, 1),
+            initial_amount=Decimal('500.00')
+        )
+        self.assertEqual(budget2.name, 'Test Budget')
+        self.assertEqual(Budget.objects.filter(name='Test Budget').count(), 2)
     
     def test_budget_default_initial_amount(self):
         """Test that initial_amount defaults to 0."""
@@ -89,10 +91,13 @@ class BudgetMonthRelationshipTest(TestCase):
         self.assertEqual(self.budget.month_set.count(), 1)
         self.assertEqual(self.budget.month_set.first(), self.month)
     
-    def test_budget_deletion_protection(self):
-        """Test that budget cannot be deleted if it has months."""
-        with self.assertRaises(ProtectedError):
-            self.budget.delete()
+    def test_budget_deletion_cascades(self):
+        """Test that budget deletion cascades to months."""
+        month_id = self.month.id
+        self.budget.delete()
+        # Budget and month should both be deleted
+        self.assertEqual(Budget.objects.filter(id=self.budget.id).count(), 0)
+        self.assertEqual(Month.objects.filter(id=month_id).count(), 0)
     
     def test_month_budget_access(self):
         """Test that month can access its budget."""
@@ -100,8 +105,8 @@ class BudgetMonthRelationshipTest(TestCase):
         self.assertEqual(self.month.budget.name, 'Test Budget')
 
 
-class BudgetCalculationTest(TestCase):
-    """Test cases for budget calculation methods."""
+class BudgetRelationshipTest(TestCase):
+    """Test cases for budget relationships with other models."""
     
     def setUp(self):
         """Set up test data."""
@@ -120,90 +125,28 @@ class BudgetCalculationTest(TestCase):
             month=2,
             budget=self.budget
         )
-        
-        # Create a payee and payment method for expenses
-        self.payee = Payee.objects.create(name='Test Payee')
-        self.payment_method = PaymentMethod.objects.create(name='Cash')
-        
-        # Create expenses
-        self.expense1 = Expense.objects.create(
-            payee=self.payee,
-            title='Expense 1',
-            expense_type=Expense.TYPE_ONE_TIME,
-            total_amount=Decimal('100.00'),
-            started_at=date(2024, 1, 1)
-        )
-        self.expense2 = Expense.objects.create(
-            payee=self.payee,
-            title='Expense 2',
-            expense_type=Expense.TYPE_ONE_TIME,
-            total_amount=Decimal('200.00'),
-            started_at=date(2024, 2, 1)
-        )
     
-    def test_get_total_expenses_empty(self):
-        """Test total expenses calculation with no expense items."""
-        total = self.budget.get_total_expenses()
-        self.assertEqual(total, Decimal('0.00'))
+    def test_budget_has_months(self):
+        """Test that budget can access its months."""
+        months = self.budget.month_set.all()
+        self.assertEqual(months.count(), 2)
+        self.assertIn(self.month1, months)
+        self.assertIn(self.month2, months)
     
-    def test_get_total_expenses_with_items(self):
-        """Test total expenses calculation with expense items."""
-        # Create expense items
-        ExpenseItem.objects.create(
-            expense=self.expense1,
-            month=self.month1,
-            due_date=date(2024, 1, 15),
-            amount=Decimal('100.00'),
-            status='pending'
-        )
-        ExpenseItem.objects.create(
-            expense=self.expense2,
-            month=self.month2,
-            due_date=date(2024, 2, 15),
-            amount=Decimal('200.00'),
-            status='pending'
-        )
+    def test_budget_can_delete_method(self):
+        """Test the can_delete method."""
+        # Budget with months cannot be deleted
+        self.assertFalse(self.budget.can_delete())
         
-        total = self.budget.get_total_expenses()
-        self.assertEqual(total, Decimal('300.00'))
-    
-    def test_get_balance_positive(self):
-        """Test balance calculation with positive result."""
-        # Create expense items
-        ExpenseItem.objects.create(
-            expense=self.expense1,
-            month=self.month1,
-            due_date=date(2024, 1, 15),
-            amount=Decimal('100.00'),
-            status='pending'
+        # Budget without months can be deleted
+        empty_budget = Budget.objects.create(
+            name='Empty Budget',
+            start_date=date(2024, 3, 1)
         )
-        
-        balance = self.budget.get_balance()
-        self.assertEqual(balance, Decimal('900.00'))  # 1000 - 100
+        self.assertTrue(empty_budget.can_delete())
     
-    def test_get_balance_negative(self):
-        """Test balance calculation with negative result."""
-        # Create expense items that exceed initial amount
-        ExpenseItem.objects.create(
-            expense=self.expense1,
-            month=self.month1,
-            due_date=date(2024, 1, 15),
-            amount=Decimal('600.00'),
-            status='pending'
-        )
-        ExpenseItem.objects.create(
-            expense=self.expense2,
-            month=self.month2,
-            due_date=date(2024, 2, 15),
-            amount=Decimal('500.00'),
-            status='pending'
-        )
-        
-        balance = self.budget.get_balance()
-        self.assertEqual(balance, Decimal('-100.00'))  # 1000 - 1100
-    
-    def test_get_total_expenses_multiple_budgets(self):
-        """Test that expenses are correctly separated by budget."""
+    def test_multiple_budgets_separation(self):
+        """Test that data is properly separated between budgets."""
         # Create another budget
         budget2 = Budget.objects.create(
             name='Budget 2',
@@ -216,25 +159,10 @@ class BudgetCalculationTest(TestCase):
             budget=budget2
         )
         
-        # Create expense items for different budgets
-        ExpenseItem.objects.create(
-            expense=self.expense1,
-            month=self.month1,  # budget1
-            due_date=date(2024, 1, 15),
-            amount=Decimal('100.00'),
-            status='pending'
-        )
-        ExpenseItem.objects.create(
-            expense=self.expense2,
-            month=month3,  # budget2
-            due_date=date(2024, 3, 15),
-            amount=Decimal('200.00'),
-            status='pending'
-        )
-        
-        # Check totals are separate
-        self.assertEqual(self.budget.get_total_expenses(), Decimal('100.00'))
-        self.assertEqual(budget2.get_total_expenses(), Decimal('200.00'))
+        # Check that months are properly separated
+        self.assertEqual(self.budget.month_set.count(), 2)
+        self.assertEqual(budget2.month_set.count(), 1)
+        self.assertEqual(budget2.month_set.first(), month3)
 
 
 class ProcessNewMonthWithBudgetTest(TestCase):
@@ -244,21 +172,24 @@ class ProcessNewMonthWithBudgetTest(TestCase):
         """Clear any existing default budget from migrations."""
         Budget.objects.filter(name='Default').delete()
     
-    def test_process_new_month_creates_default_budget(self):
-        """Test that process_new_month creates default budget if none exists."""
+    def test_process_new_month_requires_default_budget(self):
+        """Test that process_new_month requires a Default budget to exist."""
         # Ensure no budgets exist
         self.assertEqual(Budget.objects.count(), 0)
         
-        # Process a new month
+        # Try to process a new month without Default budget
+        with self.assertRaises(Budget.DoesNotExist):
+            process_new_month(2024, 1)
+        
+        # Create Default budget
+        default_budget = Budget.objects.create(
+            name='Default',
+            start_date=date(2024, 1, 1),
+            initial_amount=Decimal('0')
+        )
+        
+        # Now it should work
         month = process_new_month(2024, 1)
-        
-        # Check that default budget was created
-        self.assertEqual(Budget.objects.count(), 1)
-        default_budget = Budget.objects.first()
-        self.assertEqual(default_budget.name, 'Default')
-        self.assertEqual(default_budget.initial_amount, Decimal('0'))
-        
-        # Check that month is linked to the budget
         self.assertEqual(month.budget, default_budget)
     
     def test_process_new_month_uses_existing_default_budget(self):

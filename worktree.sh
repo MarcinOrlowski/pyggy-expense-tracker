@@ -101,7 +101,7 @@ info_worktree() {
     fi
     
     local branch_name=$(derive_branch_name "$ticket_id" "$ticket_title")
-    local worktree_path=".worktree/$ticket_id"
+    local worktree_path="../pyggy-worktree/$ticket_id"
     
     # Display ticket information
     echo ""
@@ -175,7 +175,7 @@ open_worktree() {
     fi
     
     # Check if worktree directory already exists
-    local worktree_path=".worktree/$ticket_id"
+    local worktree_path="../pyggy-worktree/$ticket_id"
     if [ -d "$worktree_path" ]; then
         # Check if this is actually a git worktree
         if git worktree list | grep -q "$worktree_path"; then
@@ -293,7 +293,7 @@ close_worktree() {
     
     # Derive branch name using same logic as open
     local branch_name=$(derive_branch_name "$ticket_id" "$ticket_title")
-    local worktree_path=".worktree/$ticket_id"
+    local worktree_path="../pyggy-worktree/$ticket_id"
     
     echo "Branch to close: $branch_name"
     echo "Worktree path: $worktree_path"
