@@ -2,6 +2,7 @@
 
 ## @dev
 
+- [#0046] Hide delete icons for items that cannot be deleted based on business rules
 - [#0026] Added Docker configuration with compose.yml for development environment and Dockerfile for production builds
 - [#0025] Added Font Awesome icons for expense types with hardcoded mapping and accessibility support
 - [#0041] Added Budget management UI (CRUD operations)

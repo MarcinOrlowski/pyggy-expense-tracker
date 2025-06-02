@@ -51,10 +51,8 @@
                                     <button type="submit" class="btn btn-secondary btn-sm" title="Hide Payee" aria-label="Hide Payee"><i class="fas fa-eye-slash"></i></button>
                                 </form>
                             {% endif %}
-                            {% if payee.expense_count == 0 and not payee.is_hidden %}
+                            {% if payee.can_be_deleted %}
                                 <a href="{% url 'payee_delete' payee.pk %}" class="btn btn-danger btn-sm" title="Delete Payee" aria-label="Delete Payee"><i class="fas fa-trash-can"></i></a>
-                            {% else %}
-                                <span class="btn btn-danger btn-sm btn-hidden"><i class="fas fa-trash-can"></i></span>
                             {% endif %}
                         </td>
                     </tr>

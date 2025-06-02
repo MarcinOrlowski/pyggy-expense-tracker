@@ -23,7 +23,7 @@ class Budget(models.Model):
                 if self.month_set.exists():
                     raise ValidationError('Start date cannot be in the past when budget has existing months')
 
-    def can_delete(self):
+    def can_be_deleted(self):
         """Check if this budget can be deleted (no associated months)"""
         return not self.month_set.exists()
 
@@ -46,6 +46,10 @@ class Payee(models.Model):
     @property
     def is_hidden(self):
         return self.hidden_at is not None
+
+    def can_be_deleted(self):
+        """Check if this payee can be deleted (no associated expenses and not hidden)"""
+        return not self.expense_set.exists() and not self.is_hidden
 
     class Meta:
         ordering = ['name']
@@ -85,7 +89,7 @@ class Month(models.Model):
         """Check if this month has any paid expense items"""
         return self.expenseitem_set.filter(status='paid').exists()
     
-    def can_delete(self):
+    def can_be_deleted(self):
         """Check if this month can be deleted (no paid expenses)"""
         return not self.has_paid_expenses()
     
@@ -192,6 +196,10 @@ class Expense(models.Model):
     def get_expense_type_icon(self):
         """Get Font Awesome icon class for the expense type."""
         return self.EXPENSE_TYPE_ICONS.get(self.expense_type, 'fa-question-circle')
+
+    def can_be_deleted(self):
+        """Check if this expense can be deleted (no paid expense items)"""
+        return not self.expenseitem_set.filter(status='paid').exists()
 
     def __str__(self):
         if self.payee:
