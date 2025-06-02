@@ -9,7 +9,6 @@ services:
       # Persist database
       - ./db.sqlite3:/app/db.sqlite3
       # Optional: Override settings for local development
-      - ./expense_tracker/settings.py:/app/expense_tracker/settings.py:ro
     environment:
       - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY:-change-me-in-production}
       - DJANGO_DEBUG=${DJANGO_DEBUG:-False}
