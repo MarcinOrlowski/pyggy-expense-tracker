@@ -3,6 +3,7 @@
 ## @dev
 
 - [#0052] Reworked footer layout with split design for better information organization
+- [#0046] Hide delete icons for items that cannot be deleted based on business rules
 - [#0026] Added Docker configuration with compose.yml for development environment and Dockerfile for production builds
 - [#0025] Added Font Awesome icons for expense types with hardcoded mapping and accessibility support
 - [#0041] Added Budget management UI (CRUD operations)
@@ -10,12 +11,12 @@
 - [#0036] Improved worktree.sh script to check if worktree already exists and prevent creating worktrees from within worktrees
 - [#0021] Added recurring with end date expense type allowing automatic expense item generation through specified end date month
 - [#0024] Reworked expense filter controls into single-line layout with stretching dropdowns and icon-only clear button
-- [#0022] Fixed Django static files configuration copying excessive files by relocating img/ folder to static/img/ and removing BASE_DIR from STATICFILES_DIRS, reducing static file collection from ~15,000 to 128 files
-- [#0019] Added optional notes field to expense entity with unlimited database storage, form-level 1024 character validation, textarea input with character counter, and notes indicator in expense list
-- [#0017] Enhanced dashboard with prominent month summary display using Tektur Google Font, redesigned as individual cards with consistent styling, and integrated calendar widget
+- [#0022] Fixed Django static files configuration copying excessive files to static files
+- [#0019] Added optional notes field to expense entity and notes indicator in expense list
+- [#0017] Enhanced dashboard with prominent month summary display, redesigned as individual cards, and integrated calendar widget
 - [#0014] Implemented application settings infrastructure with locale-aware currency formatting using babel library
 - [#0013] Extracted CSS from templates to organized SASS files with django-sass-processor integration
-- [#0004] Added calendar widget to dashboard with comprehensive payment due date visualization including color-coded indicators, weekend styling, and visual hierarchy for past/present/future days
+- [#0004] Added calendar widget to dashboard with comprehensive payment due date visualization
 - [#0008] Added Days column to dashboard expense items table showing days until due
 - [#0007] Implemented reusable template components for dashboard and month views
 - [#0001] Replaced text navigation links with icon-based action buttons
