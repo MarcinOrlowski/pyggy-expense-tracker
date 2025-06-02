@@ -1,5 +1,5 @@
 from django import template
-from decimal import Decimal
+from decimal import Decimal, InvalidOperation
 from babel.numbers import get_currency_symbol
 from ..services import SettingsService
 
@@ -15,7 +15,7 @@ def currency(value):
     try:
         amount = Decimal(str(value))
         return SettingsService.format_currency(amount)
-    except (ValueError, TypeError):
+    except (ValueError, TypeError, InvalidOperation):
         return value
 
 
@@ -26,7 +26,7 @@ def currency_symbol():
     
     try:
         return get_currency_symbol(settings.currency, settings.locale)
-    except:
+    except (ValueError, LookupError, KeyError):
         return settings.currency
 
 
