@@ -1,9 +1,9 @@
 {% extends 'expenses/base.html' %}
 
-{% block title %}Months {% endblock %}
+{% block title %}Months{% endblock %}
 
 {% block content %}
-<h1><i class="fas fa-calendar-alt"></i> Processed Months</h1>
+<h1><i class="fas fa-calendar-alt"></i> Months</h1>
 
 <div class="card">
     <div class="card-header">
@@ -40,7 +40,7 @@
                 </tbody>
             </table>
         {% else %}
-            <p>No months have been processed yet. <a href="{% url 'month_process' budget.id %}"><i class="fas fa-gear icon-left"></i>Process the first month</a>.</p>
+            <p>No months have been added yet. <a href="{% url 'month_process' budget.id %}"><i class="fas fa-gear icon-left"></i>Add the first month</a>.</p>
         {% endif %}
     </div>
 </div>

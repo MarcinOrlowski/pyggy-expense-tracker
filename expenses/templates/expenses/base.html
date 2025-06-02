@@ -5,7 +5,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}PyGGy{% endblock %} &middot; PyGGy Monthly Expense Tracker</title>
+    <title>
+        {% if current_budget %}{{ current_budget.name }} &middot; {% endif %}
+        {% block title %}PyGGy{% endblock %}
+        &middot; PyGGy Monthly Expense Tracker
+    </title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&family=Tektur:wght@400..900&display=swap" rel="stylesheet">
@@ -27,11 +31,10 @@
                     <a href="{% url 'expense_list' current_budget_id %}" class="btn btn-icon" title="View Expenses" aria-label="View Expenses List"><i class="fas fa-receipt"></i></a>
                     <a href="{% url 'month_list' current_budget_id %}" class="btn btn-icon" title="View Months" aria-label="View Processed Months"><i class="fas fa-calendar-alt"></i></a>
                     {% endif %}
-                    <a href="{% url 'budget_list' %}" class="btn btn-icon" title="View Budgets" aria-label="View Budgets List"><i class="fas fa-wallet"></i></a>
                     <a href="{% url 'payee_list' %}" class="btn btn-icon" title="View Payees" aria-label="View Payees List"><i class="fas fa-users"></i></a>
                     {% if current_budget_id %}
                     <a href="{% url 'expense_create' current_budget_id %}" class="btn btn-icon" title="Add New Expense" aria-label="Create New Expense"><i class="fas fa-plus"></i></a>
-                    <a href="{% url 'month_process' current_budget_id %}" class="btn btn-icon" title="Process New Month" aria-label="Process Next Month"><i class="fas fa-cog"></i></a>
+                    <a href="{% url 'month_process' current_budget_id %}" class="btn btn-icon" title="Add New Month" aria-label="Add Next Month"><i class="fas fa-cog"></i></a>
                     {% endif %}
                 </div>
             </nav>

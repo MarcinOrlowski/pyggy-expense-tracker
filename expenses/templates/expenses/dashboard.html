@@ -28,17 +28,17 @@
         Current Month
     </div>
     <div class="card-body">
-        <p>No months have been created yet. Start by processing your first month to begin tracking expenses.</p>
+        <p>No months have been created yet. Start by adding your first month to begin tracking expenses.</p>
         <p>Go to <strong>Months → Add initial month</strong> to choose your starting month.</p>
     </div>
 </div>
 {% elif not_current_month %}
 <div class="card mb-3">
     <div class="card-header">
-        Current Month - {{ current_date.year }}-{{ current_date.month|stringformat:"02d" }} (Not processed yet)
+        Current Month - {{ current_date.year }}-{{ current_date.month|stringformat:"02d" }} (Not added yet)
     </div>
     <div class="card-body">
-        <p>The current month hasn't been processed yet.</p>
+        <p>The current month hasn't been added yet.</p>
     </div>
 </div>
 {% endif %}

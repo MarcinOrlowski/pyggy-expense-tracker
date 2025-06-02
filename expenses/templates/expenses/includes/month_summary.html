@@ -5,15 +5,15 @@
         {% if month %}
             - {{ month.year }}-{{ month.month|stringformat:"02d" }}
         {% elif current_date and not_processed %}
-            - {{ current_date.year }}-{{ current_date.month|stringformat:"02d" }} (Not processed yet)
+            - {{ current_date.year }}-{{ current_date.month|stringformat:"02d" }} (Not added yet)
         {% endif %}
     </div>
     <div class="card-body">
         {% if show_welcome %}
-            <p>No months have been created yet. Start by processing your first month to begin tracking expenses.</p>
+            <p>No months have been created yet. Start by adding your first month to begin tracking expenses.</p>
             <p>Go to <strong>Months → Add initial month</strong> to choose your starting month.</p>
         {% elif not_processed %}
-            <p>The current month hasn't been processed yet.</p>
+            <p>The current month hasn't been added yet.</p>
         {% else %}
             <div class="grid-3-cols">
                 <div>
