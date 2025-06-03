@@ -20,6 +20,7 @@ class InitialInstallmentModelTest(TestCase):
     def test_split_payment_with_initial_installment_validation_success(self):
         """Test valid split payment with initial_installment."""
         expense = Expense(
+            budget=self.budget,
             title="Test Split Payment",
             expense_type=Expense.TYPE_SPLIT_PAYMENT,
             total_amount=Decimal('100.00'),
@@ -33,6 +34,7 @@ class InitialInstallmentModelTest(TestCase):
     def test_split_payment_initial_installment_zero_valid(self):
         """Test split payment with initial_installment=0 (default behavior)."""
         expense = Expense(
+            budget=self.budget,
             title="Test Split Payment",
             expense_type=Expense.TYPE_SPLIT_PAYMENT,
             total_amount=Decimal('100.00'),
@@ -45,6 +47,7 @@ class InitialInstallmentModelTest(TestCase):
     def test_split_payment_initial_installment_max_valid(self):
         """Test split payment with initial_installment at maximum (installments_count - 1)."""
         expense = Expense(
+            budget=self.budget,
             title="Test Split Payment",
             expense_type=Expense.TYPE_SPLIT_PAYMENT,
             total_amount=Decimal('100.00'),
@@ -57,6 +60,7 @@ class InitialInstallmentModelTest(TestCase):
     def test_split_payment_initial_installment_negative_invalid(self):
         """Test split payment with negative initial_installment fails validation."""
         expense = Expense(
+            budget=self.budget,
             title="Test Split Payment",
             expense_type=Expense.TYPE_SPLIT_PAYMENT,
             total_amount=Decimal('100.00'),
@@ -71,6 +75,7 @@ class InitialInstallmentModelTest(TestCase):
     def test_split_payment_initial_installment_too_high_invalid(self):
         """Test split payment with initial_installment >= installments_count fails validation."""
         expense = Expense(
+            budget=self.budget,
             title="Test Split Payment",
             expense_type=Expense.TYPE_SPLIT_PAYMENT,
             total_amount=Decimal('100.00'),
@@ -85,6 +90,7 @@ class InitialInstallmentModelTest(TestCase):
     def test_non_split_payment_with_initial_installment_invalid(self):
         """Test non-split payment with initial_installment > 0 fails validation."""
         expense = Expense(
+            budget=self.budget,
             title="Test Recurring",
             expense_type=Expense.TYPE_ENDLESS_RECURRING,
             total_amount=Decimal('100.00'),
@@ -99,6 +105,7 @@ class InitialInstallmentModelTest(TestCase):
     def test_non_split_payment_with_zero_initial_installment_valid(self):
         """Test non-split payment with initial_installment=0 is valid."""
         expense = Expense(
+            budget=self.budget,
             title="Test Recurring",
             expense_type=Expense.TYPE_ENDLESS_RECURRING,
             total_amount=Decimal('100.00'),
@@ -128,6 +135,7 @@ class InitialInstallmentServiceTest(TestCase):
         """Test that create_expense_items_for_month respects initial_installment."""
         # Create split payment starting from installment 3 (0-based)
         expense = Expense.objects.create(
+            budget=self.budget,
             title="Partial Split Payment",
             expense_type=Expense.TYPE_SPLIT_PAYMENT,
             total_amount=Decimal('100.00'),
@@ -165,6 +173,7 @@ class InitialInstallmentServiceTest(TestCase):
     def test_check_expense_completion_with_initial_installment(self):
         """Test expense completion logic with initial_installment."""
         expense = Expense.objects.create(
+            budget=self.budget,
             title="Partial Split Payment",
             expense_type=Expense.TYPE_SPLIT_PAYMENT,
             total_amount=Decimal('100.00'),
@@ -266,6 +275,7 @@ class InitialInstallmentFormTest(TestCase):
     def test_form_initial_installment_read_only_on_edit(self):
         """Test that initial_installment field is read-only when editing existing expense."""
         expense = Expense.objects.create(
+            budget=self.budget,
             title="Test Split Payment",
             expense_type=Expense.TYPE_SPLIT_PAYMENT,
             total_amount=Decimal('100.00'),
@@ -299,6 +309,7 @@ class InitialInstallmentIntegrationTest(TestCase):
         """Test complete workflow for partial split payment."""
         # Create split payment starting from installment 8 out of 10
         expense = Expense.objects.create(
+            budget=self.budget,
             title="Car Loan (Started Mid-Term)",
             expense_type=Expense.TYPE_SPLIT_PAYMENT,
             total_amount=Decimal('500.00'),

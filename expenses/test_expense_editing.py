@@ -32,6 +32,7 @@ class ExpenseEditingPermissionsTest(TestCase):
     def test_can_edit_one_time_unpaid_expense(self):
         """Test that one-time unpaid expenses can be edited"""
         expense = Expense.objects.create(
+            budget=self.budget,
             title="One Time Expense",
             payee=self.payee,
             expense_type=Expense.TYPE_ONE_TIME,
@@ -54,6 +55,7 @@ class ExpenseEditingPermissionsTest(TestCase):
     def test_cannot_edit_one_time_paid_expense_amount(self):
         """Test that amount cannot be edited for paid one-time expenses"""
         expense = Expense.objects.create(
+            budget=self.budget,
             title="One Time Expense",
             payee=self.payee,
             expense_type=Expense.TYPE_ONE_TIME,
@@ -77,6 +79,7 @@ class ExpenseEditingPermissionsTest(TestCase):
     def test_can_edit_endless_recurring_unpaid_expense(self):
         """Test that endless recurring unpaid expenses can be edited"""
         expense = Expense.objects.create(
+            budget=self.budget,
             title="Endless Recurring",
             payee=self.payee,
             expense_type=Expense.TYPE_ENDLESS_RECURRING,
@@ -99,6 +102,7 @@ class ExpenseEditingPermissionsTest(TestCase):
     def test_cannot_edit_split_payment_expense(self):
         """Test that split payment expenses cannot be edited"""
         expense = Expense.objects.create(
+            budget=self.budget,
             title="Split Payment",
             payee=self.payee,
             expense_type=Expense.TYPE_SPLIT_PAYMENT,
@@ -116,6 +120,7 @@ class ExpenseEditingPermissionsTest(TestCase):
     def test_cannot_edit_recurring_with_end_date_expense(self):
         """Test that recurring with end date expenses cannot be edited"""
         expense = Expense.objects.create(
+            budget=self.budget,
             title="Recurring with End",
             payee=self.payee,
             expense_type=Expense.TYPE_RECURRING_WITH_END,
@@ -133,6 +138,7 @@ class ExpenseEditingPermissionsTest(TestCase):
     def test_cannot_edit_closed_expense(self):
         """Test that closed expenses cannot be edited"""
         expense = Expense.objects.create(
+            budget=self.budget,
             title="Closed Expense",
             payee=self.payee,
             expense_type=Expense.TYPE_ONE_TIME,
@@ -150,6 +156,7 @@ class ExpenseEditingPermissionsTest(TestCase):
     def test_get_edit_restrictions_multiple_reasons(self):
         """Test get_edit_restrictions returns all applicable reasons"""
         expense = Expense.objects.create(
+            budget=self.budget,
             title="Endless Recurring",
             payee=self.payee,
             expense_type=Expense.TYPE_ENDLESS_RECURRING,
@@ -175,6 +182,7 @@ class ExpenseEditingPermissionsTest(TestCase):
     def test_expense_edit_view_redirects_for_non_editable(self):
         """Test that edit view redirects with error for non-editable expenses"""
         expense = Expense.objects.create(
+            budget=self.budget,
             title="Split Payment",
             payee=self.payee,
             expense_type=Expense.TYPE_SPLIT_PAYMENT,
@@ -194,6 +202,7 @@ class ExpenseEditingPermissionsTest(TestCase):
     def test_expense_form_validation_prevents_amount_change(self):
         """Test that form validation prevents amount changes when not allowed"""
         expense = Expense.objects.create(
+            budget=self.budget,
             title="One Time Expense",
             payee=self.payee,
             expense_type=Expense.TYPE_ONE_TIME,
@@ -236,6 +245,7 @@ class ExpenseEditingPermissionsTest(TestCase):
     def test_expense_detail_shows_disabled_edit_button(self):
         """Test that expense detail shows disabled edit button with tooltip"""
         expense = Expense.objects.create(
+            budget=self.budget,
             title="Split Payment",
             payee=self.payee,
             expense_type=Expense.TYPE_SPLIT_PAYMENT,

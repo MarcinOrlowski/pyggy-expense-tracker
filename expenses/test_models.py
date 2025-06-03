@@ -43,6 +43,7 @@ class PayeeModelTest(TestCase):
             start_date=date.today()
         )
         expense = Expense.objects.create(
+            budget=budget,
             title="Test Expense",
             payee=self.payee,
             expense_type='endless_recurring',
@@ -81,6 +82,7 @@ class ExpenseModelTest(TestCase):
         )
         self.payee = Payee.objects.create(name="Test Payee")
         self.expense_with_payee = Expense.objects.create(
+            budget=self.budget,
             title="Rent",
             payee=self.payee,
             expense_type='endless_recurring',
@@ -88,6 +90,7 @@ class ExpenseModelTest(TestCase):
             started_at=date.today()
         )
         self.expense_without_payee = Expense.objects.create(
+            budget=self.budget,
             title="Subscription",
             payee=None,
             expense_type='endless_recurring',
@@ -142,6 +145,7 @@ class ExpenseItemModelTest(TestCase):
             month=date.today().month
         )
         self.expense = Expense.objects.create(
+            budget=self.budget,
             title="Test Expense",
             expense_type='endless_recurring',
             total_amount=Decimal('100.00'),
@@ -284,6 +288,7 @@ class MonthModelTest(TestCase):
             month=1
         )
         self.expense = Expense.objects.create(
+            budget=self.budget,
             title="Test Expense",
             expense_type='endless_recurring',
             total_amount=Decimal('100.00'),
