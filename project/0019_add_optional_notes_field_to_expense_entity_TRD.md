@@ -14,11 +14,13 @@ This document outlines the technical implementation details for adding an option
 ### Database Schema Changes
 
 **Table:** `expenses_expense`
+
 ```sql
 ALTER TABLE expenses_expense ADD COLUMN notes TEXT NULL;
 ```
 
 **Field Specifications:**
+
 - **Field Name:** `notes`
 - **Type:** `TEXT` (unlimited length)
 - **Constraints:** `NULL`, `BLANK`
@@ -41,6 +43,7 @@ class Expense(models.Model):
 ```
 
 **Rationale for TextField:**
+
 - TextField provides unlimited storage capacity
 - Form-level validation handles UI constraints
 - More flexible for future requirements
@@ -75,6 +78,7 @@ class ExpenseForm(forms.ModelForm):
 ```
 
 **JavaScript Enhancement for Character Counter:**
+
 ```javascript
 // Add to expense_form.html
 function setupNotesCounter() {
@@ -101,6 +105,7 @@ function setupNotesCounter() {
 #### 1. Form Template (`expenses/templates/expenses/expense_form.html`)
 
 **Addition after started_at field:**
+
 ```html
 <div class="form-group">
     <label for="{{ form.notes.id_for_label }}">{{ form.notes.label }}:</label>
@@ -117,6 +122,7 @@ function setupNotesCounter() {
 #### 2. Detail Template (`expenses/templates/expenses/expense_detail.html`)
 
 **Addition in expense details card:**
+
 ```html
 <div class="grid-2-cols">
     <div>
@@ -138,6 +144,7 @@ function setupNotesCounter() {
 #### 3. List Template (`expenses/templates/expenses/expense_list.html`)
 
 **Addition of notes indicator column:**
+
 ```html
 <thead>
     <tr>
@@ -234,16 +241,19 @@ class Migration(migrations.Migration):
 ## Implementation Sequence
 
 ### Phase 1: Database and Model
+
 1. Add `notes` field to Expense model
 2. Generate and apply migration
 3. Update model `__str__` method if needed
 
 ### Phase 2: Forms and Validation
+
 1. Update ExpenseForm to include notes field
 2. Add appropriate widget configuration
 3. Test form validation
 
 ### Phase 3: Templates and UI
+
 1. Update expense_form.html with notes field
 2. Add character counter JavaScript
 3. Update expense_detail.html to display notes
@@ -251,6 +261,7 @@ class Migration(migrations.Migration):
 5. Add CSS styling
 
 ### Phase 4: Testing and Validation
+
 1. Test expense creation with notes
 2. Test expense editing with notes
 3. Test character limit validation
@@ -260,6 +271,7 @@ class Migration(migrations.Migration):
 ## Technical Considerations
 
 ### Performance Impact
+
 - **Minimal:** TextField addition has negligible performance impact
 - **Storage:** Variable per expense based on actual content
 - **Form Constraint:** UI enforces 1024 character limit for usability
@@ -267,16 +279,19 @@ class Migration(migrations.Migration):
 - **Indexing:** Consider text search index in future if needed
 
 ### Backward Compatibility
+
 - **100% Compatible:** All existing expenses will have `notes=NULL`
 - **No Breaking Changes:** All existing functionality preserved
 - **Migration Safe:** Non-destructive schema change
 
 ### Security Considerations
+
 - **XSS Prevention:** Django's `linebreaks` filter automatically escapes HTML
 - **Input Validation:** Max length enforced at model and form level
 - **No Special Permissions:** Uses existing expense permissions
 
 ### Error Handling
+
 - **Validation Errors:** Standard Django form validation for 1024 char limit
 - **Database Errors:** Migration rollback if needed
 - **Character Limit:** Client-side and server-side form validation (not database constraint)
@@ -284,6 +299,7 @@ class Migration(migrations.Migration):
 ## Testing Strategy
 
 ### Unit Tests
+
 ```python
 # expenses/tests.py additions
 def test_expense_notes_field_optional(self):
@@ -326,6 +342,7 @@ def test_expense_notes_database_unlimited(self):
 ```
 
 ### Integration Tests
+
 - Form submission with notes
 - Template rendering with and without notes
 - Character counter functionality
@@ -334,11 +351,13 @@ def test_expense_notes_database_unlimited(self):
 ## Deployment Considerations
 
 ### Migration Deployment
+
 1. **Zero Downtime:** Migration adds nullable column
 2. **Rollback Safe:** Can be reversed if needed
 3. **Data Preservation:** No data loss risk
 
 ### Environment Considerations
+
 - **Development:** Apply migration locally first
 - **Staging:** Test full user workflow
 - **Production:** Standard migration deployment
@@ -346,6 +365,7 @@ def test_expense_notes_database_unlimited(self):
 ## Future Enhancements
 
 ### Potential Improvements
+
 1. **Rich Text:** Upgrade to rich text editor
 2. **Search:** Full-text search on notes
 3. **Templates:** Note templates for common scenarios
@@ -353,6 +373,7 @@ def test_expense_notes_database_unlimited(self):
 5. **History:** Track notes changes over time
 
 ### Technical Debt Considerations
+
 - Form validation provides UI constraints while maintaining database flexibility
 - Monitor query performance with larger datasets
 - Evaluate need for database indexing for text search

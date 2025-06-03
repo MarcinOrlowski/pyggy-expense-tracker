@@ -1,9 +1,12 @@
 # Architecture Specification
-# Expense Tracker PoC Implementation
+
+Expense Tracker PoC Implementation
 
 ## 1. Overview
 
-This document outlines the simplified architectural design for the Expense Tracker Proof of Concept (PoC) implementation. The architecture follows Django best practices with a focus on rapid development and core functionality demonstration rather than complex patterns.
+This document outlines the simplified architectural design for the Expense Tracker Proof of
+Concept (PoC) implementation. The architecture follows Django best practices with a focus on rapid
+development and core functionality demonstration rather than complex patterns.
 
 ## 2. Architectural Principles
 
@@ -17,7 +20,7 @@ The architecture follows these key principles:
 
 ## 3. Project Structure
 
-```
+```text
 expense_tracker/                 # Django project root
 ├── manage.py
 ├── expense_tracker/            # Main project package
@@ -409,7 +412,8 @@ Simple HTML templates with basic CSS:
 
 ### 7.2 Form Validation Guidelines
 
-**Expense Creation Form**
+#### Expense Creation Form
+
 - Default start date set to first day of current month
 - Client-side validation prevents earlier dates
 - Server-side validation enforces business rules
@@ -458,19 +462,22 @@ nav a {
 
 ### 8.1 Development Phases
 
-**Phase 1: Setup (Day 1)**
+#### Phase 1: Setup (Day 1)
+
 1. Create Django project and expenses app
 2. Define models and create migrations
 3. Set up Django admin
 4. Create fixtures for test data including initial seed month
 
-**Phase 2: Core Views (Days 2-3)**
+#### Phase 2: Core Views (Days 2-3)
+
 1. Implement basic CRUD views
 2. Create simple templates
 3. Add basic forms
 4. Implement business logic functions
 
-**Phase 3: Polish (Days 4-5)**
+#### Phase 3: Polish (Days 4-5)
+
 1. Add dashboard functionality
 2. Improve styling
 3. Add month processing

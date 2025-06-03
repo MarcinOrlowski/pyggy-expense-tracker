@@ -3,15 +3,19 @@
 **Ticket:** #0019  
 **Type:** Enhancement  
 **Priority:** Normal  
-**Milestone:** backlog  
+**Milestone:** backlog
 
 ## Overview
 
-Add an optional notes field to the expense entity to allow users to capture additional context, descriptions, or comments about their expenses. This enhancement will provide users with the ability to store supplementary information that doesn't fit into the existing structured fields.
+Add an optional notes field to the expense entity to allow users to capture additional context,
+descriptions, or comments about their expenses. This enhancement will provide users with the ability
+to store supplementary information that doesn't fit into the existing structured fields.
 
 ## Problem Statement
 
-Currently, the expense tracking system captures structured data (payee, amount, type, dates) but lacks a flexible field for users to add contextual information such as:
+Currently, the expense tracking system captures structured data (payee, amount, type, dates) but
+lacks a flexible field for users to add contextual information such as:
+
 - Detailed descriptions of what the expense covers
 - Special circumstances or conditions
 - Reference information or confirmation details
@@ -37,52 +41,61 @@ Currently, the expense tracking system captures structured data (payee, amount, 
 ### Core Features
 
 1. **Notes Field**
-   - Optional text field (unlimited database storage)
-   - Form enforces 1024 character limit for UI purposes
-   - Supports multi-line text input via textarea
-   - Nullable and blank in database
 
-2. **Form Integration**
-   - Notes field appears in expense creation form
-   - Notes field appears in expense editing form
-   - Uses textarea widget for multi-line input
-   - Form-level validation enforces 1024 character limit
-   - Field is clearly labeled and positioned logically
+- Optional text field (unlimited database storage)
+- Form enforces 1024 character limit for UI purposes
+- Supports multi-line text input via textarea
+- Nullable and blank in database
 
-3. **Display Integration**
-   - Notes displayed in expense detail view when present
-   - Notes indicated in expense list view (if present)
-   - Proper formatting and readability
+1. **Form Integration**
+
+- Notes field appears in expense creation form
+- Notes field appears in expense editing form
+- Uses textarea widget for multi-line input
+- Form-level validation enforces 1024 character limit
+- Field is clearly labeled and positioned logically
+
+1**Display Integration**
+
+- Notes displayed in expense detail view when present
+- Notes indicated in expense list view (if present)
+- Proper formatting and readability
 
 ### User Interface Requirements
 
 1. **Form Layout**
-   - Notes field positioned after "Started At" field
-   - Clear label: "Notes (optional)"
-   - Placeholder text: "Add additional notes or context about this expense"
-   - Character counter showing remaining characters
 
-2. **Detail View**
-   - Notes section in expense details card
-   - Only shown if notes exist
-   - Properly formatted text display
+- Notes field positioned after "Started At" field
+- Clear label: "Notes (optional)"
+- Placeholder text: "Add additional notes or context about this expense"
+- Character counter showing remaining characters
 
-3. **List View**
-   - Subtle indicator when notes are present (e.g., small icon)
-   - No direct notes display to maintain clean layout
+1**Detail View**
+
+- Notes section in expense details card
+- Only shown if notes exist
+- Properly formatted text display
+
+1**List View**
+
+- Subtle indicator when notes are present (e.g., small icon)
+- No direct notes display to maintain clean layout
 
 ## Non-Functional Requirements
 
 ### Performance
+
 - No impact on existing query performance
 - Minimal additional storage overhead
 
 ### Compatibility
+
 - Backward compatible with existing expenses (no notes)
 - No changes to existing API contracts
 - Existing functionality remains unchanged
 
 ### Usability
+
 - Intuitive field placement and labeling
 - Responsive design across devices
 - Accessible form controls
@@ -110,24 +123,28 @@ Currently, the expense tracking system captures structured data (payee, amount, 
 ### Acceptance Criteria
 
 1. **Create Expense with Notes**
-   - User can add notes when creating new expense
-   - Notes are saved correctly to database
-   - Form validates 1024 character limit
 
-2. **Edit Expense Notes**
-   - User can edit notes on existing expenses
-   - Changes are saved properly
-   - Can clear notes completely
+- User can add notes when creating new expense
+- Notes are saved correctly to database
+- Form validates 1024 character limit
 
-3. **View Expense Notes**
-   - Notes display in expense detail view
-   - Notes are formatted properly
-   - Empty notes don't show unnecessary UI elements
+1. **Edit Expense Notes**
 
-4. **List View Integration**
-   - Expenses with notes show visual indicator
-   - List performance not impacted
-   - Clean layout maintained
+- User can edit notes on existing expenses
+- Changes are saved properly
+- Can clear notes completely
+
+1. **View Expense Notes**
+
+- Notes display in expense detail view
+- Notes are formatted properly
+- Empty notes don't show unnecessary UI elements
+
+1. **List View Integration**
+
+- Expenses with notes show visual indicator
+- List performance not impacted
+- Clean layout maintained
 
 ## Future Considerations
 

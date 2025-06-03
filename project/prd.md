@@ -1,12 +1,16 @@
 # Product Requirements Document (PRD)
-# Expense Tracker and Budget Management System - PoC Version
 
 ## 1. Project Overview
 
 ### 1.1 Purpose
-Develop a focused proof-of-concept (PoC) expense tracking application using Python 3.12 and Django. The PoC will demonstrate the core expense tracking functionality, particularly the handling of different expense types and monthly processing, as a foundation for a more comprehensive system in future phases.
+
+Develop a focused proof-of-concept (PoC) expense tracking application using Python 3.12 and Django.
+The PoC will demonstrate the core expense tracking functionality, particularly the handling of
+different expense types and monthly processing, as a foundation for a more comprehensive system
+in future phases.
 
 ### 1.2 Technology Stack
+
 - Python 3.12
 - Django framework
 - SQLite database for development
@@ -14,6 +18,7 @@ Develop a focused proof-of-concept (PoC) expense tracking application using Pyth
 - Django built-in admin for initial data management
 
 ### 1.3 PoC Objectives
+
 - Demonstrate core expense tracking functionality
 - Support various expense types (recurring, installment-based, one-time)
 - Implement monthly expense item generation
@@ -23,21 +28,24 @@ Develop a focused proof-of-concept (PoC) expense tracking application using Pyth
 ## 2. Core Requirements
 
 ### 2.1 Expense Types
+
 The system must support three fundamental expense types:
+
 1. **Endless Recurring Payments**
    - Monthly recurring expenses without a defined end date (e.g., utilities, subscriptions)
    - Automatically generated each month until manually closed
-   
+
 2. **Split Payments**
    - Fixed number of installments (e.g., loans, payment plans)
    - System tracks which installment is current and total remaining
    - Automatically marks expense as complete after final installment
-   
+
 3. **One-time Payments**
    - Single payment expenses (e.g., individual purchases)
    - Automatically closed after payment
 
 ### 2.2 Monthly Processing
+
 - The system must be seeded with an initial month (e.g., 2025-01) during setup
 - Month creation rules:
   - Users can only add new months sequentially (next month after the most recent)
@@ -54,6 +62,7 @@ The system must support three fundamental expense types:
 - Basic monthly view showing all expenses for selected month
 
 ### 2.3 Expense Creation
+
 - Users can create new expenses of any type at any time
 - **Start Date Validation Rules:**
   - Expense start dates cannot be earlier than the current month
@@ -63,6 +72,7 @@ The system must support three fundamental expense types:
 - For expenses with current month start dates, automatically create initial ExpenseItem
 
 ### 2.4 Expense Completion
+
 - Split payments are automatically marked complete after final installment
 - Endless recurring payments can be manually marked complete when no longer active
 - Completed expenses are retained but filtered from active views
@@ -72,11 +82,13 @@ The system must support three fundamental expense types:
 
 ### 3.1 Django Models
 
-**User**
+#### User
+
 - Uses Django's built-in User model
 - No customization needed for PoC
 
-**Payee**
+#### Payee
+
 ```python
 class Payee(models.Model):
     name = models.CharField(max_length=255)
@@ -84,7 +96,8 @@ class Payee(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 ```
 
-**PaymentMethod**
+#### PaymentMethod
+
 ```python
 class PaymentMethod(models.Model):
     name = models.CharField(max_length=255)
@@ -92,7 +105,8 @@ class PaymentMethod(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 ```
 
-**Expense**
+#### Expense
+
 ```python
 class Expense(models.Model):
     EXPENSE_TYPES = [
@@ -113,7 +127,8 @@ class Expense(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 ```
 
-**ExpenseItem**
+#### ExpenseItem
+
 ```python
 class ExpenseItem(models.Model):
     STATUS_CHOICES = [
@@ -131,7 +146,8 @@ class ExpenseItem(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 ```
 
-**Month**
+#### Month
+
 ```python
 class Month(models.Model):
     year = models.PositiveSmallIntegerField()
@@ -151,6 +167,7 @@ class Month(models.Model):
 ## 4. System Workflows
 
 ### 4.1 New Month Process
+
 1. Validate month creation is allowed:
    - Check that previous month exists (or this is the initial month)
    - Ensure the new month is the next sequential month
@@ -162,16 +179,19 @@ class Month(models.Model):
    - Set appropriate due dates
 
 ### 4.2 New Expense Creation
+
 1. Create main Expense record
 2. Generate initial ExpenseItem(s) based on expense type
 3. Link to appropriate Month based on started_at
 
 ### 4.3 Payment Recording
+
 1. Update ExpenseItem when payment is made
 2. Record actual payment amount and date
 3. For split payments, check if final installment and mark Expense as closed if completed
 
 ### 4.4 Expense Completion
+
 1. Set closed_at timestamp when expense is completed
 2. For split payments, this can be automated when final installment is paid
 3. For endless recurring, this is manual when service is canceled
@@ -179,16 +199,19 @@ class Month(models.Model):
 ## 5. User Interface Requirements (Simplified for PoC)
 
 ### 5.1 Dashboard
+
 - Monthly overview with total expenses
 - Upcoming payments list
 - Quick expense entry
 
 ### 5.2 Expense Management
+
 - List view with basic filtering options
 - Create/edit forms for expenses
 - Payment recording interface
 
 ### 5.3 Monthly View
+
 - Simple calendar or list view of expenses by month
 - Month navigation controls
 
@@ -196,12 +219,14 @@ class Month(models.Model):
 
 ### 6.1 Django Implementation
 
-**Database**
+#### Database
+
 - Use Django ORM with SQLite for simplicity
 - Django migrations handle schema creation
 - No complex database optimizations for PoC
 
-**Views (Simplified)**
+#### Views (Simplified)
+
 ```python
 # Function-based views for quick development
 def expense_list(request):          # List expenses
@@ -215,7 +240,8 @@ def expense_item_pay(request, pk):  # Record payment
 def dashboard(request):             # Main dashboard
 ```
 
-**URL Structure**
+#### URL Structure
+
 ```python
 # Simple URL patterns
 urlpatterns = [
@@ -265,6 +291,7 @@ urlpatterns = [
 ## 7. Implementation Plan for PoC
 
 ### Phase 1: Foundation (1-2 days)
+
 1. Set up Django project
 2. Create models and migrations
 3. Set up Django admin
@@ -272,6 +299,7 @@ urlpatterns = [
 5. Basic project structure
 
 ### Phase 2: Core Functionality (2-3 days)
+
 1. Implement basic views for expense CRUD
 2. Create simple templates with minimal CSS
 3. Build monthly processing function
@@ -279,34 +307,37 @@ urlpatterns = [
 5. Implement expense completion logic
 
 ### Phase 3: UI Polish (1-2 days)
+
 1. Create dashboard view
 2. Add basic navigation
 3. Improve form handling
 4. Add simple styling
 5. Month navigation functionality
 
-**Total Timeline: ~1 week**
-
 Note: Authentication uses Django's built-in system. Initial focus on functionality over UI polish.
 
 ## 8. Future Enhancements (Post-PoC)
 
 ### 8.1 Multi-Project Support
+
 - Allow users to create and manage multiple financial projects
 - Project selection and switching
 - Project-specific data isolation
 
 ### 8.2 Budget Management
+
 - Monthly budget setting and tracking
 - Budget vs. actual comparison reports
 - Budget category management
 
 ### 8.3 Enhanced Payee & Payment Method Management
+
 - Full CRUD operations for payees and payment methods
 - Active/inactive status management
 - Additional payee details (website, notes, etc.)
 
 ### 8.4 Advanced Features
+
 - Tags and categorization
 - Advanced reporting and analytics
 - Receipt image storage
