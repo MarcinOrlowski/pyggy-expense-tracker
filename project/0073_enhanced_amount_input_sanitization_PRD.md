@@ -16,8 +16,9 @@ Implement intelligent input sanitization that accepts both comma and dot as deci
 
 ## Acceptance Criteria
 - [ ] System accepts both comma (`,`) and dot (`.`) as valid decimal separators
-- [ ] Input sanitization removes spaces, currency symbols (€, $, £), and handles thousand separators
-- [ ] Examples work correctly: "10,50" → "10.50", "1 234,56" → "1234.56", "$1,234.56" → "1234.56", "12,34 zł" → "12.34"
+- [ ] Input sanitization removes spaces, currency symbols ($, €, zł, zl), and handles thousand separators
+- [ ] Examples work correctly: "10,50" → "10.50", "1 234,56" → "1234.56", "$1,234.56" → "1234.56", "12,34 zł" → "12.34", "34,1 zł" → "34.1"
+- [ ] Browser validation does not interfere with sanitization (uses text input instead of number input)
 - [ ] Database storage remains consistent using dot notation for all decimal values
 - [ ] Validation provides clear error messages for invalid input formats
 - [ ] Existing dot notation inputs continue to work without changes (backwards compatibility)

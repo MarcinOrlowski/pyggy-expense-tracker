@@ -4,7 +4,7 @@
 **PRD Reference**: 0073_enhanced_amount_input_sanitization_PRD.md
 
 ## Technical Approach
-We'll implement input sanitization using a custom Django form field `SanitizedDecimalField` that inherits from `DecimalField`. This field will preprocess user input to remove formatting characters and normalize decimal separators before standard validation. Frontend JavaScript will provide real-time feedback during typing and paste operations. The solution leverages Django's existing form validation pipeline and maintains backward compatibility with existing DecimalField usage.
+We'll implement input sanitization using a custom Django form field `SanitizedDecimalField` that inherits from `DecimalField`. This field will preprocess user input to remove formatting characters and normalize decimal separators before standard validation. Frontend JavaScript will provide real-time feedback during typing and paste operations. Uses `TextInput` widget instead of `NumberInput` to avoid browser validation conflicts that would block sanitization. The solution leverages Django's existing form validation pipeline and maintains backward compatibility with existing DecimalField usage.
 
 ## Data Model
 No database schema changes required. All existing DecimalField columns (`total_amount`, `initial_amount`, `amount`) continue using dot notation for storage. The sanitization occurs only during form input processing.
@@ -21,7 +21,10 @@ SanitizedDecimalField(forms.DecimalField):
 # Usage in forms
 total_amount = SanitizedDecimalField(
     max_digits=13, decimal_places=2,
-    min_value=Decimal('0.01')
+    min_value=Decimal('0.01'),
+    widget=forms.TextInput(attrs={
+        'placeholder': '10.50, 10,50, $10.50, €10,50'
+    })
 )
 ```
 
@@ -29,6 +32,7 @@ total_amount = SanitizedDecimalField(
 ```javascript
 // Real-time sanitization on input events
 function sanitizeAmountInput(inputValue) {
+    // Supports: $, €, zł, zl currencies
     // Returns sanitized string: "12,34 zł" → "12.34"
 }
 
@@ -43,9 +47,10 @@ input.addEventListener('paste', handlePasteEvent);
 - **Backwards compatibility**: Existing dot notation inputs pass through unchanged
 
 ## Technical Risks & Mitigations
-1. **Risk**: Complex international number formats break sanitization → **Mitigation**: Conservative regex patterns that handle only common cases, clear error messages for edge cases
-2. **Risk**: JavaScript disabled users get confusing validation errors → **Mitigation**: Backend sanitization provides same functionality, frontend is enhancement only
-3. **Risk**: Existing forms break due to field replacement → **Mitigation**: Drop-in replacement maintains same API, comprehensive testing
+1. **Risk**: Browser number input validation blocks sanitization → **Mitigation**: Use TextInput widget instead of NumberInput to allow sanitization before validation
+2. **Risk**: Complex international number formats break sanitization → **Mitigation**: Conservative regex patterns for supported currencies ($, €, zł, zl) only
+3. **Risk**: JavaScript disabled users get confusing validation errors → **Mitigation**: Backend sanitization provides same functionality, frontend is enhancement only
+4. **Risk**: Existing forms break due to field replacement → **Mitigation**: Drop-in replacement maintains same API, comprehensive testing
 
 ## Implementation Plan
 - **Phase 1 (S)**: Create `SanitizedDecimalField` with comprehensive sanitization logic - 1 day
