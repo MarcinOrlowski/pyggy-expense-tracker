@@ -33,10 +33,11 @@ class ExpenseForm(forms.ModelForm):
     
     class Meta:
         model = Expense
-        fields = ['payee', 'title', 'expense_type', 'total_amount', 'installments_count', 'started_at', 'end_date', 'notes']
+        fields = ['payee', 'title', 'expense_type', 'total_amount', 'installments_count', 'initial_installment', 'started_at', 'end_date', 'notes']
         widgets = {
             'expense_type': forms.Select(attrs={'id': 'expense-type-select'}),
             'installments_count': forms.NumberInput(attrs={'min': '0'}),
+            'initial_installment': forms.NumberInput(attrs={'min': '0'}),
             'total_amount': forms.NumberInput(attrs={'step': '0.01', 'min': '0.01'}),
             'title': forms.TextInput(attrs={'placeholder': 'Enter expense title'}),
         }
@@ -66,6 +67,10 @@ class ExpenseForm(forms.ModelForm):
                 self.fields['total_amount'].disabled = True
                 self.fields['total_amount'].help_text = 'Amount cannot be edited because expense has paid items'
             
+            # Make initial_installment read-only after creation
+            self.fields['initial_installment'].disabled = True
+            self.fields['initial_installment'].help_text = 'Initial installment cannot be changed after expense creation'
+            
             # Store the original amount to check for changes later
             self.original_amount = self.instance.total_amount
     
@@ -73,6 +78,7 @@ class ExpenseForm(forms.ModelForm):
         cleaned_data = super().clean()
         expense_type = cleaned_data.get('expense_type')
         installments_count = cleaned_data.get('installments_count', 0)
+        initial_installment = cleaned_data.get('initial_installment', 0)
         started_at = cleaned_data.get('started_at')
         end_date = cleaned_data.get('end_date')
         
@@ -93,6 +99,15 @@ class ExpenseForm(forms.ModelForm):
         
         if expense_type in [Expense.TYPE_ENDLESS_RECURRING, Expense.TYPE_ONE_TIME, Expense.TYPE_RECURRING_WITH_END] and installments_count > 0:
             raise ValidationError('Only split payments can have installments count greater than 0')
+        
+        # Validate initial_installment
+        if expense_type == Expense.TYPE_SPLIT_PAYMENT:
+            if initial_installment < 0:
+                raise ValidationError('Initial installment cannot be negative')
+            if initial_installment >= installments_count:
+                raise ValidationError('Initial installment must be less than total installments count')
+        elif initial_installment > 0:
+            raise ValidationError('Initial installment can only be used with split payment expenses')
         
         if expense_type == Expense.TYPE_RECURRING_WITH_END:
             if not end_date:

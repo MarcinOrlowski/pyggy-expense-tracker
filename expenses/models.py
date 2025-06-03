@@ -137,8 +137,9 @@ class Expense(models.Model):
         - total_amount: Monthly installment amount (not total cost)
         - started_at: Start date for first installment
         - installments_count: Total number of installments (must be > 0)
+        - initial_installment: Starting installment number (0-based, default 0)
         - end_date: Not used (must be None)
-        - Notes: Creates installments_count expense items, automatically closes when all paid
+        - Notes: Creates (installments_count - initial_installment) expense items, automatically closes when all paid
     
     RECURRING_WITH_END ('recurring_with_end'):
         - total_amount: Amount charged each month
@@ -176,6 +177,10 @@ class Expense(models.Model):
         validators=[MinValueValidator(0.01)]
     )
     installments_count = models.PositiveIntegerField(default=0)
+    initial_installment = models.PositiveIntegerField(
+        default=0,
+        help_text="Starting installment number (0-based). Only used for split payments."
+    )
     started_at = models.DateField()
     end_date = models.DateField(null=True, blank=True)
     closed_at = models.DateTimeField(null=True, blank=True)
@@ -193,6 +198,15 @@ class Expense(models.Model):
         
         if self.expense_type in [self.TYPE_ENDLESS_RECURRING, self.TYPE_ONE_TIME, self.TYPE_RECURRING_WITH_END] and self.installments_count > 0:
             raise ValidationError('Only split payments can have installments_count > 0')
+        
+        # Validate initial_installment field
+        if self.expense_type == self.TYPE_SPLIT_PAYMENT:
+            if self.initial_installment < 0:
+                raise ValidationError('Initial installment cannot be negative')
+            if self.initial_installment >= self.installments_count:
+                raise ValidationError('Initial installment must be less than total installments count')
+        elif self.initial_installment > 0:
+            raise ValidationError('Initial installment can only be used with split payment expenses')
         
         if self.expense_type == self.TYPE_RECURRING_WITH_END:
             if not self.end_date:
