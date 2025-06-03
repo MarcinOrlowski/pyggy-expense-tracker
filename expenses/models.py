@@ -114,6 +114,40 @@ class Month(models.Model):
 
 
 class Expense(models.Model):
+    """
+    Expense entity supporting different payment patterns.
+    
+    Field Usage by Expense Type:
+    
+    ONE_TIME ('one_time'):
+        - total_amount: Total expense amount (single payment)
+        - started_at: Due date for the single payment
+        - installments_count: Must be 0
+        - end_date: Not used (must be None)
+        - Notes: Single payment processed in start month only
+    
+    ENDLESS_RECURRING ('endless_recurring'):
+        - total_amount: Amount charged each month
+        - started_at: Start date (day of month for recurring charge)
+        - installments_count: Must be 0
+        - end_date: Not used (must be None)
+        - Notes: Creates one expense item per month indefinitely until manually closed
+    
+    SPLIT_PAYMENT ('split_payment'):
+        - total_amount: Monthly installment amount (not total cost)
+        - started_at: Start date for first installment
+        - installments_count: Total number of installments (must be > 0)
+        - end_date: Not used (must be None)
+        - Notes: Creates installments_count expense items, automatically closes when all paid
+    
+    RECURRING_WITH_END ('recurring_with_end'):
+        - total_amount: Amount charged each month
+        - started_at: Start date (day of month for recurring charge)
+        - installments_count: Must be 0
+        - end_date: Last month to create charges (required)
+        - Notes: Creates one expense item per month until end_date month (inclusive)
+    """
+    
     # Expense type constants
     TYPE_ENDLESS_RECURRING = 'endless_recurring'
     TYPE_SPLIT_PAYMENT = 'split_payment'
