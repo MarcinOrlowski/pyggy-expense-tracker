@@ -36,7 +36,10 @@ class ExpenseForm(forms.ModelForm):
         max_digits=13,
         decimal_places=2,
         min_value=0.01,
-        widget=forms.NumberInput(attrs={'step': '0.01', 'min': '0.01'}),
+        widget=forms.TextInput(attrs={
+            'placeholder': '10.50, 10,50, $10.50, €10,50',
+            'class': 'form-control'
+        }),
         help_text="Supports international formats: 10.50, 10,50, $10.50, €10,50"
     )
     
@@ -202,9 +205,8 @@ class BudgetForm(forms.ModelForm):
         max_digits=10,
         decimal_places=2,
         min_value=0,
-        widget=forms.NumberInput(attrs={
-            'step': '0.01', 
-            'min': '0',
+        widget=forms.TextInput(attrs={
+            'placeholder': '100.00, 100,00, $100.00, €100,00',
             'class': 'form-control'
         }),
         help_text="Supports international formats: 100.00, 100,00, $100.00, €100,00"
