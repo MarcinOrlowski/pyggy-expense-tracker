@@ -12,6 +12,7 @@ Add an optional notes field to the expense entity to allow users to capture addi
 ## Problem Statement
 
 Currently, the expense tracking system captures structured data (payee, amount, type, dates) but lacks a flexible field for users to add contextual information such as:
+
 - Detailed descriptions of what the expense covers
 - Special circumstances or conditions
 - Reference information or confirmation details
@@ -74,15 +75,18 @@ Currently, the expense tracking system captures structured data (payee, amount, 
 ## Non-Functional Requirements
 
 ### Performance
+
 - No impact on existing query performance
 - Minimal additional storage overhead
 
 ### Compatibility
+
 - Backward compatible with existing expenses (no notes)
 - No changes to existing API contracts
 - Existing functionality remains unchanged
 
 ### Usability
+
 - Intuitive field placement and labeling
 - Responsive design across devices
 - Accessible form controls

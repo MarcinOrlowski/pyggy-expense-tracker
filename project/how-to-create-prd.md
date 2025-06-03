@@ -13,6 +13,7 @@
 ## Required Sections
 
 ### 1. Problem Statement (2-3 sentences)
+
 ```markdown
 ## Problem Statement
 - What specific problem are we solving?
@@ -24,6 +25,7 @@
 > Users cannot track their daily water intake in our fitness app. Active users (65% of our base) manually log water consumption elsewhere. This leads to incomplete health data and 30% lower engagement with nutrition features.
 
 ### 2. Solution Overview (3-4 sentences)
+
 ```markdown
 ## Solution Overview
 - Core functionality in plain language
@@ -35,17 +37,20 @@
 > Add a simple water tracking widget to the home screen that allows one-tap logging of water consumption. Unlike competitors, it will use smart reminders based on activity level. Success means 50% of active users log water at least once daily within 30 days.
 
 ### 3. User Stories (3-5 maximum)
+
 ```markdown
 ## User Stories
 As a [user type], I want to [action], so that [outcome]
 ```
 
 **Example:**
+
 1. As an active user, I want to log water intake with one tap, so that I can track hydration without interrupting my day
 2. As a fitness enthusiast, I want to see my hydration vs. activity level, so that I can optimize my performance
 3. As a user, I want to receive smart reminders, so that I maintain healthy hydration habits
 
 ### 4. Acceptance Criteria (5-7 bullet points)
+
 ```markdown
 ## Acceptance Criteria
 - Measurable, testable conditions
@@ -53,6 +58,7 @@ As a [user type], I want to [action], so that [outcome]
 ```
 
 **Example:**
+
 - User can log water intake in under 3 seconds
 - System tracks daily, weekly, and monthly intake
 - Reminders adjust based on logged activity level
@@ -60,12 +66,14 @@ As a [user type], I want to [action], so that [outcome]
 - Widget is accessible from home screen without additional navigation
 
 ### 5. Out of Scope (Critical!)
+
 ```markdown
 ## Out of Scope
 - Explicitly list what this iteration does NOT include
 ```
 
 **Example:**
+
 - Custom beverage types (only water for v1)
 - Integration with smart water bottles
 - Detailed hydration analytics
@@ -73,12 +81,14 @@ As a [user type], I want to [action], so that [outcome]
 - Apple Watch/wearable integration
 
 ### 6. Success Metrics (2-3 KPIs)
+
 ```markdown
 ## Success Metrics
 - Quantifiable measures tied to problem statement
 ```
 
 **Example:**
+
 - 50% of active users log water at least once daily
 - 25% increase in nutrition feature engagement
 - Average logging time under 3 seconds
@@ -86,6 +96,7 @@ As a [user type], I want to [action], so that [outcome]
 ## Writing Best Practices
 
 ### DO:
+
 - ✅ Use simple, jargon-free language
 - ✅ Be specific about constraints (time, budget, technical)
 - ✅ Include "Done when" statements
@@ -93,6 +104,7 @@ As a [user type], I want to [action], so that [outcome]
 - ✅ Make acceptance criteria testable
 
 ### DON'T:
+
 - ❌ Include implementation details (save for TRD)
 - ❌ Use technical architecture terms
 - ❌ Create nested bullet points in criteria
@@ -162,6 +174,7 @@ Before finalizing your PRD, ensure:
 The goal is **clear communication that enables rapid delivery**, not comprehensive documentation. When in doubt, cut it out. You can always add detail in the next iteration.
 
 **Your PRD should answer:**
+
 - WHAT are we building?
 - WHO is it for?
 - WHY does it matter?

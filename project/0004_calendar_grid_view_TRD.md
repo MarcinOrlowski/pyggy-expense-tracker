@@ -1,17 +1,21 @@
 # Technical Requirements Document (TRD) - Calendar Grid View Implementation
 
 ## 1. Overview
-This document provides the technical implementation details for the calendar grid view feature as specified in the PRD. The calendar will be a read-only view showing unpaid payment due dates for the current month.
+
+This document provides the technical implementation details for the calendar grid view feature as specified in the
+PRD. The calendar will be a read-only view showing unpaid payment due dates for the current month.
 
 ## 2. Architecture
 
 ### 2.1 Components
+
 - **View**: `calendar_view` in `expenses/views.py`
 - **Template**: `expenses/templates/expenses/calendar.html`
 - **Include**: `expenses/templates/expenses/includes/calendar_grid.html`
 - **CSS**: Addition to existing stylesheet
 
 ### 2.2 Data Flow
+
 1. View fetches current month from database
 2. Query unpaid items for current month
 3. Check for overdue items from previous months
@@ -77,6 +81,7 @@ def calendar_view(request):
 ### 3.2 URL Configuration
 
 Add to `expenses/urls.py`:
+
 ```python
 path('calendar/', views.calendar_view, name='calendar'),
 ```
@@ -84,10 +89,12 @@ path('calendar/', views.calendar_view, name='calendar'),
 ### 3.3 Template Implementation
 
 **calendar.html**:
+
 ```django
 {% extends "expenses/base.html" %}
 
-{% block title %}Calendar - {% if month %}{{ month.year }}-{{ month.month|stringformat:"02d" }}{% else %}{{ year }}-{{ today.month|stringformat:"02d" }}{% endif %}{% endblock %}
+{% block title %}Calendar - {% if month %}{{ month.year }}-{{ month.month|stringformat:"02d" }}{% else %}{{ year }}-
+{{ today.month|stringformat:"02d" }}{% endif %}{% endblock %}
 
 {% block content %}
 <div class="content-header">
@@ -116,6 +123,7 @@ path('calendar/', views.calendar_view, name='calendar'),
 ```
 
 **includes/calendar_grid.html**:
+
 ```django
 <div class="calendar-grid">
     <!-- Weekday headers -->
@@ -149,6 +157,7 @@ path('calendar/', views.calendar_view, name='calendar'),
 The calendar uses CSS variables for comprehensive theming:
 
 #### Layout & Structure
+
 - CSS Grid with 7 columns for days of the week
 - Subtle diagonal stripe pattern background (135deg) for empty cells
 - 1px gaps between cells with muted color separators
@@ -156,32 +165,36 @@ The calendar uses CSS variables for comprehensive theming:
 - Takes up 23% of dashboard width (2.5fr vs 0.75fr grid ratio)
 
 #### Color Scheme & Visual Hierarchy
+
 - **Past days**: Grayed out (60% opacity) with `--bg-secondary` background
 - **Today**: Dark purple background (`#5849a6`) with prominent styling
 - **Future weekdays**: Light purple tint (`rgba(88, 73, 166, 0.25)`)
 - **Future weekends**: Darker purple tint (`rgba(50, 40, 100, 0.5)`) for distinction
 
 #### Headers
+
 - **Regular weekday headers**: Standard background (`--bg-secondary`)
 - **Weekend headers**: Lighter background (`--bg-tertiary`)
 - **Current weekday header**: Purple highlight matching today's cell
 
 #### Payment Indicators (6px circles in top-right corner)
+
 - **Green dot**: Future payments due (`--color-green`)
 - **Orange dot**: Payments due today (`--color-orange`)
 - **Bright red dot**: Overdue payments (`#ff2020`)
 
 #### Interactive Elements
+
 - Hover effects with scale transform and color changes
 - Smooth transitions (0.2s) for all interactions
 - Today's cell scales to 110% on hover
 
-/* Responsive Design */
+/*Responsive Design*/
 @media (max-width: 768px) {
     .calendar-day {
         font-size: 0.875rem;
     }
-    
+
     .calendar-weekday {
         font-size: 0.75rem;
         padding: 0.25rem;
@@ -197,11 +210,12 @@ The calendar uses CSS variables for comprehensive theming:
         gap: 1px;
         padding: 1px;
     }
-    
+
     .calendar-day {
         font-size: 0.75rem;
     }
 }
+
 ```
 
 ### 3.5 Navigation Update
@@ -219,6 +233,7 @@ Update `expenses/templates/expenses/base.html` navigation section:
 ## 4. Database Queries
 
 The implementation uses two efficient queries:
+
 1. **Current month unpaid items**: Single query with day extraction
 2. **Overdue check**: Single exists() query for previous months
 
@@ -242,6 +257,7 @@ Total database hits: 2 (plus 1 for month retrieval)
 ## 7. Testing Checklist
 
 ### 7.1 Functional Tests
+
 - [ ] Calendar displays current month correctly
 - [ ] Week starts on Monday
 - [ ] Days with unpaid items show orange indicator
@@ -251,12 +267,14 @@ Total database hits: 2 (plus 1 for month retrieval)
 - [ ] Calendar renders when no month exists
 
 ### 7.2 Visual Tests
+
 - [ ] Dark theme consistency
 - [ ] Mobile responsive layout
 - [ ] Readable on small screens
 - [ ] Proper spacing and alignment
 
 ### 7.3 Edge Cases
+
 - [ ] Months with 28, 29, 30, 31 days
 - [ ] First day of month on different weekdays
 - [ ] No unpaid items (empty indicators)
@@ -275,6 +293,7 @@ Total database hits: 2 (plus 1 for month retrieval)
 ## 9. Future Considerations
 
 While out of scope for MVP, the following could be added later:
+
 - Month navigation (previous/next)
 - Click for day details
 - Different indicators for different payment types

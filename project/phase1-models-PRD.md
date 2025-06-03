@@ -1,13 +1,15 @@
-# Product Requirements Document (PRD)
-# Phase 1: Data Models Implementation
-# Expense Tracker PoC - Foundation Layer
+# Product Requirements Document (PRD) - Phase 1: Data Models Implementation
+
+## Expense Tracker PoC - Foundation Layer
 
 ## 1. Phase Overview
 
 ### 1.1 Purpose
+
 Implement the foundational data models and database layer for the expense tracking system. This phase establishes the core data structures that will support all future functionality, focusing on proper relationships, validation, and data integrity.
 
 ### 1.2 Scope
+
 - Core database models for expense tracking
 - Django ORM implementation with proper validation
 - Database migrations and schema creation
@@ -15,6 +17,7 @@ Implement the foundational data models and database layer for the expense tracki
 - Initial data fixtures and setup utilities
 
 ### 1.3 Success Criteria
+
 - ✅ All core models implemented with proper relationships
 - ✅ Database schema created with appropriate constraints
 - ✅ Data validation rules enforced at model level
@@ -27,6 +30,7 @@ Implement the foundational data models and database layer for the expense tracki
 ### 2.1 Core Entities
 
 **Payee Model**
+
 - Purpose: Store vendor/company information for expenses
 - Fields:
   - `name`: Unique company/vendor name (CharField, max 255, unique)
@@ -38,6 +42,7 @@ Implement the foundational data models and database layer for the expense tracki
   - Alphabetical ordering by default
 
 **PaymentMethod Model**
+
 - Purpose: Track different payment types (Credit Card, Cash, etc.)
 - Fields:
   - `name`: Unique payment method name (CharField, max 255, unique)
@@ -49,6 +54,7 @@ Implement the foundational data models and database layer for the expense tracki
   - Alphabetical ordering by default
 
 **Month Model**
+
 - Purpose: Organize expenses by month/year for processing
 - Fields:
   - `year`: Year value (PositiveSmallIntegerField, 2020-2099)
@@ -65,6 +71,7 @@ Implement the foundational data models and database layer for the expense tracki
   - Once any expense is paid in a month, that month is locked
 
 **Expense Model**
+
 - Purpose: Main expense records supporting three expense types
 - Fields:
   - `payee`: Foreign key to Payee (PROTECT delete - cannot delete payee if linked)
@@ -86,6 +93,7 @@ Implement the foundational data models and database layer for the expense tracki
   - Payment method is now property of individual payments (ExpenseItems)
 
 **ExpenseItem Model**
+
 - Purpose: Individual payment instances linked to expenses and months
 - Fields:
   - `expense`: Foreign key to Expense (CASCADE delete)
@@ -107,12 +115,14 @@ Implement the foundational data models and database layer for the expense tracki
 ### 2.2 Relationships
 
 **Primary Relationships:**
+
 - Expense → Payee (Many-to-One, required)
 - ExpenseItem → Expense (Many-to-One, required)
 - ExpenseItem → Month (Many-to-One, required)
 - ExpenseItem → PaymentMethod (Many-to-One, optional)
 
 **Delete Behavior:**
+
 - Payee deletion → PROTECTED (prevents deletion if linked to any expenses)
 - PaymentMethod deletion → Set NULL on ExpenseItems
 - Expense deletion → Cascade to ExpenseItems
@@ -121,6 +131,7 @@ Implement the foundational data models and database layer for the expense tracki
 ### 2.3 Data Validation
 
 **Model-Level Validation:**
+
 - Expense type consistency with installments count
 - **Start date validation (cannot be earlier than current month)**
 - Date field validation (no future dates where inappropriate)
@@ -128,6 +139,7 @@ Implement the foundational data models and database layer for the expense tracki
 - Status consistency with payment dates
 
 **Database Constraints:**
+
 - Unique constraints on Payee/PaymentMethod names
 - Unique constraint on Month year/month combination
 - Check constraints for valid date ranges
@@ -139,6 +151,7 @@ Implement the foundational data models and database layer for the expense tracki
 ### 3.1 Administrative Features
 
 **Common Features for All Models:**
+
 - List views with relevant fields displayed
 - Search functionality where appropriate
 - Filtering options for key fields
@@ -146,22 +159,26 @@ Implement the foundational data models and database layer for the expense tracki
 - Optimized queries to prevent N+1 problems
 
 **Payee Admin:**
+
 - Display: name, created_at
 - Search: name
 - Features: Basic CRUD operations
 
 **PaymentMethod Admin:**
+
 - Display: name, created_at
 - Search: name
 - Features: Basic CRUD operations
 
 **Month Admin:**
+
 - Display: year, month, created_at, (indicator if has paid expenses)
 - Filter: year, month
 - Features: View existing months, create sequential months only, delete most recent unpaid month only
 - Validation: Enforce sequential creation and deletion rules
 
 **Expense Admin:**
+
 - Display: title, payee, expense_type, total_amount, started_at, closed_at
 - Filter: expense_type, closed_at, payee
 - Search: title, payee name
@@ -170,6 +187,7 @@ Implement the foundational data models and database layer for the expense tracki
 - Performance: Select related payee/payment_method
 
 **ExpenseItem Admin:**
+
 - Display: expense, month, due_date, amount, status, payment_date, payment_method
 - Filter: status, month, expense type, payment_method
 - Search: expense title, payee name
@@ -179,6 +197,7 @@ Implement the foundational data models and database layer for the expense tracki
 ### 3.2 User Experience
 
 **Admin Interface Goals:**
+
 - Quick data entry for testing and initial setup
 - Clear visualization of expense relationships
 - Easy navigation between related objects
@@ -189,12 +208,14 @@ Implement the foundational data models and database layer for the expense tracki
 ### 4.1 Initial Data
 
 **Reference Data (Fixtures):**
+
 - 5 sample payees (Electric Company, Internet Provider, etc.)
 - 5 payment methods (Credit Card, Debit Card, Bank Transfer, Cash, PayPal)
 - Initial seed month (current year/month or specified in settings)
 - Proper timestamps for all fixture data
 
 **Management Commands:**
+
 - `setup_initial_data`: Load reference data fixtures and create initial month
 - Error handling and user feedback
 - Idempotent operation (safe to run multiple times)
@@ -203,12 +224,14 @@ Implement the foundational data models and database layer for the expense tracki
 ### 4.2 Database Initialization
 
 **Migration Strategy:**
+
 - Single initial migration with all models
 - Proper field definitions and constraints
 - Index creation for performance
 - Foreign key relationships established
 
 **Setup Process:**
+
 1. Run Django migrations
 2. Create superuser for admin access
 3. Load initial data fixtures
@@ -219,12 +242,14 @@ Implement the foundational data models and database layer for the expense tracki
 ### 5.1 Django Best Practices
 
 **Model Implementation:**
+
 - Proper `__str__` methods for admin display
 - Meta classes with ordering and unique constraints
 - Clean methods for custom validation
 - Appropriate field types and validators
 
 **Performance Considerations:**
+
 - Database indexes on frequently queried fields
 - Select_related in admin querysets
 - Appropriate max_length values
@@ -233,12 +258,14 @@ Implement the foundational data models and database layer for the expense tracki
 ### 5.2 Quality Assurance
 
 **Validation Testing:**
+
 - Model clean methods work correctly
 - Database constraints prevent invalid data
 - Admin interface handles edge cases
 - Fixtures load without errors
 
 **Integration Testing:**
+
 - All model relationships function properly
 - Admin interface creates/updates data correctly
 - Management commands execute successfully
@@ -249,12 +276,14 @@ Implement the foundational data models and database layer for the expense tracki
 ### 6.1 Readiness for Phase 2
 
 **Business Logic Foundation:**
+
 - Models support all three expense types
 - Monthly processing structure in place
 - Payment tracking mechanisms ready
 - Completion workflow supported
 
 **Interface Preparation:**
+
 - Admin interface validates business rules
 - Model methods ready for view layer
 - Query optimization established
@@ -263,6 +292,7 @@ Implement the foundational data models and database layer for the expense tracki
 ### 6.2 Extension Points
 
 **Planned Enhancements:**
+
 - Additional model methods for business logic
 - Custom managers for common queries
 - Signal handlers for automatic processing
@@ -273,21 +303,25 @@ Implement the foundational data models and database layer for the expense tracki
 ### 7.1 Functional Requirements
 
 **✅ Model Creation:**
+
 - All 5 models implemented with correct fields
 - Relationships properly defined
 - Validation rules enforced
 
 **✅ Database Operations:**
+
 - Migrations create proper schema
 - CRUD operations work for all models
 - Constraints prevent invalid data
 
 **✅ Admin Interface:**
+
 - All models registered and functional
 - Search and filtering work correctly
 - Performance optimization implemented
 
 **✅ Data Management:**
+
 - Initial data loads successfully
 - Management commands work properly
 - Test data can be created/modified
@@ -295,16 +329,19 @@ Implement the foundational data models and database layer for the expense tracki
 ### 7.2 Technical Requirements
 
 **✅ Code Quality:**
+
 - Models follow Django conventions
 - Proper documentation and comments
 - Consistent naming and structure
 
 **✅ Performance:**
+
 - Database queries optimized
 - Admin interface responsive
 - Appropriate indexing in place
 
 **✅ Validation:**
+
 - Model validation prevents invalid data
 - Business rules enforced at database level
 - Error messages clear and helpful

@@ -1,31 +1,36 @@
-# Technical Requirements Document (TRD)
-# Expense Tracker PoC - Django Implementation
+# Technical Requirements Document (TRD) - Expense Tracker PoC - Django Implementation
 
 ## 1. Overview
 
-This Technical Requirements Document defines the specific technical implementation details for the Expense Tracker Proof of Concept. It complements the PRD and Architecture Specification by providing concrete technical specifications, constraints, and implementation guidelines.
+This Technical Requirements Document defines the specific technical implementation details for the Expense Tracker
+Proof of Concept. It complements the PRD and Architecture Specification by providing concrete technical
+specifications, constraints, and implementation guidelines.
 
 ## 2. Technology Stack
 
 ### 2.1 Core Technologies
 
-**Backend Framework**
+### Backend Framework
+
 - Python 3.12+
 - Django 4.2+ (LTS)
 - Django ORM for database operations
 
-**Database**
+### Database
+
 - SQLite for development and PoC
 - PostgreSQL ready (future production)
 
-**Frontend**
+### Frontend
+
 - HTML5 semantic markup
 - CSS3 with Flexbox/Grid (processed via build tools)
 - Vanilla JavaScript (ES6+)
 - Vite for fast development and bundling
 - PostCSS for CSS processing and autoprefixing
 
-**Development Tools**
+### Development Tools
+
 - Django development server
 - Django admin interface
 - Django management commands
@@ -36,7 +41,8 @@ This Technical Requirements Document defines the specific technical implementati
 
 ### 2.2 Dependencies
 
-**Required Python Packages**
+### Required Python Packages
+
 ```python
 Django>=4.2,<5.0
 python-decouple>=3.8    # Environment configuration
@@ -44,7 +50,8 @@ django-extensions>=3.2  # Development utilities
 django-vite>=2.0        # Vite integration for Django
 ```
 
-**Frontend Build Tools**
+### Frontend Build Tools
+
 ```json
 {
   "devDependencies": {
@@ -56,7 +63,8 @@ django-vite>=2.0        # Vite integration for Django
 }
 ```
 
-**Optional Development Packages**
+### Optional Development Packages
+
 ```python
 django-debug-toolbar>=4.0  # Debug information
 black>=23.0                # Code formatting
@@ -68,12 +76,13 @@ pytest-django>=4.5       # Testing framework
 
 ### 3.1 Database Schema
 
-**User Model**
+### User Model
+
 - Uses Django's built-in `django.contrib.auth.models.User`
 - No customization required for PoC
 - Authentication handled by Django admin
 
-**Core Models with Constraints**
+### Core Models with Constraints
 
 ```sql
 -- Payee Table
@@ -163,7 +172,8 @@ CREATE INDEX idx_month_lookup ON expenses_month(year, month);
 
 ### 3.2 Data Integrity Rules
 
-**Model-Level Validation**
+### Model-Level Validation
+
 ```python
 # In models.py
 class Expense(models.Model):
@@ -192,13 +202,15 @@ class ExpenseItem(models.Model):
 
 ### 3.3 Database Performance
 
-**Required Indexes**
+### Required Indexes
+
 - Foreign key indexes (automatic in Django)
-- Composite index on Month(year, month) 
+- Composite index on Month(year, month)
 - Index on Expense.closed_at for active expense queries
 - Index on ExpenseItem.status for pending/paid queries
 
-**Query Optimization**
+### Query Optimization
+
 - Use select_related() for foreign key relationships
 - Use prefetch_related() for reverse foreign key queries
 - Limit querysets with appropriate filtering
@@ -243,7 +255,8 @@ urlpatterns = [
 
 ### 4.2 View Specifications
 
-**Function Signatures**
+### Function Signatures
+
 ```python
 def dashboard(request) -> HttpResponse:
     """Display current month summary with pending payments"""
@@ -272,7 +285,8 @@ def expense_item_pay(request, pk: int) -> HttpResponse:
 
 ### 4.3 Form Specifications
 
-**ExpenseForm**
+### ExpenseForm
+
 ```python
 class ExpenseForm(forms.ModelForm):
     class Meta:
@@ -291,7 +305,8 @@ class ExpenseForm(forms.ModelForm):
         pass
 ```
 
-**PaymentForm**
+### PaymentForm
+
 ```python
 class PaymentForm(forms.ModelForm):
     class Meta:
@@ -306,7 +321,8 @@ class PaymentForm(forms.ModelForm):
 
 ### 5.1 Core Services
 
-**Monthly Processing Service**
+### Monthly Processing Service
+
 ```python
 # expenses/services.py
 
@@ -406,26 +422,30 @@ def check_expense_completion(expense: Expense) -> bool:
 
 ### 5.2 Data Validation Rules
 
-**Expense Creation Rules**
+### Expense Creation Rules
+
 1. Split payments must have installments_count > 0
 2. Other expense types must have installments_count = 0
 3. total_amount must be > 0
 4. started_at cannot be in future beyond reasonable limit (1 year)
 
-**Payment Recording Rules**
+### Payment Recording Rules
+
 1. Can only pay pending expense items
 2. Payment date cannot be before due date (with grace period)
 3. Payment date cannot be in future
 4. Status and payment_date must be consistent
 
-**Month Processing Rules**
+### Month Processing Rules
+
 1. System must be initialized with a seed month (e.g., 2025-01)
 2. Cannot process same month twice
 3. Must process months in strict chronological order (no gaps)
 4. Can only create the next sequential month after the most recent
 5. Only create items for expenses that have started
 
-**Month Deletion Rules**
+### Month Deletion Rules
+
 1. Can only delete the most recent month in the system
 2. Cannot delete if any expense items in that month are paid
 3. Deletion cascades to remove all pending expense items
@@ -434,13 +454,15 @@ def check_expense_completion(expense: Expense) -> bool:
 
 ### 6.1 Authentication & Authorization
 
-**For PoC (Simplified)**
+### For PoC (Simplified)
+
 - Use Django's built-in authentication
 - Single-user system (admin user)
 - All access through Django admin login
 - No public registration
 
-**Session Management**
+### Session Management
+
 - Django's default session handling
 - Session timeout: 2 weeks (Django default)
 - CSRF protection enabled
@@ -448,20 +470,23 @@ def check_expense_completion(expense: Expense) -> bool:
 
 ### 6.2 Input Validation
 
-**Form Validation**
+### Form Validation
+
 - All user inputs validated via Django forms
 - Decimal fields with appropriate precision limits
 - Date fields with reasonable ranges
 - Text fields with length limits
 
-**SQL Injection Prevention**
+### SQL Injection Prevention
+
 - Django ORM handles parameterized queries
 - No raw SQL in PoC
 - All database access through Django models
 
 ### 6.3 Data Protection
 
-**Sensitive Data**
+### Sensitive Data
+
 - No sensitive financial data in PoC
 - No PII beyond basic expense descriptions
 - Local SQLite database (not exposed)
@@ -470,7 +495,8 @@ def check_expense_completion(expense: Expense) -> bool:
 
 ### 7.1 Response Time Targets
 
-**Page Load Times (PoC Targets)**
+### Page Load Times (PoC Targets)
+
 - Dashboard: < 500ms
 - Expense list: < 1s
 - Expense create/edit: < 300ms
@@ -478,19 +504,22 @@ def check_expense_completion(expense: Expense) -> bool:
 
 ### 7.2 Database Performance
 
-**Query Limits**
+### Query Limits
+
 - Maximum 10 database queries per page load
 - Use select_related/prefetch_related for relationships
 - Pagination for lists > 50 items
 
-**Database Size Limits (PoC)**
+### Database Size Limits (PoC)
+
 - SQLite file size < 100MB
 - Maximum 10,000 expense items
 - Maximum 100 active expenses
 
 ### 7.3 Memory Usage
 
-**Development Server**
+### Development Server
+
 - Memory usage < 200MB
 - Django debug mode acceptable for PoC
 
@@ -498,7 +527,8 @@ def check_expense_completion(expense: Expense) -> bool:
 
 ### 8.1 Testing Strategy
 
-**Unit Tests**
+### Unit Tests
+
 ```python
 # Test model validation
 def test_expense_validation():
@@ -516,7 +546,8 @@ def test_expense_form_validation():
     # Test valid/invalid inputs
 ```
 
-**Integration Tests**
+### Integration Tests
+
 ```python
 def test_expense_creation_workflow():
     # End-to-end expense creation
@@ -534,7 +565,8 @@ def test_payment_recording_workflow():
 
 ### 8.3 Test Data
 
-**Fixtures Required**
+### Fixtures Required
+
 ```python
 # fixtures/test_data.json
 [
@@ -553,7 +585,8 @@ def test_payment_recording_workflow():
 
 ### 9.1 Development Environment
 
-**Setup Steps**
+### Setup Steps
+
 ```bash
 # Python environment
 python -m venv venv
@@ -573,7 +606,8 @@ npm run dev        # Vite dev server with HMR
 python manage.py runserver  # Django server
 ```
 
-**Environment Variables**
+### Environment Variables
+
 ```bash
 # .env file
 DEBUG=True
@@ -582,7 +616,7 @@ DATABASE_URL=sqlite:///db.sqlite3
 VITE_DEV_MODE=True
 ```
 
-**Build Configuration Files**
+### Build Configuration Files
 
 ```javascript
 // vite.config.js
@@ -631,12 +665,14 @@ module.exports = {
 
 ### 9.2 Production Considerations (Future)
 
-**Database Migration**
+### Database Migration
+
 - SQLite → PostgreSQL migration script
 - Data backup procedures
 - Database connection pooling
 
-**Security Hardening**
+### Security Hardening
+
 - HTTPS enforcement
 - Security headers
 - Database credential management
@@ -646,7 +682,8 @@ module.exports = {
 
 ### 10.1 Logging Requirements
 
-**Log Levels**
+### Log Levels
+
 ```python
 # settings.py
 LOGGING = {
@@ -669,7 +706,8 @@ LOGGING = {
 }
 ```
 
-**Events to Log**
+### Events to Log
+
 - Expense creation/modification/deletion
 - Monthly processing execution
 - Payment recording
@@ -677,7 +715,8 @@ LOGGING = {
 
 ### 10.2 Error Handling
 
-**Exception Handling Strategy**
+### Exception Handling Strategy
+
 ```python
 # Custom exception classes
 class ExpenseTrackerError(Exception):
@@ -694,7 +733,8 @@ class PaymentRecordingError(ExpenseTrackerError):
 
 ### 11.1 Data Fixtures
 
-**Initial Data**
+### Initial Data
+
 ```python
 # management/commands/setup_initial_data.py
 def handle(self):
@@ -711,7 +751,8 @@ def handle(self):
 
 ### 11.2 Backup Strategy (PoC)
 
-**Development Backup**
+### Development Backup
+
 - SQLite file backup before major changes
 - Fixture export for data preservation
 - Git repository for code versioning
@@ -720,13 +761,15 @@ def handle(self):
 
 ### 12.1 Code Standards
 
-**Python Code Style**
+### Python Code Style
+
 - PEP 8 compliance
 - Black formatting
 - Type hints where beneficial
 - Docstrings for public methods
 
-**Django Best Practices**
+### Django Best Practices
+
 - Model validation in clean() methods
 - Form validation for user input
 - URL naming conventions
@@ -734,7 +777,8 @@ def handle(self):
 
 ### 12.2 Documentation Standards
 
-**Code Documentation**
+### Code Documentation
+
 - Docstrings for all models, views, and services
 - Inline comments for complex business logic
 - README with setup instructions
@@ -744,20 +788,23 @@ def handle(self):
 
 ### 13.1 Why Vite + PostCSS?
 
-**Development Benefits**
+### Development Benefits
+
 - **Hot Module Replacement**: Instant CSS/JS updates without page refresh
 - **Fast Build Times**: Vite's esbuild-powered bundling is 10-100x faster than webpack
 - **Modern Browser Features**: Native ES modules in development
 - **Automatic Browser Prefixing**: PostCSS autoprefixer handles vendor prefixes
 - **CSS Optimization**: Automatic minification and duplicate removal
 
-**Production Benefits**
+### Production Benefits
+
 - **Optimized Bundles**: Tree-shaking removes unused code
 - **Asset Hashing**: Automatic cache-busting for deployments
 - **CSS Purging**: Remove unused CSS classes automatically
 - **Gzip Compression**: Smaller file sizes for faster loading
 
-**Developer Experience**
+### Developer Experience
+
 - **Zero Configuration**: Works out of the box with sensible defaults
 - **Error Overlay**: Clear error messages during development
 - **Source Maps**: Debug original source in production builds
@@ -775,9 +822,11 @@ npm run build                    # Creates optimized static files
 python manage.py collectstatic   # Django collects all static files
 ```
 
-**File Structure with Build Tools**
+### File Structure with Build Tools
+
 - `frontend/` - Source files (editable)
 - `static/` - Built files (auto-generated, don't edit)
 - Hot reloading updates `static/` automatically during development
 
-This TRD provides the technical foundation for implementing the Expense Tracker PoC with modern build tools that enhance development speed and production performance while maintaining the simplified Django approach.
+This TRD provides the technical foundation for implementing the Expense Tracker PoC with modern build tools that enhance
+development speed and production performance while maintaining the simplified Django approach.

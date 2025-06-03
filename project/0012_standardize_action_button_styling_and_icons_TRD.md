@@ -6,11 +6,16 @@
 
 ## Technical Approach
 
-This is a pure frontend styling update that requires modifications to Django HTML templates only. We'll remove custom color classes from action buttons (keeping only default `btn` and `btn-danger` for delete actions) and update specific icons to be more action-oriented. The existing CSS framework already supports default button styling, so no CSS changes are required. All modifications will be made to template files in the `expenses/templates/expenses/` directory.
+This is a pure frontend styling update that requires modifications to Django HTML templates only. We'll remove
+custom color classes from action buttons (keeping only default `btn` and `btn-danger` for delete actions) and
+update specific icons to be more action-oriented. The existing CSS framework already supports default button
+styling, so no CSS changes are required. All modifications will be made to template files in the
+`expenses/templates/expenses/` directory.
 
 ## Template Modifications
 
 **Files to Update:**
+
 - `expense_list.html` - Lines 76-79 (view, edit, delete buttons)
 - `payee_list.html` - Lines 42-55 (edit, hide/show, delete buttons)  
 - `month_list.html` - Lines 31-38 (view, delete buttons)
@@ -19,6 +24,7 @@ This is a pure frontend styling update that requires modifications to Django HTM
 - `expense_detail.html` - Lines 74-84 (pay/unpay buttons)
 
 **Button Class Changes:**
+
 ```html
 <!-- Before -->
 <a class="btn btn-secondary btn-sm" ...>  <!-- Remove btn-secondary -->
@@ -34,6 +40,7 @@ This is a pure frontend styling update that requires modifications to Django HTM
 ```
 
 **Icon Updates:**
+
 - `fa-circle-check` → `fa-check` (Mark as Paid action)
 - `fa-rotate-left` → `fa-undo` (Mark as Unpaid action)
 - `fa-folder-open` → `fa-eye` (View/Open action in budget_list.html)

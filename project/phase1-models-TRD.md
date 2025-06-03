@@ -1,13 +1,15 @@
-# Technical Requirements Document (TRD)
-# Phase 1: Data Models Implementation
-# Expense Tracker PoC - Foundation Layer
+# Technical Requirements Document (TRD) - Phase 1: Data Models Implementation
+
+## Expense Tracker PoC - Foundation Layer
 
 ## 1. Technical Overview
 
 ### 1.1 Implementation Summary
+
 This document details the technical implementation of Phase 1 data models for the expense tracking system. The implementation uses Django 5.2+ ORM with SQLite database, providing a solid foundation for the complete application.
 
 ### 1.2 Technology Stack
+
 - **Framework**: Django 5.2+
 - **Database**: SQLite (development), PostgreSQL-ready
 - **ORM**: Django ORM with migrations
@@ -15,6 +17,7 @@ This document details the technical implementation of Phase 1 data models for th
 - **Python**: 3.12+
 
 ### 1.3 File Structure
+
 ```
 expenses/
 ├── models.py                 # Core data models (119 lines)
@@ -38,12 +41,14 @@ expense_tracker/
 ### 2.1 Base Model Patterns
 
 **Timestamp Pattern (Applied to All Models):**
+
 ```python
 created_at = models.DateTimeField(auto_now_add=True)
 updated_at = models.DateTimeField(auto_now=True)
 ```
 
 **Validation Pattern:**
+
 ```python
 def clean(self):
     # Custom validation logic
@@ -52,6 +57,7 @@ def clean(self):
 ```
 
 **String Representation:**
+
 ```python
 def __str__(self):
     return f"{self.field} - {self.related_field}"
@@ -60,6 +66,7 @@ def __str__(self):
 ### 2.2 Model Specifications
 
 **Payee Model (expenses/models.py:7-16)**
+
 ```python
 class Payee(models.Model):
     name = models.CharField(max_length=255, unique=True)
@@ -74,12 +81,14 @@ class Payee(models.Model):
 ```
 
 **Technical Details:**
+
 - Unique constraint on name field
 - Alphabetical ordering for admin lists
 - Simple string representation
 - Auto-managed timestamps
 
 **PaymentMethod Model (expenses/models.py:19-28)**
+
 ```python
 class PaymentMethod(models.Model):
     name = models.CharField(max_length=255, unique=True)
@@ -94,11 +103,13 @@ class PaymentMethod(models.Model):
 ```
 
 **Technical Details:**
+
 - Identical pattern to Payee for consistency
 - Unique name constraint prevents duplicates
 - Optimized for dropdown selections
 
 **Month Model (expenses/models.py:31-46)**
+
 ```python
 class Month(models.Model):
     year = models.PositiveSmallIntegerField(
@@ -119,12 +130,14 @@ class Month(models.Model):
 ```
 
 **Technical Details:**
+
 - Composite unique constraint prevents duplicate months
 - Descending order (newest first)
 - Range validation on year (2020-2099) and month (1-12)
 - Zero-padded month display format
 
 **Expense Model (expenses/models.py:49-86)**
+
 ```python
 class Expense(models.Model):
     EXPENSE_TYPES = [
@@ -164,6 +177,7 @@ class Expense(models.Model):
 ```
 
 **Technical Details:**
+
 - Complex validation logic in clean() method
 - Decimal field with 13 digits, 2 decimal places
 - PROTECT delete behavior prevents payee deletion if linked to expenses
@@ -172,6 +186,7 @@ class Expense(models.Model):
 - Payment method moved to ExpenseItem level for chunked payment support
 
 **ExpenseItem Model (expenses/models.py:89-118)**
+
 ```python
 class ExpenseItem(models.Model):
     STATUS_CHOICES = [
@@ -209,6 +224,7 @@ class ExpenseItem(models.Model):
 ```
 
 **Technical Details:**
+
 - Status validation ensures data consistency
 - Triple foreign key relationships (expense, month, and payment_method)
 - Payment method at item level supports chunked payments with different methods
@@ -219,6 +235,7 @@ class ExpenseItem(models.Model):
 ### 2.3 Database Schema
 
 **Generated Tables:**
+
 ```sql
 -- expenses_payee
 CREATE TABLE "expenses_payee" (
@@ -275,6 +292,7 @@ CREATE TABLE "expenses_expenseitem" (
 ```
 
 **Indexes:**
+
 - Primary keys on all tables (auto-generated)
 - Unique constraints on payee.name, paymentmethod.name
 - Unique constraint on month(year, month)
@@ -285,12 +303,14 @@ CREATE TABLE "expenses_expenseitem" (
 ### 3.1 Admin Configuration (expenses/admin.py:1-48)
 
 **Performance Optimizations:**
+
 ```python
 def get_queryset(self, request):
     return super().get_queryset(request).select_related('payee', 'payment_method')
 ```
 
 **Common Admin Features:**
+
 - `list_display`: Key fields shown in list view
 - `search_fields`: Searchable fields for quick filtering
 - `list_filter`: Sidebar filters for data segmentation
@@ -298,12 +318,14 @@ def get_queryset(self, request):
 - `date_hierarchy`: Date-based navigation
 
 **ExpenseAdmin Specifics:**
+
 - Select related queries prevent N+1 problems
 - Date hierarchy on started_at for temporal navigation
 - Comprehensive filtering by type, status, and payee
 - No longer includes payment_method (moved to ExpenseItem level)
 
 **ExpenseItemAdmin Specifics:**
+
 - Quadruple select_related for optimal query performance (expense/payee/month/payment_method)
 - Status-based filtering for payment management
 - Payment method filtering for payment analysis
@@ -312,6 +334,7 @@ def get_queryset(self, request):
 ### 3.2 Query Optimization
 
 **Select Related Usage:**
+
 ```python
 # ExpenseAdmin
 .select_related('payee')
@@ -321,6 +344,7 @@ def get_queryset(self, request):
 ```
 
 **Benefits:**
+
 - Reduces database queries from O(n) to O(1)
 - Improves admin interface response times
 - Prevents performance degradation with large datasets
@@ -330,6 +354,7 @@ def get_queryset(self, request):
 ### 4.1 Initial Data Fixtures (fixtures/initial_data.json)
 
 **Structure:**
+
 ```json
 [
   {
@@ -345,6 +370,7 @@ def get_queryset(self, request):
 ```
 
 **Content:**
+
 - 5 sample payees (utility companies, services)
 - 5 payment methods (cards, transfer, cash, digital)
 - Consistent timestamps for clean data
@@ -352,6 +378,7 @@ def get_queryset(self, request):
 ### 4.2 Management Command (expenses/management/commands/setup_initial_data.py)
 
 **Implementation:**
+
 ```python
 def handle(self, *args, **options):
     self.stdout.write(self.style.SUCCESS('Loading initial data...'))
@@ -368,6 +395,7 @@ def handle(self, *args, **options):
 ```
 
 **Features:**
+
 - Error handling with user feedback
 - Django command framework integration
 - Colored output for success/error states
@@ -378,6 +406,7 @@ def handle(self, *args, **options):
 ### 5.1 Migration File (expenses/migrations/0001_initial.py)
 
 **Generated Operations:**
+
 1. Create model Expense
 2. Create model Payee  
 3. Create model PaymentMethod
@@ -387,12 +416,14 @@ def handle(self, *args, **options):
 7. Add field payment_method to expense
 
 **Dependencies:**
+
 - Django built-in migrations (auth, contenttypes)
 - No custom dependencies required
 
 ### 5.2 Migration Execution Results
 
 **Tables Created:**
+
 - `expenses_payee` (4 fields)
 - `expenses_paymentmethod` (4 fields)
 - `expenses_month` (5 fields with constraints)
@@ -400,6 +431,7 @@ def handle(self, *args, **options):
 - `expenses_expenseitem` (9 fields with dual relationships)
 
 **Constraints Applied:**
+
 - Unique constraints on names
 - Foreign key constraints with proper cascading
 - Check constraints on numeric ranges
@@ -410,6 +442,7 @@ def handle(self, *args, **options):
 ### 6.1 Model Validation Testing
 
 **Test Commands Executed:**
+
 ```bash
 # System check
 python manage.py check
@@ -423,6 +456,7 @@ python manage.py shell
 ```
 
 **Validation Scenarios Tested:**
+
 - Split payment with installments_count = 0 (rejected)
 - One-time payment with installments_count > 0 (rejected)
 - Paid item without payment_date (rejected)
@@ -432,6 +466,7 @@ python manage.py shell
 ### 6.2 Data Integrity Verification
 
 **Database State After Setup:**
+
 - 5 Payees loaded successfully
 - 5 Payment Methods loaded successfully
 - 1 Test month created (2024-12)
@@ -439,6 +474,7 @@ python manage.py shell
 - All relationships functioning properly
 
 **Performance Verification:**
+
 - Admin interface loads quickly
 - Search functionality responsive
 - Filtering operations efficient
@@ -449,6 +485,7 @@ python manage.py shell
 ### 7.1 Django Settings Updates
 
 **INSTALLED_APPS Addition:**
+
 ```python
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -464,6 +501,7 @@ INSTALLED_APPS = [
 ### 7.2 Dependencies (requirements.txt)
 
 **Core Requirements:**
+
 ```
 Django>=5.2.1
 asgiref>=3.8.1
@@ -472,6 +510,7 @@ tzdata>=2024.2
 ```
 
 **Environment Setup:**
+
 - Python 3.12+ virtual environment
 - SQLite database (no additional setup required)
 - Django development server
@@ -481,12 +520,14 @@ tzdata>=2024.2
 ### 8.1 Data Protection
 
 **Model-Level Security:**
+
 - Validation prevents SQL injection via ORM
 - Field length limits prevent buffer overflow
 - Numeric constraints prevent invalid values
 - Timestamp automation prevents manipulation
 
 **Admin Interface Security:**
+
 - Requires Django authentication
 - Built-in CSRF protection
 - Permission-based access control
@@ -495,12 +536,14 @@ tzdata>=2024.2
 ### 8.2 Performance Optimization
 
 **Database Performance:**
+
 - Appropriate field types for data size
 - Indexes on frequently queried fields
 - Select related for relationship queries
 - Efficient ordering specifications
 
 **Memory Management:**
+
 - Minimal field sizes where appropriate
 - Efficient string representations
 - Optimized admin querysets
@@ -511,12 +554,14 @@ tzdata>=2024.2
 ### 9.1 Business Logic Preparation
 
 **Ready for Phase 2:**
+
 - Models support all three expense types
 - Validation framework in place
 - Admin interface for testing business logic
 - Database structure supports monthly processing
 
 **Extension Hooks:**
+
 - Model methods can be added for business logic
 - Custom managers for complex queries
 - Signal handlers for automatic processing
@@ -525,6 +570,7 @@ tzdata>=2024.2
 ### 9.2 API Readiness
 
 **Model Structure:**
+
 - Serialization-friendly field types
 - Clear relationship definitions
 - Comprehensive validation rules
