@@ -16,6 +16,12 @@
                 </div>
             {% endif %}
 
+            {% if edit_restrictions and not edit_restrictions.can_edit_amount %}
+                <div class="message warning">
+                    <i class="fas fa-exclamation-triangle"></i> Note: Amount cannot be edited because this expense has paid items. You can still update other fields.
+                </div>
+            {% endif %}
+
             <!-- Two column layout for main fields -->
             <div class="grid-2-cols">
                 <div class="form-group">
@@ -30,6 +36,9 @@
                     <label for="{{ form.total_amount.id_for_label }}" id="total-amount-label">{{ form.total_amount.label }}:</label>
                     {{ form.total_amount }}
                     <small id="total-amount-help"></small>
+                    {% if edit_restrictions and not edit_restrictions.can_edit_amount %}
+                        <small class="text-muted"><i class="fas fa-lock"></i> {{ form.total_amount.help_text }}</small>
+                    {% endif %}
                     {% if form.total_amount.errors %}
                         <div class="message error">{{ form.total_amount.errors }}</div>
                     {% endif %}

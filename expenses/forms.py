@@ -56,6 +56,18 @@ class ExpenseForm(forms.ModelForm):
             'data-other-label': 'Total Amount', 
             'data-other-help': 'Total amount for this expense'
         })
+        
+        # Handle field restrictions for editing
+        if self.instance and self.instance.pk:
+            restrictions = self.instance.get_edit_restrictions()
+            
+            # If amount cannot be edited, disable the field
+            if not restrictions['can_edit_amount']:
+                self.fields['total_amount'].disabled = True
+                self.fields['total_amount'].help_text = 'Amount cannot be edited because expense has paid items'
+            
+            # Store the original amount to check for changes later
+            self.original_amount = self.instance.total_amount
     
     def clean(self):
         cleaned_data = super().clean()
@@ -63,6 +75,18 @@ class ExpenseForm(forms.ModelForm):
         installments_count = cleaned_data.get('installments_count', 0)
         started_at = cleaned_data.get('started_at')
         end_date = cleaned_data.get('end_date')
+        
+        # Additional validation for editing restrictions
+        if self.instance and self.instance.pk:
+            # Double-check edit permissions (in case someone bypasses frontend)
+            if not self.instance.can_be_edited():
+                raise ValidationError('This expense cannot be edited.')
+            
+            # Check amount editing permissions
+            if hasattr(self, 'original_amount') and not self.instance.can_edit_amount():
+                total_amount = cleaned_data.get('total_amount')
+                if total_amount != self.original_amount:
+                    raise ValidationError('Amount cannot be changed for this expense.')
         
         if expense_type == Expense.TYPE_SPLIT_PAYMENT and installments_count <= 0:
             raise ValidationError('Split payments must have installments count greater than 0')
