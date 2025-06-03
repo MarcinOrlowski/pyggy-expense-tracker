@@ -7,11 +7,15 @@
 
 ## Technical Approach
 
+<<<<<<< HEAD
 We'll extend the existing expense system by adding a new expense type `recurring_with_end` and an
 optional `end_date` field to the Expense model. The expense item generation logic in `services.py`
 will be updated to handle this new type, checking if the current month is beyond the end date month
 before creating items. The form will conditionally show the end date field and calculate the total
 number of payments for user preview.
+=======
+We'll extend the existing expense system by adding a new expense type `recurring_with_end` and an optional `end_date` field to the Expense model. The expense item generation logic in `services.py` will be updated to handle this new type, checking if the current month is beyond the end date month before creating items. The form will conditionally show the end date field and calculate the total number of payments for user preview.
+>>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 ## Data Model
 

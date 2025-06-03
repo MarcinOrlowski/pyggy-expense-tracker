@@ -30,9 +30,10 @@ docker compose exec web python manage.py createsuperuser
 docker compose exec web python manage.py loaddata fixtures/initial_data.json
 ```
 
-The application will be available at http://localhost:8000
+The application will be available at <http://localhost:8000>
 
-Note: The development image is built once and cached locally as `pyggy-expense-tracker:dev`. It will be reused on subsequent runs unless you explicitly rebuild it.
+Note: The development image is built once and cached locally as `pyggy-expense-tracker:dev`.
+It will be reused on subsequent runs unless you explicitly rebuild it.
 
 ## Building and Publishing Docker Image
 
@@ -81,12 +82,14 @@ docker compose -f compose.prod.yml up
 ## Docker Compose Files
 
 ### compose.yml (Development)
+
 - Builds a local development image with all dependencies pre-installed
 - Mounts source code for hot-reloading
 - Image is built once and reused (tagged as `pyggy-expense-tracker:dev`)
 - Ideal for development
 
 ### compose.prod.yml (Production/Distribution)
+
 - Uses pre-built image from Docker Hub
 - No source code mounting (except settings override)
 - Faster startup
@@ -95,11 +98,13 @@ docker compose -f compose.prod.yml up
 ## Docker Files
 
 ### Dockerfile
+
 - Production-ready image with all dependencies
 - Includes static file compilation
 - Suitable for Docker Hub distribution
 
 ### Dockerfile.dev
+
 - Development image with dependencies only
 - Excludes application code (mounted as volume)
 - Faster rebuilds when dependencies change
@@ -144,14 +149,18 @@ docker compose build --no-cache
 ## Troubleshooting
 
 ### Permission Issues
+
 If you encounter permission issues with the database file:
+
 ```bash
 # Fix permissions
 chmod 666 db.sqlite3
 ```
 
 ### Port Already in Use
+
 If port 8000 is already in use:
+
 ```bash
 # Change the port in compose.yml
 ports:
@@ -159,7 +168,9 @@ ports:
 ```
 
 ### Dependencies Not Installing
+
 If dependencies fail to install:
+
 ```bash
 # Rebuild development image without cache
 docker compose build --no-cache
@@ -167,7 +178,9 @@ docker compose up
 ```
 
 ### Updating Dependencies
+
 When requirements.txt changes:
+
 ```bash
 # Rebuild the development image
 docker compose build

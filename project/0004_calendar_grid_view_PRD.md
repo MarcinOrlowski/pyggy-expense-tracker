@@ -1,7 +1,9 @@
 # Product Requirements Document (PRD) - Calendar Grid View for Expense Tracker
 
+
 ## 1. Overview
 
+<<<<<<< HEAD
 This document outlines the requirements for adding a calendar grid view feature to the Python
 Expense Tracker application. The calendar will provide a visual representation of unpaid items due
 for the current month.
@@ -10,10 +12,21 @@ for the current month.
 
 Currently, users can only view expense items in a list/table format. There's no visual way to see
 payment due dates distributed across a month, making it difficult to quickly identify:
+=======
+This document outlines the requirements for adding a calendar grid view feature to the Python Expense Tracker
+application. The calendar will provide a visual representation of unpaid items due for the current month.
+
+
+## 2. Problem Statement
+
+Currently, users can only view expense items in a list/table format. There's no visual way to see payment due
+dates distributed across a month, making it difficult to quickly identify:
+>>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 - Which days have payments due
 - Whether there are overdue payments from previous months
 - The overall distribution of payment obligations throughout the month
+
 
 ## 3. Objectives
 
@@ -23,15 +36,22 @@ payment due dates distributed across a month, making it difficult to quickly ide
 - Maintain consistency with existing UI/UX patterns
 - Ensure mobile responsiveness
 
+
 ## 4. User Stories
 
+<<<<<<< HEAD
 1. **As a user**, I want to see a calendar view of the current month so I can quickly identify which
    days have payments due.
+=======
+1. **As a user**, I want to see a calendar view of the current month so I can quickly identify which days have payments due.
+>>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 2. **As a user**, I want to see overdue payments from previous months indicated on today's date.
 3. **As a mobile user**, I want the calendar to be responsive and usable on smaller screens.
 4. **As a user**, I want the calendar to respect my theme preference (dark theme).
 
+
 ## 5. Functional Requirements
+
 
 ### 5.1 Calendar Display
 
@@ -50,6 +70,7 @@ payment due dates distributed across a month, making it difficult to quickly ide
   - Future weekdays: Light purple tint
   - Future weekends: Darker purple tint for visual distinction
 
+
 ### 5.2 Payment Indicators
 
 - **Future Due Payments**: Green dot indicator for payments due in future days
@@ -59,11 +80,13 @@ payment due dates distributed across a month, making it difficult to quickly ide
 - **Current Day Highlight**: Today's date has dark purple background
 - **No Payment Status**: No indicators for paid items or payment dates
 
+
 ### 5.3 Interactivity
 
 - None - calendar is read-only display
 - No click functionality on calendar days
 - No popups or modals
+
 
 ### 5.4 Navigation
 
@@ -71,7 +94,9 @@ payment due dates distributed across a month, making it difficult to quickly ide
 - Shows current month only
 - No month navigation in MVP
 
+
 ## 6. Non-Functional Requirements
+
 
 ### 6.1 Design & UX
 
@@ -80,11 +105,13 @@ payment due dates distributed across a month, making it difficult to quickly ide
 - Follow existing card-based UI patterns
 - Maintain visual hierarchy and readability
 
+
 ### 6.2 Performance
 
 - Calendar should load quickly without blocking UI
 - Efficient data queries to avoid N+1 problems
 - Consider pagination or lazy loading for day details
+
 
 ### 6.3 Responsiveness
 
@@ -93,10 +120,12 @@ payment due dates distributed across a month, making it difficult to quickly ide
 - Touch-friendly interaction targets
 - Readable text and indicators on small screens
 
+
 ### 6.4 Accessibility
 
 - Sufficient color contrast for indicators
 - Alternative text for visual indicators
+
 
 ## 7. Technical Considerations
 
@@ -105,6 +134,7 @@ payment due dates distributed across a month, making it difficult to quickly ide
 - Leverage existing CSS styling patterns
 - No JavaScript required - pure server-side rendering
 - Minimal database queries (2 total)
+
 
 ## 8. MVP Scope
 
@@ -116,6 +146,7 @@ For the initial implementation, focus on:
 4. Mobile responsive layout
 5. Dark theme support
 6. Read-only display (no interactivity)
+
 
 ## 9. Success Metrics
 

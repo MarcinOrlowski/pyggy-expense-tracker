@@ -60,7 +60,11 @@ Daily index on (user_id, logged_at::date) for quick aggregations
 
 **Example:**
 
+<<<<<<< HEAD
 ```text
+=======
+```
+>>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 POST /api/v1/hydration/log
 Request: { amount_ml: 250 }
 Response: { id: "uuid", daily_total_ml: 1750 }

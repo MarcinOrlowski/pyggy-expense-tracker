@@ -48,9 +48,13 @@ difficult to:
 
 ### US1: Monthly Summary Widget
 
+<<<<<<< HEAD
 **As a user**, I want to see my current month's financial summary in a clear, dedicated section so
 that I can quickly understand my overall financial status without being distracted by detailed line
 items.
+=======
+**As a user**, I want to see my current month's financial summary in a clear, dedicated section so that I can quickly understand my overall financial status without being distracted by detailed line items.
+>>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 **Acceptance Criteria:**
 
@@ -59,10 +63,16 @@ items.
 - Maintains current formatting and calculations
 - Handles edge cases (no months, current month not processed)
 
+<<<<<<< HEAD
 ### US2: Expense List Section
 
 **As a user**, I want to see my current month's expense items in a dedicated section so that I can
 focus on individual transactions when needed.
+=======
+### US2: Expense List Section  
+
+**As a user**, I want to see my current month's expense items in a dedicated section so that I can focus on individual transactions when needed.
+>>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 **Acceptance Criteria:**
 
@@ -73,8 +83,12 @@ focus on individual transactions when needed.
 
 ### US3: Improved Dashboard Layout
 
+<<<<<<< HEAD
 **As a user**, I want a well-organized dashboard layout so that I can efficiently navigate between
 summary and detailed views.
+=======
+**As a user**, I want a well-organized dashboard layout so that I can efficiently navigate between summary and detailed views.
+>>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 **Acceptance Criteria:**
 

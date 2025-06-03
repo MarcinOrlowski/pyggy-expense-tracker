@@ -2,10 +2,16 @@
 
 ## Technical Overview
 
+<<<<<<< HEAD
 Integrate Font Awesome 6.5.1 via CDN and replace text-based action buttons with icon-based buttons
 across all Django templates.
+=======
+Integrate Font Awesome 6.5.1 via CDN and replace text-based action buttons with icon-based buttons across all Django templates.
+>>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
+
 
 ## Architecture Changes
+
 
 ### 1. Font Awesome Integration
 
@@ -13,6 +19,7 @@ across all Django templates.
 - **Method**: CDN link in `<head>` section
 - **Version**: 6.5.1 with integrity check
 - **CDN URL**: `https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css`
+
 
 ### 2. CSS Modifications
 
@@ -41,14 +48,22 @@ Add new CSS classes to existing `<style>` block in base.html:
 }
 ```
 
+
 ### 3. HTML Template Updates
+
 
 #### Button Pattern Changes:
 
+<<<<<<< HEAD
 - **Icon-only**:
   `<button class="btn btn-secondary btn-icon" title="Edit" aria-label="Edit"><i class="fas fa-pen-to-square"></i></button>`
 - **Icon + text**:
   `<button class="btn"><i class="fas fa-circle-plus icon-left"></i>Add New</button>`
+=======
+- **Icon-only**: `<button class="btn btn-secondary btn-icon" title="Edit" aria-label="Edit"><i class="fas fa-pen-to-square"></i></button>`
+- **Icon + text**: `<button class="btn"><i class="fas fa-circle-plus icon-left"></i>Add New</button>`
+>>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
+
 
 #### Templates to Modify:
 
@@ -62,13 +77,16 @@ Add new CSS classes to existing `<style>` block in base.html:
 8. `payment_form.html` - Save/Cancel buttons
 9. All confirmation templates - Confirm/Cancel buttons
 
+
 ## Implementation Plan
+
 
 ### Phase 1: Infrastructure (30 mins)
 
 1. Add Font Awesome CDN to base.html
 2. Add CSS classes for icon buttons
 3. Test basic icon rendering
+
 
 ### Phase 2: Core Templates (2 hours)
 
@@ -77,12 +95,14 @@ Add new CSS classes to existing `<style>` block in base.html:
 3. Update expense_detail.html
 4. Update expense_form.html
 
+
 ### Phase 3: Remaining Templates (1.5 hours)
 
 1. Update month_list.html and month_detail.html
 2. Update payee_list.html
 3. Update payment_form.html
 4. Update all confirmation dialogs
+
 
 ### Phase 4: Testing & Polish (1 hour)
 
@@ -91,7 +111,9 @@ Add new CSS classes to existing `<style>` block in base.html:
 3. Check mobile responsiveness
 4. Validate icon consistency
 
+
 ## Technical Constraints
+
 
 ### Performance
 
@@ -99,11 +121,13 @@ Add new CSS classes to existing `<style>` block in base.html:
 - No JavaScript required
 - Icons cached by browser
 
+
 ### Browser Support
 
 - All modern browsers (Chrome 60+, Firefox 60+, Safari 12+)
 - Graceful degradation for older browsers
 - No fallback required (icons enhance UX but aren't critical)
+
 
 ### Accessibility Requirements
 
@@ -111,7 +135,9 @@ Add new CSS classes to existing `<style>` block in base.html:
 - Color contrast maintained with existing theme
 - Touch targets minimum 44x44px (handled by .btn-icon class)
 
+
 ## Quality Assurance
+
 
 ### Testing Checklist
 
@@ -123,11 +149,13 @@ Add new CSS classes to existing `<style>` block in base.html:
 - [ ] Accessibility attributes present
 - [ ] Color theme consistency maintained
 
+
 ### Risk Mitigation
 
 - **CDN failure**: Icons missing won't break functionality
 - **Icon confusion**: Standard icons used with descriptive tooltips
 - **Performance**: Minimal impact due to CDN caching
+
 
 ## Deployment
 

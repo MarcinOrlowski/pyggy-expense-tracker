@@ -5,6 +5,7 @@
 
 ## Problem Statement
 
+<<<<<<< HEAD
 Users cannot modify expenses after adding them to a month, even when the expense hasn't been paid
 yet. This forces users to delete and recreate expenses to fix typos or adjust amounts, losing any
 associated history. This impacts data accuracy and creates frustration for users managing their
@@ -16,6 +17,13 @@ Add conditional editing capabilities to existing expenses based on their payment
 status. Users can edit unpaid non-recurring expenses freely, edit names/notes on any expense, and
 modify amounts only on unpaid expenses. The system will provide clear visual indicators and
 informative messages explaining why certain edits are restricted.
+=======
+Users cannot modify expenses after adding them to a month, even when the expense hasn't been paid yet. This forces users to delete and recreate expenses to fix typos or adjust amounts, losing any associated history. This impacts data accuracy and creates frustration for users managing their budgets.
+
+## Solution Overview
+
+Add conditional editing capabilities to existing expenses based on their payment and recurrence status. Users can edit unpaid non-recurring expenses freely, edit names/notes on any expense, and modify amounts only on unpaid expenses. The system will provide clear visual indicators and informative messages explaining why certain edits are restricted.
+>>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 ## User Stories
 

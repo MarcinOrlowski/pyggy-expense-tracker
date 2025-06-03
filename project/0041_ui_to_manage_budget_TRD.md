@@ -6,12 +6,16 @@
 
 ## Technical Approach
 
+<<<<<<< HEAD
 We'll implement budget management as a new Django model with CRUD views following the existing
 expense tracker patterns. The Budget model will integrate with the existing Month model through a
 foreign key relationship. Budget CRUD operations will be implemented using Django's class-based
 views with templates following the current Bootstrap/FontAwesome design system. The existing month
 processing workflow will be modified to use budget start_date for initial month creation while
 maintaining the current sequential month creation pattern.
+=======
+We'll implement budget management as a new Django model with CRUD views following the existing expense tracker patterns. The Budget model will integrate with the existing Month model through a foreign key relationship. Budget CRUD operations will be implemented using Django's class-based views with templates following the current Bootstrap/FontAwesome design system. The existing month processing workflow will be modified to use budget start_date for initial month creation while maintaining the current sequential month creation pattern.
+>>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 ## Data Model
 
@@ -54,7 +58,11 @@ path('budgets/<int:pk>/delete/', views.BudgetDeleteView.as_view(), name='budget_
 
 ## Templates Structure
 
+<<<<<<< HEAD
 ```text
+=======
+```
+>>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 expenses/templates/expenses/
 ├── budget_list.html          # List all budgets
 ├── budget_form.html          # Create/Edit budget form

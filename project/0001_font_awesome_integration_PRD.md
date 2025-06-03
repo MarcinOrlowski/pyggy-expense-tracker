@@ -2,8 +2,13 @@
 
 ## Feature Overview
 
+<<<<<<< HEAD
 Replace text-based action buttons throughout the Expense Tracker application with Font Awesome icons
 to improve visual appeal, reduce UI clutter, and enhance user experience.
+=======
+Replace text-based action buttons throughout the Expense Tracker application with Font Awesome icons to improve visual
+appeal, reduce UI clutter, and enhance user experience.
+>>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 ## Objectives
 
@@ -14,8 +19,10 @@ to improve visual appeal, reduce UI clutter, and enhance user experience.
 
 ## Icon Mapping
 
+
 ### Primary Actions
 
+<<<<<<< HEAD
 | Action     | Current Text                                         | Font Awesome Icon                                          | Icon Class         | Tooltip         |
 |------------|------------------------------------------------------|------------------------------------------------------------|--------------------|-----------------|
 | Add/Create | "Add New Expense", "Add New Payee", "Add next month" | [Plus Circle](https://fontawesome.com/icons/circle-plus)   | `fa-circle-plus`   | "Add {item}"    |
@@ -23,47 +30,101 @@ to improve visual appeal, reduce UI clutter, and enhance user experience.
 | Save       | "Save Expense", "Save Payee", "Save Payment"         | [Floppy Disk](https://fontawesome.com/icons/floppy-disk)   | `fa-floppy-disk`   | "Save"          |
 | Filter     | "Filter"                                             | [Filter](https://fontawesome.com/icons/filter)             | `fa-filter`        | "Apply Filter"  |
 | Process    | "Add initial month", "Add next month"                | [Gear/Cog](https://fontawesome.com/icons/gear)             | `fa-gear`          | "Process Month" |
+=======
+| Action | Current Text | Font Awesome Icon | Icon Class | Tooltip |
+|--------|--------------|-------------------|------------|---------|
+| Add/Create | "Add New Expense", "Add New Payee", "Add next month" | [Plus Circle](https://fontawesome.com/icons/circle-plus) | `fa-circle-plus` | "Add {item}" |
+| Edit | "Edit" | [Pencil/Edit](https://fontawesome.com/icons/pen-to-square) | `fa-pen-to-square` | "Edit {item}" |
+| Save | "Save Expense", "Save Payee", "Save Payment" | [Floppy Disk](https://fontawesome.com/icons/floppy-disk) | `fa-floppy-disk` | "Save" |
+| Filter | "Filter" | [Filter](https://fontawesome.com/icons/filter) | `fa-filter` | "Apply Filter" |
+| Process | "Add initial month", "Add next month" | [Gear/Cog](https://fontawesome.com/icons/gear) | `fa-gear` | "Process Month" |
+>>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
+
 
 ### View/Navigation Actions
 
+<<<<<<< HEAD
 | Action       | Current Text                            | Font Awesome Icon                                      | Icon Class      | Tooltip         |
 |--------------|-----------------------------------------|--------------------------------------------------------|-----------------|-----------------|
 | View Details | "View", "View Details"                  | [Eye](https://fontawesome.com/icons/eye)               | `fa-eye`        | "View Details"  |
 | Back/Return  | "Back to Expenses", "Back to Dashboard" | [Arrow Left](https://fontawesome.com/icons/arrow-left) | `fa-arrow-left` | "Go Back"       |
 | Cancel       | "Cancel"                                | [X Mark](https://fontawesome.com/icons/xmark)          | `fa-xmark`      | "Cancel"        |
 | Clear        | "Clear"                                 | [Eraser](https://fontawesome.com/icons/eraser)         | `fa-eraser`     | "Clear Filters" |
+=======
+| Action | Current Text | Font Awesome Icon | Icon Class | Tooltip |
+|--------|--------------|-------------------|------------|---------|
+| View Details | "View", "View Details" | [Eye](https://fontawesome.com/icons/eye) | `fa-eye` | "View Details" |
+| Back/Return | "Back to Expenses", "Back to Dashboard" | [Arrow Left](https://fontawesome.com/icons/arrow-left) | `fa-arrow-left` | "Go Back" |
+| Cancel | "Cancel" | [X Mark](https://fontawesome.com/icons/xmark) | `fa-xmark` | "Cancel" |
+| Clear | "Clear" | [Eraser](https://fontawesome.com/icons/eraser) | `fa-eraser` | "Clear Filters" |
+>>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
+
 
 ### Financial Actions
 
+<<<<<<< HEAD
 | Action      | Current Text                    | Font Awesome Icon                                          | Icon Class        | Tooltip          |
 |-------------|---------------------------------|------------------------------------------------------------|-------------------|------------------|
 | Mark Paid   | "Mark Paid"                     | [Check Circle](https://fontawesome.com/icons/circle-check) | `fa-circle-check` | "Mark as Paid"   |
 | Mark Unpaid | "Mark Unpaid", "Unmark Payment" | [Undo](https://fontawesome.com/icons/rotate-left)          | `fa-rotate-left`  | "Mark as Unpaid" |
 | Payment     | "Save Payment"                  | [Credit Card](https://fontawesome.com/icons/credit-card)   | `fa-credit-card`  | "Record Payment" |
+=======
+| Action | Current Text | Font Awesome Icon | Icon Class | Tooltip |
+|--------|--------------|-------------------|------------|---------|
+| Mark Paid | "Mark Paid" | [Check Circle](https://fontawesome.com/icons/circle-check) | `fa-circle-check` | "Mark as Paid" |
+| Mark Unpaid | "Mark Unpaid", "Unmark Payment" | [Undo](https://fontawesome.com/icons/rotate-left) | `fa-rotate-left` | "Mark as Unpaid" |
+| Payment | "Save Payment" | [Credit Card](https://fontawesome.com/icons/credit-card) | `fa-credit-card` | "Record Payment" |
+>>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
+
 
 ### Destructive Actions
 
+<<<<<<< HEAD
 | Action         | Current Text                     | Font Awesome Icon                                    | Icon Class     | Tooltip            |
 |----------------|----------------------------------|------------------------------------------------------|----------------|--------------------|
 | Delete         | "Delete", "Yes, Delete"          | [Trash Can](https://fontawesome.com/icons/trash-can) | `fa-trash-can` | "Delete {item}"    |
+=======
+| Action | Current Text | Font Awesome Icon | Icon Class | Tooltip |
+|--------|--------------|-------------------|------------|---------|
+| Delete | "Delete", "Yes, Delete" | [Trash Can](https://fontawesome.com/icons/trash-can) | `fa-trash-can` | "Delete {item}" |
+>>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 | Confirm Delete | "Delete Month", "Delete Expense" | [Trash Can](https://fontawesome.com/icons/trash-can) | `fa-trash-can` | "Confirm Deletion" |
+
 
 ### Visibility Actions
 
+<<<<<<< HEAD
 | Action      | Current Text  | Font Awesome Icon                                    | Icon Class     | Tooltip             |
 |-------------|---------------|------------------------------------------------------|----------------|---------------------|
 | Hide        | "Hide"        | [Eye Slash](https://fontawesome.com/icons/eye-slash) | `fa-eye-slash` | "Hide Payee"        |
 | Show Hidden | "Show Hidden" | [Eye](https://fontawesome.com/icons/eye)             | `fa-eye`       | "Show Hidden Items" |
 | Unhide      | "Unhide"      | [Eye](https://fontawesome.com/icons/eye)             | `fa-eye`       | "Make Visible"      |
+=======
+| Action | Current Text | Font Awesome Icon | Icon Class | Tooltip |
+|--------|--------------|-------------------|------------|---------|
+| Hide | "Hide" | [Eye Slash](https://fontawesome.com/icons/eye-slash) | `fa-eye-slash` | "Hide Payee" |
+| Show Hidden | "Show Hidden" | [Eye](https://fontawesome.com/icons/eye) | `fa-eye` | "Show Hidden Items" |
+| Unhide | "Unhide" | [Eye](https://fontawesome.com/icons/eye) | `fa-eye` | "Make Visible" |
+>>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
+
 
 ### Administrative Actions
 
+<<<<<<< HEAD
 | Action          | Current Text                     | Font Awesome Icon                                        | Icon Class       | Tooltip              |
 |-----------------|----------------------------------|----------------------------------------------------------|------------------|----------------------|
 | Admin/Manage    | "Manage Payment Methods (Admin)" | [User Shield](https://fontawesome.com/icons/user-shield) | `fa-user-shield` | "Admin Panel"        |
 | View Associated | "View Associated Expenses"       | [Link](https://fontawesome.com/icons/link)               | `fa-link`        | "View Related Items" |
+=======
+| Action | Current Text | Font Awesome Icon | Icon Class | Tooltip |
+|--------|--------------|-------------------|------------|---------|
+| Admin/Manage | "Manage Payment Methods (Admin)" | [User Shield](https://fontawesome.com/icons/user-shield) | `fa-user-shield` | "Admin Panel" |
+| View Associated | "View Associated Expenses" | [Link](https://fontawesome.com/icons/link) | `fa-link` | "View Related Items" |
+>>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
+
 
 ## Implementation Guidelines
+
 
 ### 1. Icon-Only Buttons
 
@@ -76,6 +137,7 @@ For table actions and compact spaces:
 </button>
 ```
 
+
 ### 2. Icon with Text Buttons
 
 For important primary actions:
@@ -87,13 +149,16 @@ For important primary actions:
 </button>
 ```
 
+
 ### 3. Accessibility Requirements
 
 - All icon-only buttons MUST have:
+
   - `title` attribute with descriptive text
   - `aria-label` attribute matching the title
   - Sufficient color contrast
   - Minimum 44x44px touch target on mobile
+
 
 ### 4. CSS Styling Classes
 
@@ -104,13 +169,16 @@ New CSS classes to add:
 - `.icon-left` - Icon spacing when text follows
 - `.icon-right` - Icon spacing when text precedes
 
+
 ### 5. Button Size Variants
 
 - **Regular buttons**: Default size with padding
 - **Small buttons** (`.btn-sm`): For table rows
 - **Icon-only buttons** (`.btn-icon`): Square aspect ratio
 
+
 ## Technical Requirements
+
 
 ### 1. Font Awesome Integration
 
@@ -119,11 +187,13 @@ New CSS classes to add:
 - Icons: Free tier (fas, far)
 - Location: base.html template
 
+
 ### 2. Browser Support
 
 - All modern browsers
 - Graceful degradation for older browsers
 - Fallback to text if icons fail to load
+
 
 ### 3. Performance Considerations
 
@@ -131,7 +201,9 @@ New CSS classes to add:
 - Consider subsetting for production
 - Lazy load for non-critical icons
 
+
 ## Migration Plan
+
 
 ### Phase 1: Infrastructure
 
@@ -139,11 +211,13 @@ New CSS classes to add:
 2. Add new CSS classes for icon buttons
 3. Test icon rendering across pages
 
+
 ### Phase 2: Core Actions
 
 1. Replace primary action buttons (Add, Save, Edit)
 2. Replace destructive action buttons (Delete)
 3. Replace navigation buttons (Back, Cancel)
+
 
 ### Phase 3: Table Actions
 
@@ -152,11 +226,13 @@ New CSS classes to add:
 3. Update payee_list.html table actions
 4. Update dashboard.html actions
 
+
 ### Phase 4: Financial Actions
 
 1. Replace Mark Paid/Unpaid buttons
 2. Update payment-related buttons
 3. Update month processing buttons
+
 
 ### Phase 5: Polish
 
@@ -164,6 +240,7 @@ New CSS classes to add:
 2. Ensure consistent spacing
 3. Verify all tooltips are descriptive
 4. Test on mobile devices
+
 
 ## Success Criteria
 
@@ -173,6 +250,7 @@ New CSS classes to add:
 4. Maintained or improved accessibility
 5. Positive user feedback on visual improvements
 6. Reduced horizontal scrolling on mobile
+
 
 ## Risks and Mitigation
 
@@ -192,7 +270,13 @@ New CSS classes to add:
 
 - **Mitigation**: Use CDN with good performance, consider subsetting
 
+
 ## Future Enhancements
 
 1. Icon color theming based on context
+<<<<<<< HEAD
    2Dark/light mode icon variants
+=======
+2. Dark/light mode icon variants
+
+>>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629

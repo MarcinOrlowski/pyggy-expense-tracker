@@ -1,6 +1,10 @@
+<<<<<<< HEAD
 # Frontend Guidelines
 
 Expense Tracker PoC - Simplified Frontend Architecture
+=======
+# Frontend Guidelines - Expense Tracker PoC - Simplified Frontend Architecture
+>>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 ## 1. Overview
 

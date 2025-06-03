@@ -6,12 +6,16 @@
 
 ## Technical Approach
 
+<<<<<<< HEAD
 We'll extend the existing expense editing functionality by adding validation methods to the Expense
 model that determine edit permissions based on payment status and expense type. The expense_edit
 view will check these permissions before rendering the form, and the ExpenseForm will dynamically
 disable fields based on edit restrictions. We'll use Django's messaging framework to communicate
 restrictions to users and update the UI to conditionally show/hide the edit button with appropriate
 tooltips.
+=======
+We'll extend the existing expense editing functionality by adding validation methods to the Expense model that determine edit permissions based on payment status and expense type. The expense_edit view will check these permissions before rendering the form, and the ExpenseForm will dynamically disable fields based on edit restrictions. We'll use Django's messaging framework to communicate restrictions to users and update the UI to conditionally show/hide the edit button with appropriate tooltips.
+>>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 ## Data Model
 
@@ -28,7 +32,11 @@ No database changes required. We'll add methods to the existing Expense model:
 
 No new endpoints. Modifications to existing views:
 
+<<<<<<< HEAD
 ```text
+=======
+```
+>>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 GET /budgets/<budget_id>/expenses/<pk>/edit/
 - Check can_be_edited() before rendering
 - Return 403 with message if editing not allowed

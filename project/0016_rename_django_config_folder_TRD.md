@@ -7,10 +7,14 @@
 
 ## Technical Approach
 
+<<<<<<< HEAD
 We'll rename the Django configuration directory from `expense_tracker/` to `pyggy/` using a
 systematic find-and-replace approach. This involves updating all Python module references in 5 core
 files and the README documentation. The changes are straightforward string replacements with no
 architectural modifications or database migrations required.
+=======
+We'll rename the Django configuration directory from `expense_tracker/` to `pyggy/` using a systematic find-and-replace approach. This involves updating all Python module references in 5 core files and the README documentation. The changes are straightforward string replacements with no architectural modifications or database migrations required.
+>>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 ## Data Model
 
@@ -19,12 +23,20 @@ No changes to data model - this is purely a module naming change.
 ## Implementation Details
 
 ### Files to Modify:
+<<<<<<< HEAD
 
 1. **Directory Rename**
 
 - `mv expense_tracker/ pyggy/`
 
 1. **Python Module Updates**
+=======
+
+1. **Directory Rename**
+   - `mv expense_tracker/ pyggy/`
+
+2. **Python Module Updates**
+>>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
    ```python
    # manage.py
@@ -54,12 +66,18 @@ No changes to data model - this is purely a module naming change.
 
 ## Technical Risks & Mitigations
 
+<<<<<<< HEAD
 1. **Risk**: Missed references causing import errors → **Mitigation**: Comprehensive grep search
    before and after changes
 2. **Risk**: Development environment confusion → **Mitigation**: Clear commit message and immediate
    team notification
 3. **Risk**: Cached .pyc files with old imports → **Mitigation**: Delete all .pyc files and *
    *pycache** directories
+=======
+1. **Risk**: Missed references causing import errors → **Mitigation**: Comprehensive grep search before and after changes
+2. **Risk**: Development environment confusion → **Mitigation**: Clear commit message and immediate team notification
+3. **Risk**: Cached .pyc files with old imports → **Mitigation**: Delete all .pyc files and **pycache** directories
+>>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 ## Implementation Plan
 

@@ -5,6 +5,7 @@
 
 ## Problem Statement
 
+<<<<<<< HEAD
 Users with multiple budgets cannot work with a specific budget in isolation - all operations show
 data from all budgets mixed together. This causes confusion when managing separate budgets (e.g.,
 personal vs business) and makes it impossible to focus on one budget at a time. Without budget
@@ -17,6 +18,13 @@ budget and all operations (viewing months, creating expenses, dashboard) will be
 only data from that budget. The current budget will be displayed in the UI with an option to switch
 budgets. Success means users can work with one budget at a time without seeing data from other
 budgets.
+=======
+Users with multiple budgets cannot work with a specific budget in isolation - all operations show data from all budgets mixed together. This causes confusion when managing separate budgets (e.g., personal vs business) and makes it impossible to focus on one budget at a time. Without budget scoping, users cannot effectively organize their financial data across different contexts.
+
+## Solution Overview
+
+Implement budget-scoped operations by introducing budget-aware URLs. Users will select a current budget and all operations (viewing months, creating expenses, dashboard) will be filtered to show only data from that budget. The current budget will be displayed in the UI with an option to switch budgets. Success means users can work with one budget at a time without seeing data from other budgets.
+>>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 ## User Stories
 

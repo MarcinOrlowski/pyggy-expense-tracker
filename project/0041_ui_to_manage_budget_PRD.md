@@ -4,6 +4,7 @@
 
 ## Problem Statement
 
+<<<<<<< HEAD
 Users currently create expense tracking months manually through a "Process new month" interface
 without any budget planning or financial goal setting. This reactive approach prevents users from
 establishing spending limits, tracking budget adherence, and making informed financial decisions.
@@ -17,6 +18,13 @@ budgets that define their financial planning periods and spending limits. Users 
 through dedicated CRUD operations and use budget start dates to initialize their first tracking
 month. The 'Default' budget concept ensures existing dashboard functionality remains unchanged while
 enabling budget-aware expense management.
+=======
+Users currently create expense tracking months manually through a "Process new month" interface without any budget planning or financial goal setting. This reactive approach prevents users from establishing spending limits, tracking budget adherence, and making informed financial decisions. Without budget management, users cannot transition from expense tracking to proactive financial planning.
+
+## Solution Overview
+
+Replace the current month processing workflow with a budget-driven approach where users create budgets that define their financial planning periods and spending limits. Users will manage budgets through dedicated CRUD operations and use budget start dates to initialize their first tracking month. The 'Default' budget concept ensures existing dashboard functionality remains unchanged while enabling budget-aware expense management.
+>>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 ## User Stories
 

@@ -208,7 +208,11 @@ def format_amount(amount, show_symbol=True):
 
 Add to `requirements.txt`:
 
+<<<<<<< HEAD
 ```text
+=======
+```
+>>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 babel==2.13.1
 ```
 

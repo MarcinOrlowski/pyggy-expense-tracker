@@ -39,7 +39,11 @@ The current expense filter implementation uses excessive vertical space due to:
 
 #### 4.2 Layout Structure
 
+<<<<<<< HEAD
 ```text
+=======
+```
+>>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 [Expense Type: ▼] [Payee: ▼] [🔍 Filter] [🧹 Clear]
 ```
 
@@ -106,7 +110,11 @@ The current expense filter implementation uses excessive vertical space due to:
 
 **Current State:**
 
+<<<<<<< HEAD
 ```text
+=======
+```
+>>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 ┌─────────────────────────────────────┐
 │ Filter Expenses                     │
 ├─────────────────────────────────────┤
@@ -119,7 +127,11 @@ The current expense filter implementation uses excessive vertical space due to:
 
 **Proposed State:**
 
+<<<<<<< HEAD
 ```text
+=======
+```
+>>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 Expense Type: [All Types ▼] Payee: [All Payees ▼] [Filter] [Clear]
 ```
 

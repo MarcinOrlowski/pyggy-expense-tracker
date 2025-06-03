@@ -1,13 +1,21 @@
+<<<<<<< HEAD
 # Product Requirements Document (PRD)
+=======
+# Product Requirements Document (PRD) - Expense Tracker and Budget Management System - PoC Version
+>>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 ## 1. Project Overview
 
 ### 1.1 Purpose
 
+<<<<<<< HEAD
 Develop a focused proof-of-concept (PoC) expense tracking application using Python 3.12 and Django.
 The PoC will demonstrate the core expense tracking functionality, particularly the handling of
 different expense types and monthly processing, as a foundation for a more comprehensive system
 in future phases.
+=======
+Develop a focused proof-of-concept (PoC) expense tracking application using Python 3.12 and Django. The PoC will demonstrate the core expense tracking functionality, particularly the handling of different expense types and monthly processing, as a foundation for a more comprehensive system in future phases.
+>>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 ### 1.2 Technology Stack
 
@@ -82,12 +90,20 @@ The system must support three fundamental expense types:
 
 ### 3.1 Django Models
 
+<<<<<<< HEAD
 #### User
+=======
+**User**
+>>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 - Uses Django's built-in User model
 - No customization needed for PoC
 
+<<<<<<< HEAD
 #### Payee
+=======
+**Payee**
+>>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 ```python
 class Payee(models.Model):
@@ -96,7 +112,11 @@ class Payee(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 ```
 
+<<<<<<< HEAD
 #### PaymentMethod
+=======
+**PaymentMethod**
+>>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 ```python
 class PaymentMethod(models.Model):
@@ -105,7 +125,11 @@ class PaymentMethod(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 ```
 
+<<<<<<< HEAD
 #### Expense
+=======
+**Expense**
+>>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 ```python
 class Expense(models.Model):
@@ -127,7 +151,11 @@ class Expense(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 ```
 
+<<<<<<< HEAD
 #### ExpenseItem
+=======
+**ExpenseItem**
+>>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 ```python
 class ExpenseItem(models.Model):
@@ -146,7 +174,11 @@ class ExpenseItem(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 ```
 
+<<<<<<< HEAD
 #### Month
+=======
+**Month**
+>>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 ```python
 class Month(models.Model):
@@ -219,13 +251,21 @@ class Month(models.Model):
 
 ### 6.1 Django Implementation
 
+<<<<<<< HEAD
 #### Database
+=======
+**Database**
+>>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 - Use Django ORM with SQLite for simplicity
 - Django migrations handle schema creation
 - No complex database optimizations for PoC
 
+<<<<<<< HEAD
 #### Views (Simplified)
+=======
+**Views (Simplified)**
+>>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 ```python
 # Function-based views for quick development
@@ -240,7 +280,11 @@ def expense_item_pay(request, pk):  # Record payment
 def dashboard(request):             # Main dashboard
 ```
 
+<<<<<<< HEAD
 #### URL Structure
+=======
+**URL Structure**
+>>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 ```python
 # Simple URL patterns

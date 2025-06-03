@@ -7,11 +7,19 @@
 
 ## Technical Approach
 
+<<<<<<< HEAD
 This is a pure frontend styling update that requires modifications to Django HTML templates only.
 We'll remove custom color classes from action buttons (keeping only default `btn` and `btn-danger`
 for delete actions) and update specific icons to be more action-oriented. The existing CSS framework
 already supports default button styling, so no CSS changes are required. All modifications will be
 made to template files in the `expenses/templates/expenses/` directory.
+=======
+This is a pure frontend styling update that requires modifications to Django HTML templates only. We'll remove
+custom color classes from action buttons (keeping only default `btn` and `btn-danger` for delete actions) and
+update specific icons to be more action-oriented. The existing CSS framework already supports default button
+styling, so no CSS changes are required. All modifications will be made to template files in the
+`expenses/templates/expenses/` directory.
+>>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 ## Template Modifications
 

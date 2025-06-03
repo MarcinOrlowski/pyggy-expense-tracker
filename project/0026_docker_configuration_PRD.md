@@ -5,6 +5,7 @@
 
 ## Problem Statement
 
+<<<<<<< HEAD
 Developers need to manually set up Python environment, install dependencies, and configure the
 application each time they clone the repository. New team members spend 30-60 minutes on initial
 setup. Environment inconsistencies between developers cause "works on my machine" issues.
@@ -15,6 +16,13 @@ Add Docker containerization using compose.yml to provide a consistent, one-comma
 environment setup. Developers will run `docker compose up` to have a fully functional application
 with all dependencies. The solution preserves existing development workflows including code
 hot-reloading and database persistence.
+=======
+Developers need to manually set up Python environment, install dependencies, and configure the application each time they clone the repository. New team members spend 30-60 minutes on initial setup. Environment inconsistencies between developers cause "works on my machine" issues.
+
+## Solution Overview
+
+Add Docker containerization using compose.yml to provide a consistent, one-command development environment setup. Developers will run `docker compose up` to have a fully functional application with all dependencies. The solution preserves existing development workflows including code hot-reloading and database persistence.
+>>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 ## User Stories
 

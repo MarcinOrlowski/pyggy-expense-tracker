@@ -6,6 +6,7 @@
 
 ## Problem Statement
 
+<<<<<<< HEAD
 The project has been renamed from "Expense Tracker" to "PyGGy", but the Django configuration
 directory is still named `expense_tracker`. This creates confusion for developers as the project
 name and configuration directory name don't match. New developers expect the main configuration to
@@ -26,6 +27,19 @@ intuitive.
    structure quickly
 3. As a maintainer, I want clear project organization, so that I can onboard new developers
    efficiently
+=======
+The project has been renamed from "Expense Tracker" to "PyGGy", but the Django configuration directory is still named `expense_tracker`. This creates confusion for developers as the project name and configuration directory name don't match. New developers expect the main configuration to match the project name.
+
+## Solution Overview
+
+Rename the Django configuration directory from `expense_tracker` to `pyggy` to match the project name. Update all references throughout the codebase to use the new module name. This creates consistency between the project name and its configuration structure, making the codebase more intuitive.
+
+## User Stories
+
+1. As a developer, I want the Django config folder to match the project name, so that I can navigate the codebase intuitively
+2. As a new contributor, I want consistent naming conventions, so that I can understand the project structure quickly
+3. As a maintainer, I want clear project organization, so that I can onboard new developers efficiently
+>>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 ## Acceptance Criteria
 
