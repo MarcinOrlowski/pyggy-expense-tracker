@@ -2,6 +2,7 @@
 
 ## @dev
 
+- [#0075] Bind expenses directly to budgets to fix invisible expenses bug
 - [#0063] Added partial split payment tracking with configurable start installment number
 - [#0069] Added linters and Github Actions to guard the code.
 - [#0067] Added edit expense button next to each expense in dashboard (when editable)

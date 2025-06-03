@@ -40,8 +40,8 @@ def process_new_month(year: int, month: int, budget: Budget) -> Month:
         )
 
         if created:
-            # Generate expense items for all active expenses
-            active_expenses = Expense.objects.filter(closed_at__isnull=True)
+            # Generate expense items for all active expenses in this budget
+            active_expenses = Expense.objects.filter(closed_at__isnull=True, budget=budget)
 
             for expense in active_expenses:
                 create_expense_items_for_month(expense, month_obj)
@@ -194,9 +194,9 @@ def handle_new_expense(expense: Expense, budget: Budget) -> None:
     
     Args:
         expense: The newly created expense
-        budget: The budget to use for finding the most recent month
+        budget: The budget to use for finding the most recent month (should match expense.budget)
     """
-    most_recent_month = Month.objects.filter(budget=budget).order_by('-year', '-month').first()
+    most_recent_month = Month.objects.filter(budget=expense.budget).order_by('-year', '-month').first()
     if not most_recent_month:
         return  # No months exist yet in this budget
     
