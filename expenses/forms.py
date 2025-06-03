@@ -260,3 +260,37 @@ class BudgetForm(forms.ModelForm):
                 if self.instance.month_set.exists():
                     raise ValidationError('Start date cannot be in the past when budget has existing months')
         return start_date
+
+
+class ExpenseItemEditForm(forms.ModelForm):
+    due_date = forms.DateField(
+        widget=forms.DateInput(attrs={'type': 'date'}, format='%Y-%m-%d'),
+        input_formats=['%Y-%m-%d'],
+        help_text='Format: YYYY-MM-DD'
+    )
+    
+    class Meta:
+        model = ExpenseItem
+        fields = ['due_date']
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        
+        # Add helpful information about allowed date range
+        if self.instance and self.instance.pk:
+            start_date, end_date = self.instance.get_allowed_month_range()
+            if start_date and end_date:
+                month_name = start_date.strftime("%B %Y")
+                self.fields['due_date'].help_text = f'Date must be within {month_name} ({start_date.strftime("%Y-%m-%d")} to {end_date.strftime("%Y-%m-%d")})'
+    
+    def clean_due_date(self):
+        due_date = self.cleaned_data.get('due_date')
+        
+        if due_date and self.instance and self.instance.pk:
+            start_date, end_date = self.instance.get_allowed_month_range()
+            if start_date and end_date:
+                if not (start_date <= due_date <= end_date):
+                    month_name = start_date.strftime("%B %Y")
+                    raise ValidationError(f'Due date must be within {month_name} ({start_date.strftime("%Y-%m-%d")} to {end_date.strftime("%Y-%m-%d")})')
+        
+        return due_date

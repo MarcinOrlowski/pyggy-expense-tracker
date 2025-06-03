@@ -4,6 +4,7 @@ from django.core.exceptions import ValidationError
 from django.utils import timezone
 from django.core.cache import cache
 from datetime import date
+import calendar
 
 
 class Budget(models.Model):
@@ -380,6 +381,24 @@ class ExpenseItem(models.Model):
         
         if self.status == 'pending' and self.payment_date:
             raise ValidationError('Pending items cannot have payment_date')
+        
+        # Validate due_date is within expense creation month
+        if self.due_date and self.expense_id:
+            start_date, end_date = self.get_allowed_month_range()
+            if not (start_date <= self.due_date <= end_date):
+                month_name = start_date.strftime("%B %Y")
+                raise ValidationError(f'Due date must be within {month_name}')
+    
+    def get_allowed_month_range(self):
+        """Returns (start_date, end_date) tuple for allowed month range based on expense creation month"""
+        if not self.expense_id:
+            return None, None
+        
+        expense_month = self.expense.started_at
+        year, month = expense_month.year, expense_month.month
+        start_date = date(year, month, 1)
+        end_date = date(year, month, calendar.monthrange(year, month)[1])
+        return start_date, end_date
 
     @property
     def days_until_due(self):

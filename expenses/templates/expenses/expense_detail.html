@@ -86,6 +86,7 @@
                             {% endif %}
                         </td>
                         <td class="actions-column">
+                            <a href="{% url 'expense_item_edit' budget.id item.pk %}" class="btn btn-sm" title="Edit Due Date" aria-label="Edit Due Date"><i class="fas fa-calendar-days"></i></a>
                             {% if item.status == 'pending' %}
                                 <a href="{% url 'expense_item_pay' budget.id item.pk %}" class="btn btn-sm" title="Mark as Paid" aria-label="Mark as Paid"><i class="fas fa-check"></i></a>
                             {% else %}

@@ -1,0 +1,95 @@
+{% extends 'expenses/base.html' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<h1><i class="fas fa-calendar-days"></i> {{ title }}</h1>
+
+<div class="card">
+    <div class="card-body">
+        <form method="post">
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+                <div class="message error">
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+
+            <div class="form-group">
+                <label><strong>Expense:</strong></label>
+                <p>{{ expense_item.expense.title }}</p>
+                {% if expense_item.expense.payee %}
+                    <small class="text-muted">Payee: {{ expense_item.expense.payee.name }}</small>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label><strong>Current Month:</strong></label>
+                <p>{{ expense_item.month }}</p>
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.due_date.id_for_label }}">{{ form.due_date.label }}:</label>
+                {{ form.due_date }}
+                {% if form.due_date.help_text %}
+                    <small>{{ form.due_date.help_text }}</small>
+                {% endif %}
+                {% if form.due_date.errors %}
+                    <div class="message error">{{ form.due_date.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn"><i class="fas fa-floppy-disk icon-left"></i>Save Due Date</button>
+                <a href="{% url 'expense_detail' budget.id expense_item.expense.pk %}" class="btn btn-secondary"><i class="fas fa-xmark icon-left"></i>Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const dueDateInput = document.querySelector('input[name="due_date"]');
+    
+    if (dueDateInput) {
+        // Extract allowed date range from help text
+        const helpText = dueDateInput.parentNode.querySelector('small').textContent;
+        const rangeMatch = helpText.match(/\((\d{4}-\d{2}-\d{2}) to (\d{4}-\d{2}-\d{2})\)/);
+        
+        if (rangeMatch) {
+            const minDate = rangeMatch[1];
+            const maxDate = rangeMatch[2];
+            
+            // Set HTML5 date input constraints
+            dueDateInput.min = minDate;
+            dueDateInput.max = maxDate;
+            
+            // Add real-time validation feedback
+            dueDateInput.addEventListener('input', function() {
+                const selectedDate = this.value;
+                const messageDiv = this.parentNode.querySelector('.validation-message');
+                
+                // Remove existing message
+                if (messageDiv) {
+                    messageDiv.remove();
+                }
+                
+                if (selectedDate && (selectedDate < minDate || selectedDate > maxDate)) {
+                    const message = document.createElement('div');
+                    message.className = 'validation-message error';
+                    message.style.marginTop = '4px';
+                    message.style.fontSize = '14px';
+                    message.style.color = '#e74c3c';
+                    message.innerHTML = '<i class="fas fa-exclamation-circle"></i> Date must be within the allowed month range';
+                    this.parentNode.appendChild(message);
+                    this.style.borderColor = '#e74c3c';
+                } else {
+                    this.style.borderColor = '';
+                }
+            });
+        }
+    }
+});
+</script>
+{% endblock %}

@@ -5,7 +5,7 @@ from django.db.models import Q
 from django.utils import timezone
 from datetime import datetime, date
 from .models import Expense, ExpenseItem, Month, Payee, PaymentMethod, Budget
-from .forms import ExpenseForm, PaymentForm, PayeeForm, BudgetForm
+from .forms import ExpenseForm, PaymentForm, PayeeForm, BudgetForm, ExpenseItemEditForm
 
 
 def dashboard(request, budget_id):
@@ -608,3 +608,26 @@ def budget_delete(request, pk):
         'month_count': month_count,
     }
     return render(request, 'expenses/budget_confirm_delete.html', context)
+
+
+def expense_item_edit(request, budget_id, pk):
+    """Edit expense item due date with month validation"""
+    budget = get_object_or_404(Budget, id=budget_id)
+    expense_item = get_object_or_404(ExpenseItem, pk=pk, month__budget=budget)
+    
+    if request.method == 'POST':
+        form = ExpenseItemEditForm(request.POST, instance=expense_item)
+        if form.is_valid():
+            item = form.save()
+            messages.success(request, f'Due date for "{item.expense.title}" updated successfully.')
+            return redirect('expense_detail', budget_id=budget_id, pk=expense_item.expense.pk)
+    else:
+        form = ExpenseItemEditForm(instance=expense_item)
+    
+    context = {
+        'budget': budget,
+        'form': form,
+        'expense_item': expense_item,
+        'title': f'Edit Due Date: {expense_item.expense.title}'
+    }
+    return render(request, 'expenses/expense_item_edit.html', context)
