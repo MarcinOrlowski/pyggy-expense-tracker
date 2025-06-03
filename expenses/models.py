@@ -276,11 +276,49 @@ class Expense(models.Model):
         
         return True
     
+    def can_edit_date(self):
+        """Check if the start date can be edited based on current date restrictions"""
+        # First check if expense can be edited at all
+        if not self.can_be_edited():
+            return False
+        
+        # Check if current expense date is not earlier than next month
+        if self.started_at and self.budget_id:
+            most_recent_month = Month.get_most_recent(budget=self.budget)
+            if most_recent_month:
+                # Calculate next month start date
+                if most_recent_month.month == 12:
+                    next_month_start = date(most_recent_month.year + 1, 1, 1)
+                else:
+                    next_month_start = date(most_recent_month.year, most_recent_month.month + 1, 1)
+                
+                # Can only edit date if current expense date is not earlier than next month
+                if self.started_at < next_month_start:
+                    return False
+        
+        return True
+    
+    def get_next_month_date(self):
+        """Calculate next month start date for this expense's budget"""
+        if not self.budget_id:
+            return None
+            
+        most_recent_month = Month.get_most_recent(budget=self.budget)
+        if not most_recent_month:
+            return None
+            
+        # Calculate next month (current active month + 1)
+        if most_recent_month.month == 12:
+            return date(most_recent_month.year + 1, 1, 1)
+        else:
+            return date(most_recent_month.year, most_recent_month.month + 1, 1)
+
     def get_edit_restrictions(self):
         """Get detailed information about edit restrictions"""
         restrictions = {
             'can_edit': self.can_be_edited(),
             'can_edit_amount': self.can_edit_amount(),
+            'can_edit_date': self.can_edit_date(),
             'reasons': []
         }
         
@@ -296,6 +334,9 @@ class Expense(models.Model):
             has_paid_items = self.expenseitem_set.filter(status='paid').exists()
             if has_paid_items:
                 restrictions['reasons'].append('Amount cannot be edited because expense has paid items')
+        
+        if restrictions['can_edit'] and not restrictions['can_edit_date']:
+            restrictions['reasons'].append('Date cannot be edited for expenses earlier than next month')
         
         return restrictions
 

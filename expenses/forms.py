@@ -78,12 +78,18 @@ class ExpenseForm(forms.ModelForm):
                 self.fields['total_amount'].disabled = True
                 self.fields['total_amount'].help_text = 'Amount cannot be edited because expense has paid items'
             
+            # If date cannot be edited, disable the field
+            if not restrictions['can_edit_date']:
+                self.fields['started_at'].disabled = True
+                self.fields['started_at'].help_text = 'Date cannot be edited for expenses earlier than next month'
+            
             # Make initial_installment read-only after creation
             self.fields['initial_installment'].disabled = True
             self.fields['initial_installment'].help_text = 'Initial installment cannot be changed after expense creation'
             
-            # Store the original amount to check for changes later
+            # Store the original values to check for changes later
             self.original_amount = self.instance.total_amount
+            self.original_started_at = self.instance.started_at
     
     def clean(self):
         cleaned_data = super().clean()
@@ -104,6 +110,21 @@ class ExpenseForm(forms.ModelForm):
                 total_amount = cleaned_data.get('total_amount')
                 if total_amount != self.original_amount:
                     raise ValidationError('Amount cannot be changed for this expense.')
+            
+            # Check date editing permissions
+            if hasattr(self, 'original_started_at') and not self.instance.can_edit_date():
+                started_at = cleaned_data.get('started_at')
+                if started_at != self.original_started_at:
+                    raise ValidationError('Date cannot be changed for expenses earlier than next month.')
+            
+            # When date editing is allowed, validate new date is not historical
+            if hasattr(self, 'original_started_at') and self.instance.can_edit_date():
+                started_at = cleaned_data.get('started_at')
+                if started_at and started_at != self.original_started_at:
+                    # Get the minimum allowed date (active month + 1)
+                    next_month_date = self.instance.get_next_month_date()
+                    if next_month_date and started_at < next_month_date:
+                        raise ValidationError(f'New date must be no earlier than the next month ({next_month_date.strftime("%Y-%m-%d")}).')
         
         if expense_type == Expense.TYPE_SPLIT_PAYMENT and installments_count <= 0:
             raise ValidationError('Split payments must have installments count greater than 0')

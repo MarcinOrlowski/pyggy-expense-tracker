@@ -2,6 +2,7 @@
 
 ## @dev
 
+- [#0084] Added date editing restrictions for expenses to prevent historical date modifications and maintain financial data integrity
 - [#0072] Refactored payees list layout by removing created column and right-aligning expenses column for better readability
 - [#0073] Enhanced amount input sanitization with international format support (comma/dot decimal separators, currency symbols)
 - [#0075] Bind expenses directly to budgets to fix invisible expenses bug
