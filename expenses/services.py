@@ -126,13 +126,11 @@ def create_expense_items_for_month(expense: Expense, month: Month) -> List[Expen
                 last_day = calendar.monthrange(month.year, month.month)[1]
                 due_date = date(month.year, month.month, last_day)
 
-            installment_amount = calculate_installment_amount(expense)
-
             item = ExpenseItem.objects.create(
                 expense=expense,
                 month=month,
                 due_date=due_date,
-                amount=installment_amount
+                amount=expense.total_amount
             )
             items.append(item)
 
@@ -153,13 +151,6 @@ def create_expense_items_for_month(expense: Expense, month: Month) -> List[Expen
 
     return items
 
-
-def calculate_installment_amount(expense: Expense) -> Decimal:
-    """Calculate per-installment amount for split payments."""
-    if expense.expense_type != expense.TYPE_SPLIT_PAYMENT or expense.installments_count <= 0:
-        raise ValueError("Can only calculate installments for split payment expenses")
-
-    return expense.total_amount / expense.installments_count
 
 
 def check_expense_completion(expense: Expense) -> bool:

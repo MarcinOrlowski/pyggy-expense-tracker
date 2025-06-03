@@ -46,7 +46,7 @@
                         <th>Title</th>
                         <th>Payee</th>
                         <th>Type</th>
-                        <th class="amount-column">Total Amount</th>
+                        <th class="amount-column">Amount</th>
                         <th>Started</th>
                         <th>Installments</th>
                         <th class="actions-column">Actions</th>
@@ -63,7 +63,13 @@
                         </td>
                         <td>{% if expense.payee %}{{ expense.payee.name }}{% else %}-{% endif %}</td>
                         <td><i class="fas {{ expense.get_expense_type_icon }}" aria-label="{{ expense.get_expense_type_display }}" title="{{ expense.get_expense_type_display }}"></i> {{ expense.get_expense_type_display }}</td>
-                        <td class="amount-column">{{ expense.total_amount|currency }}</td>
+                        <td class="amount-column">
+                            {% if expense.expense_type == 'split_payment' %}
+                                {{ expense.total_amount|currency }} <small>/ month</small>
+                            {% else %}
+                                {{ expense.total_amount|currency }}
+                            {% endif %}
+                        </td>
                         <td>{{ expense.started_at|date:"Y-m-d" }}</td>
                         <td>
                             {% if expense.expense_type == 'split_payment' %}

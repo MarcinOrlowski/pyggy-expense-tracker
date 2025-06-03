@@ -27,8 +27,9 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="{{ form.total_amount.id_for_label }}">{{ form.total_amount.label }}:</label>
+                    <label for="{{ form.total_amount.id_for_label }}" id="total-amount-label">{{ form.total_amount.label }}:</label>
                     {{ form.total_amount }}
+                    <small id="total-amount-help"></small>
                     {% if form.total_amount.errors %}
                         <div class="message error">{{ form.total_amount.errors }}</div>
                     {% endif %}
@@ -114,6 +115,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const installmentsInput = document.querySelector('#installments-group input');
     const endDateGroup = document.getElementById('end-date-group');
     const endDateInput = document.querySelector('#end-date-group input');
+    const totalAmountLabel = document.getElementById('total-amount-label');
+    const totalAmountHelp = document.getElementById('total-amount-help');
+    const totalAmountInput = document.querySelector('input[name="total_amount"]');
 
     function toggleFields() {
         // Handle installments field
@@ -134,6 +138,15 @@ document.addEventListener('DOMContentLoaded', function() {
             endDateGroup.style.display = 'none';
             endDateInput.required = false;
             endDateInput.value = '';
+        }
+        
+        // Handle total amount field label and help text
+        if (expenseTypeSelect.value === 'split_payment') {
+            totalAmountLabel.textContent = totalAmountInput.dataset.splitLabel + ':';
+            totalAmountHelp.textContent = totalAmountInput.dataset.splitHelp;
+        } else {
+            totalAmountLabel.textContent = totalAmountInput.dataset.otherLabel + ':';
+            totalAmountHelp.textContent = totalAmountInput.dataset.otherHelp;
         }
     }
 

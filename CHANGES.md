@@ -2,6 +2,7 @@
 
 ## @dev
 
+- [#0064] Refactored split payments to use monthly installment amount instead of total amount calculation
 - [#0058] Disabled budget start date field in edit form when months exist
 - [#0016] Renamed Django configuration directory from expense_tracker to pyggy to match project name
 - [#0056] Fixed failing unit tests by updating method names and function signatures to match current codebase
