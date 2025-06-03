@@ -382,21 +382,45 @@ class ExpenseItem(models.Model):
         if self.status == 'pending' and self.payment_date:
             raise ValidationError('Pending items cannot have payment_date')
         
-        # Validate due_date is within expense creation month
+        # Validate due_date is within allowed range
         if self.due_date and self.expense_id:
             start_date, end_date = self.get_allowed_month_range()
             if not (start_date <= self.due_date <= end_date):
-                month_name = start_date.strftime("%B %Y")
-                raise ValidationError(f'Due date must be within {month_name}')
+                expense_month_name = date(self.expense.started_at.year, self.expense.started_at.month, 1).strftime("%B %Y")
+                if self.expense.expense_type == self.expense.TYPE_ONE_TIME:
+                    most_recent_month = Month.get_most_recent(budget=self.expense.budget)
+                    if most_recent_month and start_date < date(self.expense.started_at.year, self.expense.started_at.month, 1):
+                        active_month_name = date(most_recent_month.year, most_recent_month.month, 1).strftime("%B %Y")
+                        raise ValidationError(f'Due date must be between {active_month_name} and {expense_month_name}')
+                    else:
+                        raise ValidationError(f'Due date must be within {expense_month_name}')
+                else:
+                    raise ValidationError(f'Due date must be within {expense_month_name}')
     
     def get_allowed_month_range(self):
-        """Returns (start_date, end_date) tuple for allowed month range based on expense creation month"""
+        """Returns (start_date, end_date) tuple for allowed month range based on expense type and creation month"""
         if not self.expense_id:
             return None, None
         
         expense_month = self.expense.started_at
         year, month = expense_month.year, expense_month.month
-        start_date = date(year, month, 1)
+        
+        # For one-time expenses, allow moving as early as the most recent month in budget
+        if self.expense.expense_type == self.expense.TYPE_ONE_TIME:
+            # Get the most recent (active) month for this budget
+            most_recent_month = Month.get_most_recent(budget=self.expense.budget)
+            if most_recent_month:
+                # Start date is the earlier of: expense creation month or most recent month
+                active_month_start = date(most_recent_month.year, most_recent_month.month, 1)
+                expense_month_start = date(year, month, 1)
+                start_date = min(active_month_start, expense_month_start)
+            else:
+                start_date = date(year, month, 1)
+        else:
+            # For other expense types, restrict to creation month only
+            start_date = date(year, month, 1)
+        
+        # End date is always the last day of the expense creation month
         end_date = date(year, month, calendar.monthrange(year, month)[1])
         return start_date, end_date
 
