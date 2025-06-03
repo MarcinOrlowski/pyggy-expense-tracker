@@ -1,15 +1,9 @@
 # PyGGy - Python (Monthly) Expense Tracker
 
-<<<<<<< HEAD
 A Django-based expense tracking application designed to manage different types of
 expenses with monthly processing workflows. This proof-of-concept demonstrates core
 expense management functionality as a foundation for a comprehensive budget
 management system.
-=======
-A Django-based expense tracking application designed to manage different types of expenses with monthly
-processing workflows. This proof-of-concept demonstrates core expense management functionality as a
-foundation for a comprehensive budget management system.
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 ## Features
 
@@ -171,11 +165,7 @@ The project includes convenience scripts:
 
 The project uses SASS for styling with django-sass-processor for automatic compilation:
 
-<<<<<<< HEAD
 - Source files: `src/scss/` directory  
-=======
-- Source files: `src/scss/` directory
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 - Styles are automatically compiled when running the development server
 - No manual compilation needed - Django handles it via `{% sass_src %}` template tag
 - To modify styles, edit the `.scss` files and refresh your browser
