@@ -116,8 +116,9 @@ def create_expense_items_for_month(expense: Expense, month: Month) -> List[Expen
     elif expense.expense_type == expense.TYPE_SPLIT_PAYMENT:
         # Check how many items we've already created
         existing_count = ExpenseItem.objects.filter(expense=expense).count()
+        remaining_installments = expense.installments_count - expense.initial_installment
 
-        if existing_count < expense.installments_count:
+        if existing_count < remaining_installments:
             due_date = date(month.year, month.month, expense_start_date.day)
             try:
                 due_date = date(month.year, month.month, expense_start_date.day)
@@ -175,9 +176,10 @@ def check_expense_completion(expense: Expense) -> bool:
             return True
 
     elif expense.expense_type == expense.TYPE_SPLIT_PAYMENT:
-        # Complete when all installments are paid
+        # Complete when all remaining installments are paid
         paid_items = ExpenseItem.objects.filter(expense=expense, status='paid').count()
-        if paid_items >= expense.installments_count:
+        remaining_installments = expense.installments_count - expense.initial_installment
+        if paid_items >= remaining_installments:
             expense.closed_at = timezone.now()
             expense.save()
             return True

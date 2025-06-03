@@ -69,6 +69,18 @@
                     <small>Only required for split payment expenses</small>
                 </div>
 
+                <div class="form-group" id="initial-installment-group">
+                    <label for="{{ form.initial_installment.id_for_label }}">{{ form.initial_installment.label }}:</label>
+                    {{ form.initial_installment }}
+                    {% if form.initial_installment.errors %}
+                        <div class="message error">{{ form.initial_installment.errors }}</div>
+                    {% endif %}
+                    <small>Starting installment number (0 = start from first installment). Only used for split payments.</small>
+                    {% if form.initial_installment.help_text %}
+                        <small class="text-muted"><i class="fas fa-lock"></i> {{ form.initial_installment.help_text }}</small>
+                    {% endif %}
+                </div>
+
                 <div class="form-group">
                     <label for="{{ form.started_at.id_for_label }}">{{ form.started_at.label }}:</label>
                     {{ form.started_at }}
@@ -122,6 +134,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const expenseTypeSelect = document.getElementById('expense-type-select');
     const installmentsGroup = document.getElementById('installments-group');
     const installmentsInput = document.querySelector('#installments-group input');
+    const initialInstallmentGroup = document.getElementById('initial-installment-group');
+    const initialInstallmentInput = document.querySelector('#initial-installment-group input');
     const endDateGroup = document.getElementById('end-date-group');
     const endDateInput = document.querySelector('#end-date-group input');
     const totalAmountLabel = document.getElementById('total-amount-label');
@@ -133,10 +147,13 @@ document.addEventListener('DOMContentLoaded', function() {
         if (expenseTypeSelect.value === 'split_payment') {
             installmentsGroup.style.display = 'block';
             installmentsInput.required = true;
+            initialInstallmentGroup.style.display = 'block';
         } else {
             installmentsGroup.style.display = 'none';
             installmentsInput.required = false;
             installmentsInput.value = '0';
+            initialInstallmentGroup.style.display = 'none';
+            initialInstallmentInput.value = '0';
         }
         
         // Handle end date field
