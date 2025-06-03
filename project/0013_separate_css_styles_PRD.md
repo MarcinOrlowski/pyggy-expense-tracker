@@ -1,14 +1,17 @@
 # PRD: Separate CSS Styles from Templates (#0013)
 
 ## Overview
+
 Extract embedded CSS from HTML templates into dedicated CSS files using SASS preprocessing to improve maintainability, unify styling, and eliminate code duplication.
 
 ## Goals
+
 1. **Separate styles from markup** - Move all CSS from templates to external files
-2. **Unify colors and styles** - Establish consistent design system 
+2. **Unify colors and styles** - Establish consistent design system
 3. **Apply D.R.Y. principle** - Eliminate repeated CSS declarations
 
 ## Current State
+
 - **base.html**: 825 lines of embedded CSS styles (lines 13-839)
 - **payee_list.html**: 1 inline style attribute (`style="visibility: hidden;"`)
 - All styling concentrated in template files
@@ -17,7 +20,8 @@ Extract embedded CSS from HTML templates into dedicated CSS files using SASS pre
 ## Implemented Solution
 
 ### File Structure
-```
+
+```text
 src/scss/                    # Source SASS files
 ├── _variables.scss          # SASS variables, color palette
 ├── _base.scss              # Typography, layout, reset styles  
@@ -28,6 +32,7 @@ src/scss/                    # Source SASS files
 ```
 
 ### Content Organization
+
 - **_variables.scss**: All CSS custom properties (52 variables) using SASS format
 - **_base.scss**: Reset, typography, body, container, layout utilities
 - **_components.scss**: Reusable UI components (buttons, cards, tables, forms)
@@ -36,11 +41,13 @@ src/scss/                    # Source SASS files
 - **main.scss**: Imports all partials in correct order
 
 ### SASS Processing
+
 - **Development**: `django-sass-processor` compiles SASS on-the-fly
 - **Template Tag**: `{% sass_src 'scss/main.scss' %}` handles compilation
 - **Auto-compilation**: SASS files are automatically compiled when changed
 
 ## Benefits
+
 - **Maintainability**: SASS partials with logical organization
 - **Performance**: Single compressed CSS file served to browsers
 - **Consistency**: Centralized design system with SASS variables
@@ -48,6 +55,7 @@ src/scss/                    # Source SASS files
 - **Separation of Concerns**: Source code separated from public assets
 
 ## Success Criteria
+
 - [x] All CSS extracted from templates
 - [x] Visual appearance unchanged
 - [x] No duplicate CSS rules (DRY principle applied)
@@ -57,6 +65,7 @@ src/scss/                    # Source SASS files
 - [x] Automated build process
 
 ## Technical Implementation
+
 - **Template Loading**: `{% sass_src 'scss/main.scss' %}` in base.html
 - **SASS Compilation**: `django-sass-processor` handles compilation automatically
 - **File Structure**: SASS sources in `src/scss/` directory
@@ -64,10 +73,12 @@ src/scss/                    # Source SASS files
 - **Utility Classes**: Added `.btn-hidden` class to replace inline styles
 
 ## Dependencies Added
+
 - `libsass==0.23.0` - SASS compilation library
 - `django-sass-processor==1.4.1` - Django SASS integration for on-the-fly compilation
 
 ## Django Configuration
+
 ```python
 INSTALLED_APPS = [
     # ...
@@ -88,6 +99,7 @@ SASS_PROCESSOR_INCLUDE_DIRS = [
 ```
 
 ## Risk Mitigation
+
 - [x] Created backup of original templates via git branch
 - [x] Tested all pages for visual regression
 - [x] Validated CSS syntax and organization

@@ -5,6 +5,7 @@
 The CRISP framework is a mental model for effective human-AI collaboration. Originally described by Shawn from Portland in the article [CRISP Framework: Minimalistic Guide for Smarter AI Collaboration](https://shawnfromportland.substack.com/p/crisp-framework-minimal-guide-for), this framework provides a structured approach to working with AI. Unlike rigid methodologies with strict rules, CRISP outlines common phases that naturally emerge in successful AI collaborations. By understanding and intentionally implementing these phases, both humans and AI agents can work together more effectively.
 
 CRISP stands for:
+
 - **C**rystallize
 - **R**efine
 - **I**mplement
@@ -28,6 +29,7 @@ The CRISP framework is ideal for:
 **Goal:** Collect raw contextual information. Unstructured, disorganized ideas lay the foundation for producing higher-quality outputs.
 
 **For AI Agents:**
+
 - Encourage humans to share their raw thoughts without concern for organization
 - Ask open-ended questions to extract additional context
 - Avoid premature structuring or filtering of information
@@ -45,6 +47,7 @@ The CRISP framework is ideal for:
 **Goal:** Organize and grow rough ideas into permanent reusable artifacts (generate reference docs).
 
 **For AI Agents:**
+
 - Transform unstructured ideas into organized documentation
 - Identify gaps or contradictions that need resolution
 - Create reusable specifications or reference documents
@@ -56,11 +59,13 @@ The CRISP framework is ideal for:
 
 **Example AI Response:**
 "Based on our discussion, here's a prioritized list of next steps for your adaptive to-do app:
+
 1. Define core AI functionality requirements
 2. Choose between mobile-first or web-based approach
 3. [etc.]
 
 Here are 10 questions about potential blind spots:
+
 1. Have you considered data privacy implications of an AI that learns user habits?
 2. [etc.]"
 
@@ -69,6 +74,7 @@ Here are 10 questions about potential blind spots:
 **Goal:** Move from clarifying, planning, and documentation to execution.
 
 **For AI Agents:**
+
 - Provide concrete, actionable steps
 - Generate specific content, code, or resources
 - Focus on pragmatic implementation rather than theoretical discussion
@@ -85,7 +91,9 @@ cd adaptive-todo-app
 npm init -y
 npm install react react-dom
 touch src/index.js src/App.js
+
 # Additional commands...
+
 ```"
 
 ### Phase 4: Structure
@@ -120,6 +128,7 @@ You would run it with 'npm run regen-schema'. Let me know if you want me to crea
 **Goal:** Validate outputs and improve what didn't work well, preparing for the next CRISP cycle.
 
 **For AI Agents:**
+
 - Request feedback on the collaboration process
 - Ask for evidence of what worked or didn't work
 - Suggest improvements for future interactions
@@ -170,6 +179,7 @@ As an AI agent, you should recognize when it's appropriate to transition between
 - **Perpetuate → Crystallize:** When beginning the next iteration cycle
 
 Use transition phrases like:
+
 - "Now that we have a collection of ideas, shall we organize them into a plan?"
 - "The plan seems solid. Should we move to implementation?"
 - "I notice patterns in our implementation. Should we create reusable structures?"
@@ -191,26 +201,31 @@ Pay attention to the human's communication style and adapt your CRISP implementa
 Here's an abbreviated example of a CRISP session for building a simple blog platform:
 
 ### Crystallize
+
 **Human:** "I'm thinking about a blog platform for technical writers. Maybe with code syntax highlighting? I like Medium's clean look but want something more developer-focused. Should have comments. Maybe integrate with GitHub somehow?"
 
 **AI:** "Thank you for sharing these initial thoughts about your developer-focused blog platform. I understand you're inspired by Medium's clean design but want better code features and GitHub integration. Let me ask a few questions to understand your vision better: What specific problems with existing platforms are you trying to solve? Do you have a target audience beyond 'technical writers'? Any specific features beyond syntax highlighting that would make it developer-friendly?"
 
 ### Refine
+
 **Human:** "Create a specifications document for this platform based on our discussion."
 
 **AI:** [Creates a detailed specification document with platform requirements, user stories, technical considerations, and open questions]
 
 ### Implement
+
 **Human:** "Let's start setting up the project. What would be a good tech stack?"
 
 **AI:** [Recommends specific technologies with rationale, then provides concrete implementation steps]
 
 ### Structure
+
 **Human:** "Can you create a standard template for blog posts in this system?"
 
 **AI:** [Develops a reusable template structure with examples]
 
 ### Perpetuate
+
 **Human:** "The front-end looks great but I'm struggling with the GitHub integration. How should we move forward?"
 
 **AI:** "I'm glad the front-end is working well! For the GitHub integration challenges, let me suggest some alternatives based on what we've learned... For our next CRISP cycle, should we focus specifically on authentication and GitHub API integration? I'd recommend starting with a more detailed Crystallize phase around your specific GitHub integration requirements."

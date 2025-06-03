@@ -1,4 +1,5 @@
 # Technical Requirements Document (TRD)
+
 ## Application Settings Infrastructure with Currency and Locale Support
 
 **Feature ID:** #0014  
@@ -200,6 +201,7 @@ def format_amount(amount, show_symbol=True):
 ### 6. Dependencies
 
 Add to `requirements.txt`:
+
 ```
 babel==2.13.1
 ```
@@ -248,6 +250,7 @@ class Migration(migrations.Migration):
 ### 8. Template Updates
 
 Example template usage:
+
 ```django
 {% load currency_tags %}
 
@@ -327,6 +330,7 @@ class SettingsServiceTest(TestCase):
 ### 14. Currency Filter Usage Examples
 
 #### Basic Usage
+
 ```django
 {% load currency_tags %}
 
@@ -341,6 +345,7 @@ ${{ item.amount|floatformat:2 }}
 #### Template Examples
 
 **expenses/includes/expense_items_table.html:**
+
 ```django
 {% load currency_tags %}
 ...
@@ -348,6 +353,7 @@ ${{ item.amount|floatformat:2 }}
 ```
 
 **expenses/includes/month_summary.html:**
+
 ```django
 {% load currency_tags %}
 ...
@@ -357,6 +363,7 @@ ${{ item.amount|floatformat:2 }}
 ```
 
 **Forms with currency symbol:**
+
 ```django
 {% load currency_tags %}
 <div class="form-group">

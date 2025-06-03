@@ -5,18 +5,22 @@
 **PRD Reference**: 0016_rename_django_config_folder_PRD.md
 
 ## Technical Approach
+
 We'll rename the Django configuration directory from `expense_tracker/` to `pyggy/` using a systematic find-and-replace approach. This involves updating all Python module references in 5 core files and the README documentation. The changes are straightforward string replacements with no architectural modifications or database migrations required.
 
 ## Data Model
+
 No changes to data model - this is purely a module naming change.
 
 ## Implementation Details
 
 ### Files to Modify:
+
 1. **Directory Rename**
    - `mv expense_tracker/ pyggy/`
 
 2. **Python Module Updates**
+
    ```python
    # manage.py
    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'pyggy.settings')
@@ -37,16 +41,19 @@ No changes to data model - this is purely a module naming change.
    - Update comments in Python files referencing project name
 
 ## Security & Performance
+
 - Security: No impact - only module naming changes
 - Performance: No impact - identical code execution
 - Deployment: Requires restart of Django application
 
 ## Technical Risks & Mitigations
+
 1. **Risk**: Missed references causing import errors → **Mitigation**: Comprehensive grep search before and after changes
 2. **Risk**: Development environment confusion → **Mitigation**: Clear commit message and immediate team notification
-3. **Risk**: Cached .pyc files with old imports → **Mitigation**: Delete all .pyc files and __pycache__ directories
+3. **Risk**: Cached .pyc files with old imports → **Mitigation**: Delete all .pyc files and **pycache** directories
 
 ## Implementation Plan
+
 - Step 1 (S): Rename directory - 1 minute
 - Step 2 (S): Update Python module references in 5 files - 5 minutes
 - Step 3 (S): Update README.md documentation - 2 minutes
@@ -56,6 +63,7 @@ No changes to data model - this is purely a module naming change.
 Dependencies: None
 
 ## Monitoring & Rollback
+
 - Feature flag: Not applicable for this change
 - Key metrics: Server startup success, no ImportError exceptions
 - Rollback: Simple git revert of the commit if any issues arise

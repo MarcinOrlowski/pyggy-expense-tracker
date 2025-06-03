@@ -5,9 +5,11 @@
 **PRD Reference**: 0041_ui_to_manage_budget_PRD.md v1.0
 
 ## Technical Approach
+
 We'll implement budget management as a new Django model with CRUD views following the existing expense tracker patterns. The Budget model will integrate with the existing Month model through a foreign key relationship. Budget CRUD operations will be implemented using Django's class-based views with templates following the current Bootstrap/FontAwesome design system. The existing month processing workflow will be modified to use budget start_date for initial month creation while maintaining the current sequential month creation pattern.
 
 ## Data Model
+
 ```python
 # New Budget model in expenses/models.py
 class Budget(models.Model):
@@ -27,6 +29,7 @@ Index: (budget_id, year, month) for efficient budget-month queries
 ```
 
 ## Views & URLs Design
+
 ```python
 # New views in expenses/views.py
 class BudgetListView(ListView)  # GET /budgets/
@@ -45,6 +48,7 @@ path('budgets/<int:pk>/delete/', views.BudgetDeleteView.as_view(), name='budget_
 ```
 
 ## Templates Structure
+
 ```
 expenses/templates/expenses/
 ├── budget_list.html          # List all budgets
@@ -55,6 +59,7 @@ expenses/templates/expenses/
 ```
 
 ## Validation Rules
+
 - Budget name: Required, max 100 characters, unique per user
 - Start date: Required, cannot be in the past (except when no months exist)
 - Initial amount: Required, decimal field, minimum 0
@@ -63,6 +68,7 @@ expenses/templates/expenses/
 - Month creation: Must reference existing budget
 
 ## Security & Performance
+
 - Authentication: Use existing Django session authentication
 - Authorization: Users can only manage their own budgets (add user foreign key if multi-user)
 - Performance: <300ms response time for CRUD operations
@@ -70,11 +76,13 @@ expenses/templates/expenses/
 - CSRF: Django's built-in CSRF protection for all forms
 
 ## Technical Risks & Mitigations
+
 1. **Risk**: Data migration issues with existing Month records → **Mitigation**: Make budget foreign key nullable initially, provide data migration script
 2. **Risk**: UI inconsistency with existing design → **Mitigation**: Reuse existing template patterns and CSS classes from expense forms
 3. **Risk**: Breaking existing month processing workflow → **Mitigation**: Maintain backward compatibility, add budget integration incrementally
 
 ## Implementation Plan
+
 - Phase 1: Budget model + migration + basic CRUD views
 - Phase 2: Budget templates following existing UI patterns
 - Phase 3: Integration with month processing workflow
@@ -83,6 +91,7 @@ expenses/templates/expenses/
 Dependencies: None - uses existing Django framework and patterns
 
 ## Monitoring & Rollback
+
 - Feature flag: Not required - incremental implementation allows safe rollback
 - Key metrics: Budget CRUD operation success rates, month creation with budget association
 - Rollback: Remove budget foreign key constraint, revert month processing logic

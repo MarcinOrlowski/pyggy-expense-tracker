@@ -5,17 +5,21 @@
 **PRD Reference**: 0052_rework_footer_layout_PRD.md
 
 ## Technical Approach
+
 We'll modify the existing footer in `base.html` to use flexbox layout with two sections (left and right), updating the SCSS in `_components.scss` to support responsive behavior. The application version will be hardcoded initially (v1.0.0) in the template. We'll use CSS media queries to stack footer sections vertically on mobile devices (<768px).
 
 ## Data Model
+
 No data model changes required - this is a pure frontend UI enhancement.
 
 ## API Design
+
 Not applicable - this is a static UI component with no backend interaction.
 
 ## Implementation Details
 
 ### HTML Structure (`expenses/templates/expenses/base.html`)
+
 ```html
 <footer>
     <div class="container">
@@ -35,6 +39,7 @@ Not applicable - this is a static UI component with no backend interaction.
 ```
 
 ### CSS Changes (`src/scss/_components.scss`)
+
 - Add `.footer-content` with `display: flex` and `justify-content: space-between`
 - Style `.footer-left` and `.footer-right` sections
 - Add `.version` with smaller, muted text styling
@@ -42,15 +47,18 @@ Not applicable - this is a static UI component with no backend interaction.
 - Media query at 768px breakpoint for mobile stacking
 
 ## Security & Performance
+
 - Links include `rel="noopener"` for security when opening in new tabs
 - No JavaScript required - pure CSS solution for performance
 - Minimal CSS additions (~20 lines) with no impact on page load
 
 ## Technical Risks & Mitigations
+
 1. **Risk**: Footer height change might affect page layout → **Mitigation**: Test with various content lengths to ensure `margin-top: auto` still works
 2. **Risk**: Long version strings might break layout → **Mitigation**: Use `text-overflow: ellipsis` for version text
 
 ## Implementation Plan
+
 - Phase 1 (S): Update HTML structure in base.html - 30 min
 - Phase 2 (S): Add SCSS styles for desktop layout - 30 min
 - Phase 3 (S): Add responsive media queries - 30 min
@@ -59,6 +67,7 @@ Not applicable - this is a static UI component with no backend interaction.
 Dependencies: None - uses existing CSS variables and container styles
 
 ## Monitoring & Rollback
+
 - Feature flag: Not required for CSS-only change
 - Key metrics: Visual regression testing on footer appearance
 - Rollback: Git revert of the commit if any issues arise

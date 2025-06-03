@@ -5,16 +5,24 @@
 
 ## Problem Statement
 
-Action buttons in table rows currently use inconsistent custom colors and may have icons that look like status indicators rather than action buttons. Users may find it difficult to distinguish between status information and actionable elements, leading to confusion about what can be clicked or interacted with. This inconsistency degrades the overall user experience and visual cohesion of the application.
+Action buttons in table rows currently use inconsistent custom colors and may have icons that look like status
+indicators rather than action buttons. Users may find it difficult to distinguish between status information and
+actionable elements, leading to confusion about what can be clicked or interacted with. This inconsistency degrades
+the overall user experience and visual cohesion of the application.
 
 ## Solution Overview
 
-Remove custom colors from all action buttons in table rows (except delete actions which should maintain warning color) and ensure icons clearly represent actions rather than status. Standardize the visual design across all table views to create a consistent, intuitive interface where users can easily identify actionable elements from status indicators.
+Remove custom colors from all action buttons in table rows (except delete actions which should maintain warning
+color) and ensure icons clearly represent actions rather than status. Standardize the visual design across all
+table views to create a consistent, intuitive interface where users can easily identify actionable elements from
+status indicators.
 
 ## User Stories
 
-1. As a user, I want to quickly identify which elements in tables are clickable actions, so that I can efficiently navigate and interact with the interface
-2. As a user, I want consistent visual styling across all table views, so that I can rely on familiar patterns throughout the application
+1. As a user, I want to quickly identify which elements in tables are clickable actions, so that I can efficiently
+   navigate and interact with the interface
+2. As a user, I want consistent visual styling across all table views, so that I can rely on familiar patterns
+   throughout the application
 3. As a user, I want clear action icons that represent what will happen when clicked, so that I can confidently perform tasks without confusion
 
 ## Acceptance Criteria
