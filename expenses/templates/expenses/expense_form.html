@@ -22,6 +22,12 @@
                 </div>
             {% endif %}
 
+            {% if edit_restrictions and not edit_restrictions.can_edit_date %}
+                <div class="message warning">
+                    <i class="fas fa-exclamation-triangle"></i> Note: Date cannot be edited for expenses earlier than next month. You can still update other fields.
+                </div>
+            {% endif %}
+
             <!-- Two column layout for main fields -->
             <div class="grid-2-cols">
                 <div class="form-group">
@@ -85,7 +91,10 @@
                     <label for="{{ form.started_at.id_for_label }}">{{ form.started_at.label }}:</label>
                     {{ form.started_at }}
                     <small>Start date cannot be earlier than the currently active month. If you set it to the current month, expense items will be created immediately.</small>
-                    {% if form.started_at.help_text %}
+                    {% if edit_restrictions and not edit_restrictions.can_edit_date %}
+                        <small class="text-muted"><i class="fas fa-lock"></i> {{ form.started_at.help_text }}</small>
+                    {% endif %}
+                    {% if form.started_at.help_text and edit_restrictions.can_edit_date %}
                         <small>{{ form.started_at.help_text }}</small>
                     {% endif %}
                     {% if form.started_at.errors %}
