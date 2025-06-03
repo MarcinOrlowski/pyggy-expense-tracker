@@ -2,6 +2,7 @@
 
 ## @dev
 
+- [#0073] Enhanced amount input sanitization with international format support (comma/dot decimal separators, currency symbols)
 - [#0075] Bind expenses directly to budgets to fix invisible expenses bug
 - [#0063] Added partial split payment tracking with configurable start installment number
 - [#0069] Added linters and Github Actions to guard the code.

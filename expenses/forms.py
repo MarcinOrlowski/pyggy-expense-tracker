@@ -2,6 +2,7 @@ from django import forms
 from django.core.exceptions import ValidationError
 from datetime import date
 from .models import Expense, ExpenseItem, PaymentMethod, Payee, Month, Budget
+from .fields import SanitizedDecimalField
 
 
 class ExpenseForm(forms.ModelForm):
@@ -31,6 +32,14 @@ class ExpenseForm(forms.ModelForm):
         help_text="Optional notes or additional context about this expense (max 1024 characters)"
     )
     
+    total_amount = SanitizedDecimalField(
+        max_digits=13,
+        decimal_places=2,
+        min_value=0.01,
+        widget=forms.NumberInput(attrs={'step': '0.01', 'min': '0.01'}),
+        help_text="Supports international formats: 10.50, 10,50, $10.50, €10,50"
+    )
+    
     class Meta:
         model = Expense
         fields = ['payee', 'title', 'expense_type', 'total_amount', 'installments_count', 'initial_installment', 'started_at', 'end_date', 'notes']
@@ -38,7 +47,6 @@ class ExpenseForm(forms.ModelForm):
             'expense_type': forms.Select(attrs={'id': 'expense-type-select'}),
             'installments_count': forms.NumberInput(attrs={'min': '0'}),
             'initial_installment': forms.NumberInput(attrs={'min': '0'}),
-            'total_amount': forms.NumberInput(attrs={'step': '0.01', 'min': '0.01'}),
             'title': forms.TextInput(attrs={'placeholder': 'Enter expense title'}),
         }
     
@@ -190,6 +198,18 @@ class BudgetForm(forms.ModelForm):
         help_text='Format: YYYY-MM-DD'
     )
     
+    initial_amount = SanitizedDecimalField(
+        max_digits=10,
+        decimal_places=2,
+        min_value=0,
+        widget=forms.NumberInput(attrs={
+            'step': '0.01', 
+            'min': '0',
+            'class': 'form-control'
+        }),
+        help_text="Supports international formats: 100.00, 100,00, $100.00, €100,00"
+    )
+    
     class Meta:
         model = Budget
         fields = ['name', 'start_date', 'initial_amount']
@@ -198,11 +218,6 @@ class BudgetForm(forms.ModelForm):
                 'placeholder': 'Enter budget name',
                 'class': 'form-control'
             }),
-            'initial_amount': forms.NumberInput(attrs={
-                'step': '0.01', 
-                'min': '0',
-                'class': 'form-control'
-            })
         }
     
     def __init__(self, *args, **kwargs):
