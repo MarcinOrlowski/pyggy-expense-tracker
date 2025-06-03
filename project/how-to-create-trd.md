@@ -158,10 +158,8 @@ Before finalizing your TRD, ensure:
 ```markdown
 # [Feature Name] TRD
 
-**Last Updated**: [Date]
 **Ticket**: [Link to github ticket]
 **PRD Reference**: [PRD version]
-
 
 ## Technical Approach
 [1 paragraph describing overall implementation strategy]

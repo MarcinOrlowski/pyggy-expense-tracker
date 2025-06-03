@@ -131,7 +131,6 @@ Before finalizing your PRD, ensure:
 ```markdown
 # [Feature Name] PRD
 
-**Last Updated**: [Date]
 **Ticket**: [Link to github ticket]
 
 ## Problem Statement
