@@ -169,6 +169,7 @@ class Expense(models.Model):
         TYPE_RECURRING_WITH_END: 'fa-calendar-check'
     }
 
+    budget = models.ForeignKey(Budget, on_delete=models.CASCADE)
     payee = models.ForeignKey(Payee, on_delete=models.PROTECT, null=True, blank=True)
     title = models.CharField(max_length=255)
     expense_type = models.CharField(max_length=20, choices=EXPENSE_TYPES)
@@ -220,9 +221,9 @@ class Expense(models.Model):
         if self.closed_at and self.closed_at > timezone.now():
             raise ValidationError('closed_at cannot be in the future')
         
-        # Validate start date is not earlier than current month
-        if self.started_at:
-            most_recent_month = Month.get_most_recent()
+        # Validate start date is not earlier than current month for this budget
+        if self.started_at and self.budget_id:
+            most_recent_month = Month.get_most_recent(budget=self.budget)
             if most_recent_month:
                 # Get first day of the most recent month
                 current_month_start = date(most_recent_month.year, most_recent_month.month, 1)

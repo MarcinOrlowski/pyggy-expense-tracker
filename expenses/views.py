@@ -114,11 +114,11 @@ def expense_list(request, budget_id):
     """List active expenses with filtering options for a specific budget"""
     budget = get_object_or_404(Budget, id=budget_id)
     
-    # Get expenses that belong to months in this budget
+    # Get expenses that belong directly to this budget
     expenses = Expense.objects.filter(
         closed_at__isnull=True,
-        expenseitem__month__budget=budget
-    ).distinct().select_related('payee')
+        budget=budget
+    ).select_related('payee')
     
     # Simple filtering
     expense_type = request.GET.get('type')
@@ -150,7 +150,9 @@ def expense_create(request, budget_id):
     if request.method == 'POST':
         form = ExpenseForm(request.POST, budget=budget)
         if form.is_valid():
-            expense = form.save()
+            expense = form.save(commit=False)
+            expense.budget = budget
+            expense.save()
             # Handle expense items creation if it starts in current month
             from .services import handle_new_expense
             handle_new_expense(expense, budget)
@@ -179,12 +181,11 @@ def expense_create(request, budget_id):
 def expense_detail(request, budget_id, pk):
     """Display expense details and related items"""
     budget = get_object_or_404(Budget, id=budget_id)
-    expense = get_object_or_404(Expense, pk=pk)
+    expense = get_object_or_404(Expense, pk=pk, budget=budget)
     
-    # Filter expense items to only those belonging to months in this budget
+    # Get all expense items for this expense
     expense_items = ExpenseItem.objects.filter(
-        expense=expense,
-        month__budget=budget
+        expense=expense
     ).select_related('month', 'payment_method').order_by('due_date')
     
     # Get edit restrictions for the template
@@ -202,7 +203,7 @@ def expense_detail(request, budget_id, pk):
 def expense_edit(request, budget_id, pk):
     """Edit existing expense"""
     budget = get_object_or_404(Budget, id=budget_id)
-    expense = get_object_or_404(Expense, pk=pk)
+    expense = get_object_or_404(Expense, pk=pk, budget=budget)
     
     # Check if expense can be edited
     if not expense.can_be_edited():
@@ -240,7 +241,7 @@ def expense_edit(request, budget_id, pk):
 def expense_delete(request, budget_id, pk):
     """Delete expense with confirmation"""
     budget = get_object_or_404(Budget, id=budget_id)
-    expense = get_object_or_404(Expense, pk=pk)
+    expense = get_object_or_404(Expense, pk=pk, budget=budget)
     
     if request.method == 'POST':
         title = expense.title
