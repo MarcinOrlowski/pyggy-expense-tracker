@@ -187,10 +187,14 @@ def expense_detail(request, budget_id, pk):
         month__budget=budget
     ).select_related('month', 'payment_method').order_by('due_date')
     
+    # Get edit restrictions for the template
+    edit_restrictions = expense.get_edit_restrictions()
+    
     context = {
         'budget': budget,
         'expense': expense,
         'expense_items': expense_items,
+        'edit_restrictions': edit_restrictions,
     }
     return render(request, 'expenses/expense_detail.html', context)
 
@@ -199,6 +203,12 @@ def expense_edit(request, budget_id, pk):
     """Edit existing expense"""
     budget = get_object_or_404(Budget, id=budget_id)
     expense = get_object_or_404(Expense, pk=pk)
+    
+    # Check if expense can be edited
+    if not expense.can_be_edited():
+        restrictions = expense.get_edit_restrictions()
+        messages.error(request, f'This expense cannot be edited. {" ".join(restrictions["reasons"])}')
+        return redirect('expense_detail', budget_id=budget_id, pk=expense.pk)
     
     if request.method == 'POST':
         original_start_date = expense.started_at
@@ -214,11 +224,15 @@ def expense_edit(request, budget_id, pk):
     else:
         form = ExpenseForm(instance=expense, budget=budget)
     
+    # Get edit restrictions to pass to template
+    restrictions = expense.get_edit_restrictions()
+    
     context = {
         'budget': budget,
         'form': form,
         'expense': expense,
-        'title': f'Edit Expense: {expense.title}'
+        'title': f'Edit Expense: {expense.title}',
+        'edit_restrictions': restrictions
     }
     return render(request, 'expenses/expense_form.html', context)
 

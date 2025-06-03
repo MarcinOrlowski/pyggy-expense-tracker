@@ -200,6 +200,55 @@ class Expense(models.Model):
     def can_be_deleted(self):
         """Check if this expense can be deleted (no paid expense items)"""
         return not self.expenseitem_set.filter(status='paid').exists()
+    
+    def can_be_edited(self):
+        """Check if this expense can be edited at all"""
+        # Cannot edit if expense is closed
+        if self.closed_at:
+            return False
+        
+        # Cannot edit recurring expenses (split payment or recurring with end date)
+        if self.expense_type in [self.TYPE_SPLIT_PAYMENT, self.TYPE_RECURRING_WITH_END]:
+            return False
+        
+        # One-time and endless recurring expenses can be edited (with restrictions)
+        return True
+    
+    def can_edit_amount(self):
+        """Check if the amount field can be edited"""
+        # First check if expense can be edited at all
+        if not self.can_be_edited():
+            return False
+        
+        # Cannot edit amount if any expense item is paid
+        has_paid_items = self.expenseitem_set.filter(status='paid').exists()
+        if has_paid_items:
+            return False
+        
+        return True
+    
+    def get_edit_restrictions(self):
+        """Get detailed information about edit restrictions"""
+        restrictions = {
+            'can_edit': self.can_be_edited(),
+            'can_edit_amount': self.can_edit_amount(),
+            'reasons': []
+        }
+        
+        if self.closed_at:
+            restrictions['reasons'].append('Expense is closed')
+        
+        if self.expense_type == self.TYPE_SPLIT_PAYMENT:
+            restrictions['reasons'].append('Split payment expenses cannot be edited')
+        elif self.expense_type == self.TYPE_RECURRING_WITH_END:
+            restrictions['reasons'].append('Recurring expenses with end date cannot be edited')
+        
+        if restrictions['can_edit'] and not restrictions['can_edit_amount']:
+            has_paid_items = self.expenseitem_set.filter(status='paid').exists()
+            if has_paid_items:
+                restrictions['reasons'].append('Amount cannot be edited because expense has paid items')
+        
+        return restrictions
 
     def __str__(self):
         if self.payee:
