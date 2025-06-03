@@ -43,6 +43,9 @@
                             {% else %}
                                 <a href="{% url 'expense_item_unpay' budget.id item.pk %}" class="btn btn-sm" title="Mark as Unpaid" aria-label="Mark as Unpaid"><i class="fas fa-undo"></i></a>
                             {% endif %}
+                            {% if item.expense.can_be_edited %}
+                                <a href="{% url 'expense_edit' budget.id item.expense.pk %}" class="btn btn-sm" title="Edit Expense" aria-label="Edit Expense"><i class="fas fa-pencil"></i></a>
+                            {% endif %}
                             <a href="{% url 'expense_detail' budget.id item.expense.pk %}" class="btn btn-sm" title="View Details" aria-label="View Details"><i class="fas fa-eye"></i></a>
                         </td>
                     </tr>
