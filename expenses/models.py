@@ -283,7 +283,11 @@ class Expense(models.Model):
         if not self.can_be_edited():
             return False
         
-        # Check if current expense date is not earlier than next month
+        # For one-time expenses, allow editing dates back to the most recent month
+        if self.expense_type == self.TYPE_ONE_TIME:
+            return True
+        
+        # For other expense types, check if current expense date is not earlier than next month
         if self.started_at and self.budget_id:
             most_recent_month = Month.get_most_recent(budget=self.budget)
             if most_recent_month:

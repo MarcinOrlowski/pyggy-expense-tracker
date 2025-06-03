@@ -117,14 +117,24 @@ class ExpenseForm(forms.ModelForm):
                 if started_at != self.original_started_at:
                     raise ValidationError('Date cannot be changed for expenses earlier than next month.')
             
-            # When date editing is allowed, validate new date is not historical
+            # When date editing is allowed, validate new date restrictions
             if hasattr(self, 'original_started_at') and self.instance.can_edit_date():
                 started_at = cleaned_data.get('started_at')
                 if started_at and started_at != self.original_started_at:
-                    # Get the minimum allowed date (active month + 1)
-                    next_month_date = self.instance.get_next_month_date()
-                    if next_month_date and started_at < next_month_date:
-                        raise ValidationError(f'New date must be no earlier than the next month ({next_month_date.strftime("%Y-%m-%d")}).')
+                    # For one-time expenses, allow moving back to the most recent month
+                    if self.instance.expense_type == self.instance.TYPE_ONE_TIME:
+                        most_recent_month = Month.get_most_recent(budget=self.instance.budget)
+                        if most_recent_month:
+                            # Allow dates from most recent month onward
+                            earliest_allowed = date(most_recent_month.year, most_recent_month.month, 1)
+                            if started_at < earliest_allowed:
+                                most_recent_name = earliest_allowed.strftime("%B %Y")
+                                raise ValidationError(f'One-time expense dates cannot be earlier than the most recent month ({most_recent_name}).')
+                    else:
+                        # For other expense types, use the original "next month" restriction
+                        next_month_date = self.instance.get_next_month_date()
+                        if next_month_date and started_at < next_month_date:
+                            raise ValidationError(f'New date must be no earlier than the next month ({next_month_date.strftime("%Y-%m-%d")}).')
         
         if expense_type == Expense.TYPE_SPLIT_PAYMENT and installments_count <= 0:
             raise ValidationError('Split payments must have installments count greater than 0')
