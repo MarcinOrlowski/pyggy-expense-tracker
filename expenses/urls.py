@@ -28,6 +28,7 @@ urlpatterns = [
     # Payment Processing (budget-scoped)
     path('budgets/<int:budget_id>/expense-items/<int:pk>/pay/', views.expense_item_pay, name='expense_item_pay'),
     path('budgets/<int:budget_id>/expense-items/<int:pk>/unpay/', views.expense_item_unpay, name='expense_item_unpay'),
+    path('budgets/<int:budget_id>/expense-items/<int:pk>/edit/', views.expense_item_edit, name='expense_item_edit'),
     
     # Reference Data (no budget context needed)
     path('payees/', views.payee_list, name='payee_list'),

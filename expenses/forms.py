@@ -117,14 +117,24 @@ class ExpenseForm(forms.ModelForm):
                 if started_at != self.original_started_at:
                     raise ValidationError('Date cannot be changed for expenses earlier than next month.')
             
-            # When date editing is allowed, validate new date is not historical
+            # When date editing is allowed, validate new date restrictions
             if hasattr(self, 'original_started_at') and self.instance.can_edit_date():
                 started_at = cleaned_data.get('started_at')
                 if started_at and started_at != self.original_started_at:
-                    # Get the minimum allowed date (active month + 1)
-                    next_month_date = self.instance.get_next_month_date()
-                    if next_month_date and started_at < next_month_date:
-                        raise ValidationError(f'New date must be no earlier than the next month ({next_month_date.strftime("%Y-%m-%d")}).')
+                    # For one-time expenses, allow moving back to the most recent month
+                    if self.instance.expense_type == self.instance.TYPE_ONE_TIME:
+                        most_recent_month = Month.get_most_recent(budget=self.instance.budget)
+                        if most_recent_month:
+                            # Allow dates from most recent month onward
+                            earliest_allowed = date(most_recent_month.year, most_recent_month.month, 1)
+                            if started_at < earliest_allowed:
+                                most_recent_name = earliest_allowed.strftime("%B %Y")
+                                raise ValidationError(f'One-time expense dates cannot be earlier than the most recent month ({most_recent_name}).')
+                    else:
+                        # For other expense types, use the original "next month" restriction
+                        next_month_date = self.instance.get_next_month_date()
+                        if next_month_date and started_at < next_month_date:
+                            raise ValidationError(f'New date must be no earlier than the next month ({next_month_date.strftime("%Y-%m-%d")}).')
         
         if expense_type == Expense.TYPE_SPLIT_PAYMENT and installments_count <= 0:
             raise ValidationError('Split payments must have installments count greater than 0')
@@ -260,3 +270,57 @@ class BudgetForm(forms.ModelForm):
                 if self.instance.month_set.exists():
                     raise ValidationError('Start date cannot be in the past when budget has existing months')
         return start_date
+
+
+class ExpenseItemEditForm(forms.ModelForm):
+    due_date = forms.DateField(
+        widget=forms.DateInput(attrs={'type': 'date'}, format='%Y-%m-%d'),
+        input_formats=['%Y-%m-%d'],
+        help_text='Format: YYYY-MM-DD'
+    )
+    
+    class Meta:
+        model = ExpenseItem
+        fields = ['due_date']
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        
+        # Add helpful information about allowed date range
+        if self.instance and self.instance.pk:
+            start_date, end_date = self.instance.get_allowed_month_range()
+            if start_date and end_date:
+                expense_month_name = date(self.instance.expense.started_at.year, self.instance.expense.started_at.month, 1).strftime("%B %Y")
+                
+                if self.instance.expense.expense_type == self.instance.expense.TYPE_ONE_TIME:
+                    from .models import Month
+                    most_recent_month = Month.get_most_recent(budget=self.instance.expense.budget)
+                    if most_recent_month and start_date < date(self.instance.expense.started_at.year, self.instance.expense.started_at.month, 1):
+                        active_month_name = date(most_recent_month.year, most_recent_month.month, 1).strftime("%B %Y")
+                        self.fields['due_date'].help_text = f'Date must be between {active_month_name} and {expense_month_name} ({start_date.strftime("%Y-%m-%d")} to {end_date.strftime("%Y-%m-%d")})'
+                    else:
+                        self.fields['due_date'].help_text = f'Date must be within {expense_month_name} ({start_date.strftime("%Y-%m-%d")} to {end_date.strftime("%Y-%m-%d")})'
+                else:
+                    self.fields['due_date'].help_text = f'Date must be within {expense_month_name} ({start_date.strftime("%Y-%m-%d")} to {end_date.strftime("%Y-%m-%d")})'
+    
+    def clean_due_date(self):
+        due_date = self.cleaned_data.get('due_date')
+        
+        if due_date and self.instance and self.instance.pk:
+            start_date, end_date = self.instance.get_allowed_month_range()
+            if start_date and end_date:
+                if not (start_date <= due_date <= end_date):
+                    expense_month_name = date(self.instance.expense.started_at.year, self.instance.expense.started_at.month, 1).strftime("%B %Y")
+                    
+                    if self.instance.expense.expense_type == self.instance.expense.TYPE_ONE_TIME:
+                        from .models import Month
+                        most_recent_month = Month.get_most_recent(budget=self.instance.expense.budget)
+                        if most_recent_month and start_date < date(self.instance.expense.started_at.year, self.instance.expense.started_at.month, 1):
+                            active_month_name = date(most_recent_month.year, most_recent_month.month, 1).strftime("%B %Y")
+                            raise ValidationError(f'Due date must be between {active_month_name} and {expense_month_name} ({start_date.strftime("%Y-%m-%d")} to {end_date.strftime("%Y-%m-%d")})')
+                        else:
+                            raise ValidationError(f'Due date must be within {expense_month_name} ({start_date.strftime("%Y-%m-%d")} to {end_date.strftime("%Y-%m-%d")})')
+                    else:
+                        raise ValidationError(f'Due date must be within {expense_month_name} ({start_date.strftime("%Y-%m-%d")} to {end_date.strftime("%Y-%m-%d")})')
+        
+        return due_date

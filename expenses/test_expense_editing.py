@@ -260,3 +260,42 @@ class ExpenseEditingPermissionsTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'disabled')
         self.assertContains(response, 'Split payment expenses cannot be edited')
+
+    def test_one_time_expense_can_edit_date_to_most_recent_month(self):
+        """Test that one-time expenses can edit dates back to most recent month"""
+        # Create a one-time expense in a future month
+        future_expense = Expense.objects.create(
+            budget=self.budget,
+            title="Future One Time Expense",
+            payee=self.payee,
+            expense_type=Expense.TYPE_ONE_TIME,
+            total_amount=Decimal("100.00"),
+            started_at=date(2025, 6, 15)  # June (future from current month)
+        )
+        
+        # Most recent month is the current month (created in setUp)
+        self.assertTrue(future_expense.can_edit_date())
+        
+        # Should be able to edit the date to the current month
+        restrictions = future_expense.get_edit_restrictions()
+        self.assertTrue(restrictions['can_edit'])
+        self.assertTrue(restrictions['can_edit_date'])
+
+    def test_recurring_expense_cannot_edit_date_to_earlier_month(self):
+        """Test that recurring expenses still cannot edit dates to earlier months"""
+        # Create a recurring expense in a future month
+        future_expense = Expense.objects.create(
+            budget=self.budget,
+            title="Future Recurring Expense",
+            payee=self.payee,
+            expense_type=Expense.TYPE_ENDLESS_RECURRING,
+            total_amount=Decimal("100.00"),
+            started_at=date(2025, 6, 15)  # June (future from current month)
+        )
+        
+        # Should not be able to edit the date (normal restriction applies)
+        self.assertFalse(future_expense.can_edit_date())
+        
+        restrictions = future_expense.get_edit_restrictions()
+        self.assertTrue(restrictions['can_edit'])  # Can edit other fields
+        self.assertFalse(restrictions['can_edit_date'])  # But not the date
