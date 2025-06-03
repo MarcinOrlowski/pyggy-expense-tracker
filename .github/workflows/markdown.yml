@@ -27,7 +27,8 @@ jobs:
         with:
           filters: |
             docs:
-              - '**/*.md'
+              - 'README.md'
+              - 'docs/*.md'
 
       # https://github.com/marketplace/actions/my-markdown-linter
       - name: "Running markdown linter..."
