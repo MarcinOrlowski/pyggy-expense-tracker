@@ -53,6 +53,35 @@ nav {
     border: none;
     color: var(--text-secondary);
     transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    width: auto;
+    min-width: auto;
+    padding: 0.5rem 0.75rem;
+}
+
+.nav-actions .btn-icon i {
+    flex-shrink: 0;
+}
+
+.nav-actions .btn-icon span {
+    font-size: 0.875rem;
+    white-space: nowrap;
+}
+
+// Hide text labels on small screens (mobile)
+@media (max-width: 768px) {
+    .nav-actions .btn-icon span {
+        display: none;
+    }
+    
+    .nav-actions .btn-icon {
+        width: 38px;
+        min-width: 38px;
+        padding: 0.5rem;
+        justify-content: center;
+    }
 }
 
 .nav-actions .btn-icon:hover {
