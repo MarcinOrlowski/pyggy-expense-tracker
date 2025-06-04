@@ -302,54 +302,45 @@ class BudgetForm(forms.ModelForm):
 
 
 class ExpenseItemEditForm(forms.ModelForm):
+    amount = SanitizedDecimalField(
+        max_digits=13,
+        decimal_places=2,
+        min_value=0.01,
+        widget=forms.TextInput(attrs={
+            'placeholder': '10.50, 10,50, $10.50, €10,50',
+            'class': 'form-control'
+        }),
+        help_text='Amount for this specific payment instance'
+    )
+    
     due_date = forms.DateField(
         widget=forms.DateInput(attrs={'type': 'date'}, format='%Y-%m-%d'),
         input_formats=['%Y-%m-%d'],
-        help_text='Format: YYYY-MM-DD'
+        help_text='Due date must be within the same month'
     )
     
     class Meta:
         model = ExpenseItem
-        fields = ['due_date']
+        fields = ['amount', 'due_date']
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         
-        # Add helpful information about allowed date range
+        # Set helpful information about month restriction for due date
         if self.instance and self.instance.pk:
-            start_date, end_date = self.instance.get_allowed_month_range()
-            if start_date and end_date:
-                expense_month_name = date(self.instance.expense.start_date.year, self.instance.expense.start_date.month, 1).strftime("%B %Y")
-                
-                if self.instance.expense.expense_type == self.instance.expense.TYPE_ONE_TIME:
-                    from .models import Month
-                    most_recent_month = Month.get_most_recent(budget=self.instance.expense.budget)
-                    if most_recent_month and start_date < date(self.instance.expense.start_date.year, self.instance.expense.start_date.month, 1):
-                        active_month_name = date(most_recent_month.year, most_recent_month.month, 1).strftime("%B %Y")
-                        self.fields['due_date'].help_text = f'Date must be between {active_month_name} and {expense_month_name} ({start_date.strftime("%Y-%m-%d")} to {end_date.strftime("%Y-%m-%d")})'
-                    else:
-                        self.fields['due_date'].help_text = f'Date must be within {expense_month_name} ({start_date.strftime("%Y-%m-%d")} to {end_date.strftime("%Y-%m-%d")})'
-                else:
-                    self.fields['due_date'].help_text = f'Date must be within {expense_month_name} ({start_date.strftime("%Y-%m-%d")} to {end_date.strftime("%Y-%m-%d")})'
+            month_name = date(self.instance.month.year, self.instance.month.month, 1).strftime("%B %Y")
+            self.fields['due_date'].help_text = f'Date must be within {month_name}'
     
     def clean_due_date(self):
         due_date = self.cleaned_data.get('due_date')
         
         if due_date and self.instance and self.instance.pk:
-            start_date, end_date = self.instance.get_allowed_month_range()
-            if start_date and end_date:
-                if not (start_date <= due_date <= end_date):
-                    expense_month_name = date(self.instance.expense.start_date.year, self.instance.expense.start_date.month, 1).strftime("%B %Y")
-                    
-                    if self.instance.expense.expense_type == self.instance.expense.TYPE_ONE_TIME:
-                        from .models import Month
-                        most_recent_month = Month.get_most_recent(budget=self.instance.expense.budget)
-                        if most_recent_month and start_date < date(self.instance.expense.start_date.year, self.instance.expense.start_date.month, 1):
-                            active_month_name = date(most_recent_month.year, most_recent_month.month, 1).strftime("%B %Y")
-                            raise ValidationError(f'Due date must be between {active_month_name} and {expense_month_name} ({start_date.strftime("%Y-%m-%d")} to {end_date.strftime("%Y-%m-%d")})')
-                        else:
-                            raise ValidationError(f'Due date must be within {expense_month_name} ({start_date.strftime("%Y-%m-%d")} to {end_date.strftime("%Y-%m-%d")})')
-                    else:
-                        raise ValidationError(f'Due date must be within {expense_month_name} ({start_date.strftime("%Y-%m-%d")} to {end_date.strftime("%Y-%m-%d")})')
+            # Restrict due date to the same month as the expense item
+            month_year = (self.instance.month.year, self.instance.month.month)
+            due_year_month = (due_date.year, due_date.month)
+            
+            if month_year != due_year_month:
+                month_name = date(self.instance.month.year, self.instance.month.month, 1).strftime("%B %Y")
+                raise ValidationError(f'Due date must be within {month_name}')
         
         return due_date

@@ -538,8 +538,13 @@ def payment_method_list(request):
 # Budget views
 
 def budget_list(request):
-    """List all budgets"""
-    budgets = Budget.objects.all()
+    """List all budgets with current balance calculations"""
+    budgets = list(Budget.objects.all())
+    
+    # Add balance calculation for each budget
+    for budget in budgets:
+        budget.current_balance = budget.get_current_balance()
+    
     context = {
         'budgets': budgets,
     }
@@ -628,6 +633,6 @@ def expense_item_edit(request, budget_id, pk):
         'budget': budget,
         'form': form,
         'expense_item': expense_item,
-        'title': f'Edit Due Date: {expense_item.expense.title}'
+        'title': f'Edit Expense Item: {expense_item.expense.title}'
     }
     return render(request, 'expenses/expense_item_edit.html', context)
