@@ -3,7 +3,7 @@ from django.template import Context, Template
 from decimal import Decimal
 from unittest.mock import patch
 from expenses.models import Settings
-from expenses.templatetags.currency_tags import currency, currency_symbol, format_amount
+from expenses.templatetags.currency_tags import currency, currency_symbol, format_amount, amount_with_class
 from expenses.services import SettingsService
 
 
@@ -295,3 +295,111 @@ class TemplateTagIntegrationTest(TestCase):
         result2 = template.render(context)
         self.assertIn('£', result2)
         self.assertIn('100.00', result2)
+
+
+class AmountWithClassFilterTest(TestCase):
+    """Test cases for the amount_with_class template filter."""
+    
+    def setUp(self):
+        """Set up test data."""
+        Settings.objects.all().delete()
+        self.settings = Settings.objects.create(
+            locale='en_US',
+            currency='USD'
+        )
+    
+    def test_amount_with_class_positive(self):
+        """Test amount_with_class filter with positive amount."""
+        result = amount_with_class(Decimal('123.45'))
+        self.assertIn('amount-positive', result)
+        self.assertIn('$123.45', result)
+        self.assertIn('<span', result)
+        self.assertIn('</span>', result)
+    
+    def test_amount_with_class_negative(self):
+        """Test amount_with_class filter with negative amount."""
+        result = amount_with_class(Decimal('-50.25'))
+        self.assertIn('amount-negative', result)
+        self.assertIn('50.25', result)  # Currency formatting might vary
+        self.assertIn('<span', result)
+        self.assertIn('</span>', result)
+    
+    def test_amount_with_class_zero(self):
+        """Test amount_with_class filter with zero amount."""
+        result = amount_with_class(Decimal('0.00'))
+        self.assertIn('amount-zero', result)
+        self.assertIn('$0.00', result)
+        self.assertIn('<span', result)
+        self.assertIn('</span>', result)
+    
+    def test_amount_with_class_with_none(self):
+        """Test amount_with_class filter with None value."""
+        result = amount_with_class(None)
+        self.assertEqual(result, '')
+    
+    def test_amount_with_class_with_empty_string(self):
+        """Test amount_with_class filter with empty string."""
+        result = amount_with_class('')
+        self.assertEqual(result, '')
+    
+    def test_amount_with_class_with_invalid_string(self):
+        """Test amount_with_class filter with non-numeric string."""
+        result = amount_with_class('invalid')
+        self.assertEqual(result, 'invalid')
+    
+    def test_amount_with_class_in_template(self):
+        """Test amount_with_class filter usage in Django template."""
+        template = Template('{% load currency_tags %}{{ value|amount_with_class }}')
+        context = Context({'value': Decimal('1234.56')})
+        result = template.render(context)
+        
+        self.assertIn('amount-positive', result)
+        self.assertIn('$1,234.56', result)
+        self.assertIn('<span', result)
+    
+    def test_amount_with_class_with_different_locale(self):
+        """Test amount_with_class filter with different locale settings."""
+        # Change settings to Euro
+        self.settings.locale = 'de_DE'
+        self.settings.currency = 'EUR'
+        self.settings.save()
+        
+        # Clear cache to ensure new settings are used
+        SettingsService.clear_cache()
+        
+        result = amount_with_class(Decimal('-1234.56'))
+        # Should have negative class regardless of locale
+        self.assertIn('amount-negative', result)
+        # German locale formatting
+        self.assertIn('1.234,56', result)
+        self.assertIn('€', result)
+    
+    def test_amount_with_class_is_safe_html(self):
+        """Test that amount_with_class returns safe HTML."""
+        from django.utils.safestring import SafeString
+        
+        result = amount_with_class(Decimal('100.00'))
+        # Check that it's marked as safe HTML
+        self.assertIsInstance(result, SafeString)
+    
+    def test_amount_with_class_all_scenarios_in_template(self):
+        """Test all amount scenarios in a template."""
+        template = Template('''
+            {% load currency_tags %}
+            Positive: {{ positive|amount_with_class }}
+            Negative: {{ negative|amount_with_class }}
+            Zero: {{ zero|amount_with_class }}
+        ''')
+        context = Context({
+            'positive': Decimal('100.50'),
+            'negative': Decimal('-25.75'),
+            'zero': Decimal('0.00')
+        })
+        result = template.render(context)
+        
+        self.assertIn('amount-positive', result)
+        self.assertIn('amount-negative', result)
+        self.assertIn('amount-zero', result)
+        self.assertIn('$100.50', result)
+        self.assertIn('25.75', result)  # Negative formatting varies
+        self.assertIn('$0.00', result)

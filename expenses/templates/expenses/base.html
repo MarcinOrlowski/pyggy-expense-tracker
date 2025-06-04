@@ -23,7 +23,7 @@
             <nav>
                 <a href="{% url 'budget_list' %}" class="logo">
                     <img src="{% static 'img/logo.png' %}" alt="PyGGy Logo" class="logo-img">
-                    {% if current_budget %}{{ current_budget.name }}{% else %}PyGGy{% endif %}
+                    {% if current_budget %}{{ current_budget.name }}{% else %}<span style="color: #FFD43B;">Py</span><span style="color: #4B8BBE;">GGy</span>{% endif %}
                 </a>
                 <div class="nav-actions">
                   {% if current_budget_id %}
@@ -73,7 +73,7 @@
             </div>
         </div>
     </footer>
-    
+
     <!-- Enhanced Amount Input Sanitization -->
     <script src="{% static 'js/amount-sanitizer.js' %}"></script>
 </body>

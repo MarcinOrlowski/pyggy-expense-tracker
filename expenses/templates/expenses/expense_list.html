@@ -65,15 +65,15 @@
                         <td><i class="fas {{ expense.get_expense_type_icon }}" aria-label="{{ expense.get_expense_type_display }}" title="{{ expense.get_expense_type_display }}"></i> {{ expense.get_expense_type_display }}</td>
                         <td class="amount-column">
                             {% if expense.expense_type == 'split_payment' %}
-                                {{ expense.total_amount|currency }} <small>/ month</small>
+                                {{ expense.amount|amount_with_class }} <small>/ month</small>
                             {% else %}
-                                {{ expense.total_amount|currency }}
+                                {{ expense.amount|amount_with_class }}
                             {% endif %}
                         </td>
-                        <td>{{ expense.started_at|date:"Y-m-d" }}</td>
+                        <td>{{ expense.start_date|date:"Y-m-d" }}</td>
                         <td>
                             {% if expense.expense_type == 'split_payment' %}
-                                {{ expense.installments_count }}
+                                {{ expense.total_parts }}
                             {% else %}
                                 -
                             {% endif %}

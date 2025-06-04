@@ -15,7 +15,7 @@
         <p><strong>Payee:</strong> {% if expense_item.expense.payee %}{{ expense_item.expense.payee.name }}{% else %}-{% endif %}</p>
         <p><strong>Month:</strong> {{ expense_item.month }}</p>
         <p><strong>Due Date:</strong> {{ expense_item.due_date|date:"Y-m-d" }}</p>
-        <p><strong>Amount:</strong> {{ expense_item.amount|currency }}</p>
+        <p><strong>Amount:</strong> {{ expense_item.amount|amount_with_class }}</p>
     </div>
 </div>
 

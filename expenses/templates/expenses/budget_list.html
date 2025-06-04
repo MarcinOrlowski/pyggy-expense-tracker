@@ -20,6 +20,7 @@
                     <tr>
                         <th>Name</th>
                         <th>Start Date</th>
+                        <th class="text-right">Balance</th>
                         <th class="text-right">Actions</th>
                     </tr>
                 </thead>
@@ -30,6 +31,9 @@
                                 <a href="{% url 'dashboard' budget.pk %}">{{ budget.name }}</a>
                             </td>
                             <td>{{ budget.start_date|date:"Y-m-d" }}</td>
+                            <td class="text-right">
+                                {{ budget.current_balance|amount_with_class }}
+                            </td>
                             <td class="text-right">
                                 <a href="{% url 'dashboard' budget.pk %}" class="btn btn-sm" title="Open Budget"><i class="fas fa-eye"></i></a>
                                 <a href="{% url 'budget_edit' budget.pk %}" class="btn btn-sm" title="Edit Budget"><i class="fas fa-edit"></i></a>
