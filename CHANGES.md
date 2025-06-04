@@ -2,6 +2,8 @@
 
 ## @dev
 
+- [#0095] Fixed budget dashboard edit action to redirect to expense item editing instead of expense editing
+- [#0095] Enhanced expense item editing to allow modification of both amount and due date (restricted to same month)
 - [#0092] Added text labels next to icons in main toolbar action buttons for improved user experience and accessibility
 - [#0087] Exposed explicit due date functionality with comprehensive expense model restructuring, flexible one-time expense scheduling, and enhanced due date calculation logic
 - [#0084] Added date editing restrictions for expenses to prevent historical date modifications and maintain financial data integrity
