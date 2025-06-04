@@ -60,33 +60,28 @@ def create_expense_items_for_month(expense: Expense, month: Month) -> List[Expen
     - recurring_with_end: Create one item per month until end date month
     """
     items = []
-    expense_start_date = expense.started_at
+    expense_start_date = expense.start_date
 
-    # Check if the expense has started by this month
-    # For the start month, we create items even if the start date is mid-month
+    # Check if the expense is relevant for this month
+    # For other expense types (not one-time), check start date
     import calendar
     last_day = calendar.monthrange(month.year, month.month)[1]
     month_end_date = date(month.year, month.month, last_day)
 
-    if expense_start_date > month_end_date:
-        return items
+    if expense.expense_type != expense.TYPE_ONE_TIME:
+        # For other expense types, check if start date is after this month
+        if expense_start_date > month_end_date:
+            return items
 
     if expense.expense_type == expense.TYPE_ENDLESS_RECURRING:
         # Create one item per month
-        try:
-            # Handle case where start day doesn't exist in target month (e.g., Feb 30)
-            due_date = date(month.year, month.month, expense_start_date.day)
-        except ValueError:
-            # Use last day of month if start day doesn't exist
-            import calendar
-            last_day = calendar.monthrange(month.year, month.month)[1]
-            due_date = date(month.year, month.month, last_day)
+        due_date = expense.get_due_date_for_month(month.year, month.month)
 
         item = ExpenseItem.objects.create(
             expense=expense,
             month=month,
             due_date=due_date,
-            amount=expense.total_amount
+            amount=expense.amount
         )
         items.append(item)
 
@@ -96,57 +91,43 @@ def create_expense_items_for_month(expense: Expense, month: Month) -> List[Expen
         end_month_date = date(expense.end_date.year, expense.end_date.month, 1)
         
         if target_date <= end_month_date:
-            try:
-                # Handle case where start day doesn't exist in target month (e.g., Feb 30)
-                due_date = date(month.year, month.month, expense_start_date.day)
-            except ValueError:
-                # Use last day of month if start day doesn't exist
-                import calendar
-                last_day = calendar.monthrange(month.year, month.month)[1]
-                due_date = date(month.year, month.month, last_day)
+            due_date = expense.get_due_date_for_month(month.year, month.month)
 
             item = ExpenseItem.objects.create(
                 expense=expense,
                 month=month,
                 due_date=due_date,
-                amount=expense.total_amount
+                amount=expense.amount
             )
             items.append(item)
 
     elif expense.expense_type == expense.TYPE_SPLIT_PAYMENT:
         # Check how many items we've already created
         existing_count = ExpenseItem.objects.filter(expense=expense).count()
-        remaining_installments = expense.installments_count - expense.initial_installment
+        remaining_installments = expense.total_parts - expense.skip_parts
 
         if existing_count < remaining_installments:
-            due_date = date(month.year, month.month, expense_start_date.day)
-            try:
-                due_date = date(month.year, month.month, expense_start_date.day)
-            except ValueError:
-                import calendar
-                last_day = calendar.monthrange(month.year, month.month)[1]
-                due_date = date(month.year, month.month, last_day)
+            due_date = expense.get_due_date_for_month(month.year, month.month)
 
             item = ExpenseItem.objects.create(
                 expense=expense,
                 month=month,
                 due_date=due_date,
-                amount=expense.total_amount
+                amount=expense.amount
             )
             items.append(item)
 
     elif expense.expense_type == expense.TYPE_ONE_TIME:
-        # Only create if this is the start month and no items exist yet
-        start_month_date = date(expense_start_date.year, expense_start_date.month, 1)
-        target_month_date = date(month.year, month.month, 1)
-
-        if (start_month_date == target_month_date and
-                not ExpenseItem.objects.filter(expense=expense).exists()):
+        # For one-time expenses, create item if no items exist yet
+        # The month being processed determines the due_date
+        if not ExpenseItem.objects.filter(expense=expense).exists():
+            due_date = expense.get_due_date_for_month(month.year, month.month)
+            
             item = ExpenseItem.objects.create(
                 expense=expense,
                 month=month,
-                due_date=expense_start_date,
-                amount=expense.total_amount
+                due_date=due_date,
+                amount=expense.amount
             )
             items.append(item)
 
@@ -178,7 +159,7 @@ def check_expense_completion(expense: Expense) -> bool:
     elif expense.expense_type == expense.TYPE_SPLIT_PAYMENT:
         # Complete when all remaining installments are paid
         paid_items = ExpenseItem.objects.filter(expense=expense, status='paid').count()
-        remaining_installments = expense.installments_count - expense.initial_installment
+        remaining_installments = expense.total_parts - expense.skip_parts
         if paid_items >= remaining_installments:
             expense.closed_at = timezone.now()
             expense.save()
@@ -190,7 +171,7 @@ def check_expense_completion(expense: Expense) -> bool:
 
 def handle_new_expense(expense: Expense, budget: Budget) -> None:
     """
-    Handle newly created expense - create expense items if it starts in current month.
+    Handle newly created expense - create expense items if it starts/is due in current month.
     
     Args:
         expense: The newly created expense
@@ -200,17 +181,22 @@ def handle_new_expense(expense: Expense, budget: Budget) -> None:
     if not most_recent_month:
         return  # No months exist yet in this budget
     
-    # Check if expense starts in the current month
-    expense_start_date = expense.started_at
-    current_month_start = date(most_recent_month.year, most_recent_month.month, 1)
-    
-    import calendar
-    last_day = calendar.monthrange(most_recent_month.year, most_recent_month.month)[1]
-    current_month_end = date(most_recent_month.year, most_recent_month.month, last_day)
-    
-    # If expense starts within the current month, create expense items immediately
-    if current_month_start <= expense_start_date <= current_month_end:
+    # For one-time expenses, always try to create in the current month
+    # For other expense types, check if start date falls in current month
+    if expense.expense_type == expense.TYPE_ONE_TIME:
         create_expense_items_for_month(expense, most_recent_month)
+    else:
+        check_date = expense.start_date
+        
+        current_month_start = date(most_recent_month.year, most_recent_month.month, 1)
+        
+        import calendar
+        last_day = calendar.monthrange(most_recent_month.year, most_recent_month.month)[1]
+        current_month_end = date(most_recent_month.year, most_recent_month.month, last_day)
+        
+        # If expense starts within the current month, create expense items immediately
+        if current_month_start <= check_date <= current_month_end:
+            create_expense_items_for_month(expense, most_recent_month)
 
 
 class SettingsService:

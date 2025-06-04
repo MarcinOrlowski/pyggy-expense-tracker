@@ -36,16 +36,17 @@ class ExpenseEditingPermissionsTest(TestCase):
             title="One Time Expense",
             payee=self.payee,
             expense_type=Expense.TYPE_ONE_TIME,
-            total_amount=Decimal("100.00"),
-            started_at=date.today()
+            amount=Decimal("100.00"),
+            start_date=date.today(),
+            day_of_month=date.today().day
         )
         
         # Create unpaid expense item
         ExpenseItem.objects.create(
             expense=expense,
             month=self.month,
-            due_date=date.today(),
             amount=Decimal("100.00"),
+            due_date=date.today(),
             status='pending'
         )
         
@@ -59,16 +60,17 @@ class ExpenseEditingPermissionsTest(TestCase):
             title="One Time Expense",
             payee=self.payee,
             expense_type=Expense.TYPE_ONE_TIME,
-            total_amount=Decimal("100.00"),
-            started_at=date.today()
+            amount=Decimal("100.00"),
+            start_date=date.today(),
+            day_of_month=date.today().day
         )
         
         # Create paid expense item
         ExpenseItem.objects.create(
             expense=expense,
             month=self.month,
-            due_date=date.today(),
             amount=Decimal("100.00"),
+            due_date=date.today(),
             status='paid',
             payment_date=timezone.now()
         )
@@ -83,16 +85,17 @@ class ExpenseEditingPermissionsTest(TestCase):
             title="Endless Recurring",
             payee=self.payee,
             expense_type=Expense.TYPE_ENDLESS_RECURRING,
-            total_amount=Decimal("50.00"),
-            started_at=date.today()
+            amount=Decimal("50.00"),
+            start_date=date.today(),
+            day_of_month=date.today().day
         )
         
         # Create unpaid expense item
         ExpenseItem.objects.create(
             expense=expense,
             month=self.month,
-            due_date=date.today(),
             amount=Decimal("50.00"),
+            due_date=date.today(),
             status='pending'
         )
         
@@ -106,9 +109,10 @@ class ExpenseEditingPermissionsTest(TestCase):
             title="Split Payment",
             payee=self.payee,
             expense_type=Expense.TYPE_SPLIT_PAYMENT,
-            total_amount=Decimal("100.00"),
-            installments_count=3,
-            started_at=date.today()
+            amount=Decimal("100.00"),
+            total_parts=3,
+            start_date=date.today(),
+            day_of_month=date.today().day
         )
         
         self.assertFalse(expense.can_be_edited())
@@ -124,8 +128,9 @@ class ExpenseEditingPermissionsTest(TestCase):
             title="Recurring with End",
             payee=self.payee,
             expense_type=Expense.TYPE_RECURRING_WITH_END,
-            total_amount=Decimal("75.00"),
-            started_at=date.today(),
+            amount=Decimal("75.00"),
+            start_date=date.today(),
+            day_of_month=date.today().day,
             end_date=date(date.today().year, 12, 31)
         )
         
@@ -142,8 +147,9 @@ class ExpenseEditingPermissionsTest(TestCase):
             title="Closed Expense",
             payee=self.payee,
             expense_type=Expense.TYPE_ONE_TIME,
-            total_amount=Decimal("100.00"),
-            started_at=date.today(),
+            amount=Decimal("100.00"),
+            start_date=date.today(),
+            day_of_month=date.today().day,
             closed_at=timezone.now()
         )
         
@@ -160,16 +166,17 @@ class ExpenseEditingPermissionsTest(TestCase):
             title="Endless Recurring",
             payee=self.payee,
             expense_type=Expense.TYPE_ENDLESS_RECURRING,
-            total_amount=Decimal("50.00"),
-            started_at=date.today()
+            amount=Decimal("50.00"),
+            start_date=date.today(),
+            day_of_month=date.today().day
         )
         
         # Create paid expense item
         ExpenseItem.objects.create(
             expense=expense,
             month=self.month,
-            due_date=date.today(),
             amount=Decimal("50.00"),
+            due_date=date.today(),
             status='paid',
             payment_date=timezone.now()
         )
@@ -186,9 +193,10 @@ class ExpenseEditingPermissionsTest(TestCase):
             title="Split Payment",
             payee=self.payee,
             expense_type=Expense.TYPE_SPLIT_PAYMENT,
-            total_amount=Decimal("100.00"),
-            installments_count=3,
-            started_at=date.today()
+            amount=Decimal("100.00"),
+            total_parts=3,
+            start_date=date.today(),
+            day_of_month=date.today().day
         )
         
         url = reverse('expense_edit', kwargs={'budget_id': self.budget.id, 'pk': expense.pk})
@@ -206,16 +214,17 @@ class ExpenseEditingPermissionsTest(TestCase):
             title="One Time Expense",
             payee=self.payee,
             expense_type=Expense.TYPE_ONE_TIME,
-            total_amount=Decimal("100.00"),
-            started_at=date.today()
+            amount=Decimal("100.00"),
+            start_date=date.today(),
+            day_of_month=date.today().day
         )
         
         # Create paid expense item
         ExpenseItem.objects.create(
             expense=expense,
             month=self.month,
-            due_date=date.today(),
             amount=Decimal("100.00"),
+            due_date=date.today(),
             status='paid',
             payment_date=timezone.now()
         )
@@ -225,9 +234,9 @@ class ExpenseEditingPermissionsTest(TestCase):
         post_data = {
             'title': 'Updated Title',
             'expense_type': Expense.TYPE_ONE_TIME,
-            'total_amount': '200.00',  # Try to change amount
-            'started_at': date.today().strftime('%Y-%m-%d'),
-            'installments_count': '0',
+            'amount': '200.00',  # Try to change amount
+            'start_date': date.today().strftime('%Y-%m-%d'),
+            'total_parts': '0',
             'notes': 'Updated notes'
         }
         
@@ -239,7 +248,7 @@ class ExpenseEditingPermissionsTest(TestCase):
         
         # Verify amount wasn't changed (disabled field preserves original value)
         expense.refresh_from_db()
-        self.assertEqual(expense.total_amount, Decimal("100.00"))
+        self.assertEqual(expense.amount, Decimal("100.00"))
         self.assertEqual(expense.title, 'Updated Title')  # But other fields are updated
         
     def test_expense_detail_shows_disabled_edit_button(self):
@@ -249,9 +258,10 @@ class ExpenseEditingPermissionsTest(TestCase):
             title="Split Payment",
             payee=self.payee,
             expense_type=Expense.TYPE_SPLIT_PAYMENT,
-            total_amount=Decimal("100.00"),
-            installments_count=3,
-            started_at=date.today()
+            amount=Decimal("100.00"),
+            total_parts=3,
+            start_date=date.today(),
+            day_of_month=date.today().day
         )
         
         url = reverse('expense_detail', kwargs={'budget_id': self.budget.id, 'pk': expense.pk})
@@ -269,8 +279,9 @@ class ExpenseEditingPermissionsTest(TestCase):
             title="Future One Time Expense",
             payee=self.payee,
             expense_type=Expense.TYPE_ONE_TIME,
-            total_amount=Decimal("100.00"),
-            started_at=date(2025, 6, 15)  # June (future from current month)
+            amount=Decimal("100.00"),
+            start_date=date(2025, 6, 15),  # June (future from current month)
+            day_of_month=15
         )
         
         # Most recent month is the current month (created in setUp)
@@ -289,8 +300,9 @@ class ExpenseEditingPermissionsTest(TestCase):
             title="Future Recurring Expense",
             payee=self.payee,
             expense_type=Expense.TYPE_ENDLESS_RECURRING,
-            total_amount=Decimal("100.00"),
-            started_at=date(2025, 6, 15)  # June (future from current month)
+            amount=Decimal("100.00"),
+            start_date=date(2025, 6, 15),  # June (future from current month)
+            day_of_month=15
         )
         
         # Should not be able to edit the date (normal restriction applies)
