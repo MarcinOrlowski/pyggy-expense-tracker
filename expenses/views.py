@@ -212,12 +212,12 @@ def expense_edit(request, budget_id, pk):
         return redirect('expense_detail', budget_id=budget_id, pk=expense.pk)
     
     if request.method == 'POST':
-        original_start_date = expense.started_at
+        original_start_date = expense.start_date
         form = ExpenseForm(request.POST, instance=expense, budget=budget)
         if form.is_valid():
             expense = form.save()
             # If start date changed and now starts in current month, handle expense items
-            if original_start_date != expense.started_at:
+            if original_start_date != expense.start_date:
                 from .services import handle_new_expense
                 handle_new_expense(expense, budget)
             messages.success(request, f'Expense "{expense.title}" updated successfully.')

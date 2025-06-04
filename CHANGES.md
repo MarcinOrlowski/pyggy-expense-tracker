@@ -2,6 +2,7 @@
 
 ## @dev
 
+- [#0087] Exposed explicit due date functionality with comprehensive expense model restructuring, flexible one-time expense scheduling, and enhanced due date calculation logic
 - [#0084] Added date editing restrictions for expenses to prevent historical date modifications and maintain financial data integrity
 - [#0072] Refactored payees list layout by removing created column and right-aligning expenses column for better readability
 - [#0073] Enhanced amount input sanitization with international format support (comma/dot decimal separators, currency symbols)

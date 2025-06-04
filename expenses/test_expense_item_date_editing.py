@@ -31,22 +31,23 @@ class ExpenseItemDateEditingTest(TestCase):
         # Create payee
         self.payee = Payee.objects.create(name="Test Payee")
         
-        # Create expense with started_at in January 2024
+        # Create expense with start_date in January 2024
         self.expense = Expense.objects.create(
             budget=self.budget,
             title="Test Expense",
             payee=self.payee,
             expense_type=Expense.TYPE_ONE_TIME,
-            total_amount=Decimal("100.00"),
-            started_at=date(2024, 1, 15)
+            amount=Decimal("100.00"),
+            start_date=date(2024, 1, 15),
+            day_of_month=15
         )
         
         # Create expense item with due date in January 2024
         self.expense_item = ExpenseItem.objects.create(
             expense=self.expense,
             month=self.month,
-            due_date=date(2024, 1, 20),
             amount=Decimal("100.00"),
+            due_date=date(2024, 1, 20),
             status='pending'
         )
 
@@ -65,8 +66,9 @@ class ExpenseItemDateEditingTest(TestCase):
             budget=self.budget,
             title="Feb Expense",
             expense_type=Expense.TYPE_ONE_TIME,
-            total_amount=Decimal("50.00"),
-            started_at=date(2024, 2, 15)
+            amount=Decimal("50.00"),
+            start_date=date(2024, 2, 15),
+            day_of_month=15
         )
         
         february_month = Month.objects.create(
@@ -78,8 +80,8 @@ class ExpenseItemDateEditingTest(TestCase):
         expense_item = ExpenseItem.objects.create(
             expense=expense,
             month=february_month,
-            due_date=date(2024, 2, 20),
             amount=Decimal("50.00"),
+            due_date=date(2024, 1, 15),
             status='pending'
         )
         
@@ -260,8 +262,9 @@ class ExpenseItemDateEditingTest(TestCase):
             budget=self.budget,
             title="March Expense",
             expense_type=Expense.TYPE_ONE_TIME,
-            total_amount=Decimal("75.00"),
-            started_at=date(2024, 3, 10)
+            amount=Decimal("75.00"),
+            start_date=date(2024, 3, 10),
+            day_of_month=10
         )
         
         march_month = Month.objects.create(
@@ -273,8 +276,8 @@ class ExpenseItemDateEditingTest(TestCase):
         march_item = ExpenseItem.objects.create(
             expense=march_expense,
             month=march_month,
-            due_date=date(2024, 3, 15),
             amount=Decimal("75.00"),
+            due_date=date(2024, 1, 15),
             status='pending'
         )
         
@@ -299,8 +302,9 @@ class ExpenseItemDateEditingTest(TestCase):
             budget=self.budget,
             title="Future One-Time Expense",
             expense_type=Expense.TYPE_ONE_TIME,
-            total_amount=Decimal("50.00"),
-            started_at=date(2024, 3, 15)  # Created for March
+            amount=Decimal("50.00"),
+            start_date=date(2024, 3, 15),  # Created for March
+            day_of_month=15
         )
         
         # Create March month - this becomes the most recent month in budget
@@ -313,8 +317,8 @@ class ExpenseItemDateEditingTest(TestCase):
         future_expense_item = ExpenseItem.objects.create(
             expense=future_expense,
             month=future_month,
-            due_date=date(2024, 3, 20),
             amount=Decimal("50.00"),
+            due_date=date(2024, 1, 15),
             status='pending'
         )
         
@@ -332,8 +336,9 @@ class ExpenseItemDateEditingTest(TestCase):
             budget=self.budget,
             title="Future One-Time Expense",
             expense_type=Expense.TYPE_ONE_TIME,
-            total_amount=Decimal("50.00"),
-            started_at=date(2024, 3, 15)  # Created for March
+            amount=Decimal("50.00"),
+            start_date=date(2024, 3, 15),  # Created for March
+            day_of_month=15
         )
         
         # Don't create March month yet, so January remains most recent
@@ -364,8 +369,8 @@ class ExpenseItemDateEditingTest(TestCase):
         future_expense_item = ExpenseItem.objects.create(
             expense=future_expense,
             month=march_month,
-            due_date=date(2024, 3, 20),
             amount=Decimal("50.00"),
+            due_date=date(2024, 1, 15),
             status='pending'
         )
         
@@ -395,8 +400,9 @@ class ExpenseItemDateEditingTest(TestCase):
             budget=self.budget,
             title="Recurring Expense",
             expense_type=Expense.TYPE_ENDLESS_RECURRING,
-            total_amount=Decimal("75.00"),
-            started_at=date(2024, 2, 15)
+            amount=Decimal("75.00"),
+            start_date=date(2024, 2, 15),
+            day_of_month=15
         )
         
         february_month = Month.objects.create(
@@ -408,8 +414,8 @@ class ExpenseItemDateEditingTest(TestCase):
         recurring_item = ExpenseItem.objects.create(
             expense=recurring_expense,
             month=february_month,
-            due_date=date(2024, 2, 20),
             amount=Decimal("75.00"),
+            due_date=date(2024, 1, 15),
             status='pending'
         )
         
