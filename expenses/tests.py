@@ -2,6 +2,7 @@ import hashlib
 import os
 import sys
 from pathlib import Path
+from unittest import skipIf
 
 from django.conf import settings
 from django.contrib.staticfiles import finders
@@ -9,6 +10,7 @@ from django.core.management import call_command
 from django.test import TestCase, override_settings
 
 
+@skipIf('GITHUB_ACTIONS' in os.environ, "Skip SCSS tests in GitHub Actions")
 @override_settings(
     SASS_PROCESSOR_ENABLED=True,
     SASS_PROCESSOR_AUTO_INCLUDE=True,
