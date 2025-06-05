@@ -4,7 +4,6 @@
 
 ## Problem Statement
 
-<<<<<<< HEAD
 Users cannot organize expenses into budget categories or set spending limits. The current system
 tracks individual expenses but lacks grouping functionality for financial planning and budget
 management. This prevents users from tracking spending against predetermined budget limits.
@@ -24,19 +23,6 @@ tracking expense categorization.
    against planned amounts
 3. As a system administrator, I want default budget categories seeded in the database, so that users
    have immediate access to common budget types
-=======
-Users cannot organize expenses into budget categories or set spending limits. The current system tracks individual expenses but lacks grouping functionality for financial planning and budget management. This prevents users from tracking spending against predetermined budget limits.
-
-## Solution Overview
-
-Introduce a Budget model that serves as an umbrella entity to group related expenses under budget categories. The solution will establish the database schema and relationships without UI implementation. Budget entities will be seeded through database initialization for immediate use in tracking expense categorization.
-
-## User Stories
-
-1. As a user, I want my monthly expenses to be associated with budget categories, so that I can track spending by category
-2. As a user, I want budgets to have configurable spending limits, so that I can monitor my spending against planned amounts
-3. As a system administrator, I want default budget categories seeded in the database, so that users have immediate access to common budget types
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 ## Acceptance Criteria
 

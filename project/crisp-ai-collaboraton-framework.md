@@ -108,12 +108,7 @@ npm install react react-dom
 touch src/index.js src/App.js
 
 # Additional commands...
-<<<<<<< HEAD
 ```
-=======
-
-```"
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 ### Phase 4: Structure
 
@@ -230,11 +225,6 @@ Pay attention to the human's communication style and adapt your CRISP implementa
 Here's an abbreviated example of a CRISP session for building a simple blog platform:
 
 ### Crystallize
-<<<<<<< HEAD
-=======
-
-**Human:** "I'm thinking about a blog platform for technical writers. Maybe with code syntax highlighting? I like Medium's clean look but want something more developer-focused. Should have comments. Maybe integrate with GitHub somehow?"
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 **Human:** "I'm thinking about a blog platform for technical writers. Maybe with code syntax
 highlighting? I like Medium's clean look but want something more developer-focused. Should have
@@ -267,11 +257,6 @@ writers'? Any specific features beyond syntax highlighting that would make it de
 **AI:** [Develops a reusable template structure with examples]
 
 ### Perpetuate
-<<<<<<< HEAD
-=======
-
-**Human:** "The front-end looks great but I'm struggling with the GitHub integration. How should we move forward?"
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 **Human:** "The front-end looks great but I'm struggling with the GitHub integration. How should we
 move forward?"

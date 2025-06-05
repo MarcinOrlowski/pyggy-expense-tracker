@@ -1,25 +1,15 @@
-<<<<<<< HEAD
 # Phase 1: Data Models Implementation
 
 - Product Requirements Document (PRD)
--Expense Tracker PoC - Foundation Layer
-=======
-# Product Requirements Document (PRD) - Phase 1: Data Models Implementation
-
-## Expense Tracker PoC - Foundation Layer
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
+- Expense Tracker PoC - Foundation Layer
 
 ## 1. Phase Overview
 
 ### 1.1 Purpose
 
-<<<<<<< HEAD
 Implement the foundational data models and database layer for the expense tracking system. This
 phase establishes the core data structures that will support all future functionality, focusing on
 proper relationships, validation, and data integrity.
-=======
-Implement the foundational data models and database layer for the expense tracking system. This phase establishes the core data structures that will support all future functionality, focusing on proper relationships, validation, and data integrity.
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 ### 1.2 Scope
 
@@ -42,11 +32,7 @@ Implement the foundational data models and database layer for the expense tracki
 
 ### 2.1 Core Entities
 
-<<<<<<< HEAD
 #### Payee Model
-=======
-**Payee Model**
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 - Purpose: Store vendor/company information for expenses
 - Fields:
@@ -58,11 +44,7 @@ Implement the foundational data models and database layer for the expense tracki
   - Deletion is PROTECTED - cannot delete payee if linked to any expenses
   - Alphabetical ordering by default
 
-<<<<<<< HEAD
 #### PaymentMethod Model
-=======
-**PaymentMethod Model**
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 - Purpose: Track different payment types (Credit Card, Cash, etc.)
 - Fields:
@@ -74,11 +56,7 @@ Implement the foundational data models and database layer for the expense tracki
   - Can be removed from expense items (SET_NULL on delete)
   - Alphabetical ordering by default
 
-<<<<<<< HEAD
 #### Month Model
-=======
-**Month Model**
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 - Purpose: Organize expenses by month/year for processing
 - Fields:
@@ -95,11 +73,7 @@ Implement the foundational data models and database layer for the expense tracki
   - Can only delete the most recent month if it has no paid expenses
   - Once any expense is paid in a month, that month is locked
 
-<<<<<<< HEAD
 #### Expense Model
-=======
-**Expense Model**
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 - Purpose: Main expense records supporting three expense types
 - Fields:
@@ -121,11 +95,7 @@ Implement the foundational data models and database layer for the expense tracki
   - Ordered by creation date descending
   - Payment method is now property of individual payments (ExpenseItems)
 
-<<<<<<< HEAD
 #### ExpenseItem Model
-=======
-**ExpenseItem Model**
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 - Purpose: Individual payment instances linked to expenses and months
 - Fields:
@@ -147,22 +117,14 @@ Implement the foundational data models and database layer for the expense tracki
 
 ### 2.2 Relationships
 
-<<<<<<< HEAD
 #### Primary Relationships:
-=======
-**Primary Relationships:**
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 - Expense → Payee (Many-to-One, required)
 - ExpenseItem → Expense (Many-to-One, required)
 - ExpenseItem → Month (Many-to-One, required)
 - ExpenseItem → PaymentMethod (Many-to-One, optional)
 
-<<<<<<< HEAD
 #### Delete Behavior:
-=======
-**Delete Behavior:**
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 - Payee deletion → PROTECTED (prevents deletion if linked to any expenses)
 - PaymentMethod deletion → Set NULL on ExpenseItems
@@ -171,11 +133,7 @@ Implement the foundational data models and database layer for the expense tracki
 
 ### 2.3 Data Validation
 
-<<<<<<< HEAD
 #### Model-Level Validation:
-=======
-**Model-Level Validation:**
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 - Expense type consistency with installments count
 - **Start date validation (cannot be earlier than current month)**
@@ -183,11 +141,7 @@ Implement the foundational data models and database layer for the expense tracki
 - Amount validation (positive values only)
 - Status consistency with payment dates
 
-<<<<<<< HEAD
 #### Database Constraints:
-=======
-**Database Constraints:**
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 - Unique constraints on Payee/PaymentMethod names
 - Unique constraint on Month year/month combination
@@ -199,11 +153,7 @@ Implement the foundational data models and database layer for the expense tracki
 
 ### 3.1 Administrative Features
 
-<<<<<<< HEAD
 #### Common Features for All Models:
-=======
-**Common Features for All Models:**
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 - List views with relevant fields displayed
 - Search functionality where appropriate
@@ -211,42 +161,26 @@ Implement the foundational data models and database layer for the expense tracki
 - Readonly fields for timestamps
 - Optimized queries to prevent N+1 problems
 
-<<<<<<< HEAD
 #### Payee Admin:
-=======
-**Payee Admin:**
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 - Display: name, created_at
 - Search: name
 - Features: Basic CRUD operations
 
-<<<<<<< HEAD
 #### PaymentMethod Admin:
-=======
-**PaymentMethod Admin:**
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 - Display: name, created_at
 - Search: name
 - Features: Basic CRUD operations
 
-<<<<<<< HEAD
 #### Month Admin:
-=======
-**Month Admin:**
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 - Display: year, month, created_at, (indicator if has paid expenses)
 - Filter: year, month
 - Features: View existing months, create sequential months only, delete most recent unpaid month only
 - Validation: Enforce sequential creation and deletion rules
 
-<<<<<<< HEAD
 #### Expense Admin:
-=======
-**Expense Admin:**
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 - Display: title, payee, expense_type, total_amount, started_at, closed_at
 - Filter: expense_type, closed_at, payee
@@ -255,11 +189,7 @@ Implement the foundational data models and database layer for the expense tracki
 - **Form defaults: start date set to current month's first day**
 - Performance: Select related payee/payment_method
 
-<<<<<<< HEAD
 #### ExpenseItem Admin:
-=======
-**ExpenseItem Admin:**
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 - Display: expense, month, due_date, amount, status, payment_date, payment_method
 - Filter: status, month, expense type, payment_method
@@ -269,11 +199,7 @@ Implement the foundational data models and database layer for the expense tracki
 
 ### 3.2 User Experience
 
-<<<<<<< HEAD
 #### Admin Interface Goals:
-=======
-**Admin Interface Goals:**
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 - Quick data entry for testing and initial setup
 - Clear visualization of expense relationships
@@ -284,22 +210,14 @@ Implement the foundational data models and database layer for the expense tracki
 
 ### 4.1 Initial Data
 
-<<<<<<< HEAD
 #### Reference Data (Fixtures):
-=======
-**Reference Data (Fixtures):**
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 - 5 sample payees (Electric Company, Internet Provider, etc.)
 - 5 payment methods (Credit Card, Debit Card, Bank Transfer, Cash, PayPal)
 - Initial seed month (current year/month or specified in settings)
 - Proper timestamps for all fixture data
 
-<<<<<<< HEAD
 #### Management Commands:
-=======
-**Management Commands:**
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 - `setup_initial_data`: Load reference data fixtures and create initial month
 - Error handling and user feedback
@@ -308,22 +226,14 @@ Implement the foundational data models and database layer for the expense tracki
 
 ### 4.2 Database Initialization
 
-<<<<<<< HEAD
 #### Migration Strategy:
-=======
-**Migration Strategy:**
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 - Single initial migration with all models
 - Proper field definitions and constraints
 - Index creation for performance
 - Foreign key relationships established
 
-<<<<<<< HEAD
 #### Setup Process:
-=======
-**Setup Process:**
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 1. Run Django migrations
 2. Create superuser for admin access
@@ -334,22 +244,14 @@ Implement the foundational data models and database layer for the expense tracki
 
 ### 5.1 Django Best Practices
 
-<<<<<<< HEAD
 #### Model Implementation:
-=======
-**Model Implementation:**
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 - Proper `__str__` methods for admin display
 - Meta classes with ordering and unique constraints
 - Clean methods for custom validation
 - Appropriate field types and validators
 
-<<<<<<< HEAD
 #### Performance Considerations:
-=======
-**Performance Considerations:**
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 - Database indexes on frequently queried fields
 - Select_related in admin querysets
@@ -358,22 +260,14 @@ Implement the foundational data models and database layer for the expense tracki
 
 ### 5.2 Quality Assurance
 
-<<<<<<< HEAD
 #### Validation Testing:
-=======
-**Validation Testing:**
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 - Model clean methods work correctly
 - Database constraints prevent invalid data
 - Admin interface handles edge cases
 - Fixtures load without errors
 
-<<<<<<< HEAD
 #### Integration Testing:
-=======
-**Integration Testing:**
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 - All model relationships function properly
 - Admin interface creates/updates data correctly
@@ -384,22 +278,14 @@ Implement the foundational data models and database layer for the expense tracki
 
 ### 6.1 Readiness for Phase 2
 
-<<<<<<< HEAD
 #### Business Logic Foundation:
-=======
-**Business Logic Foundation:**
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 - Models support all three expense types
 - Monthly processing structure in place
 - Payment tracking mechanisms ready
 - Completion workflow supported
 
-<<<<<<< HEAD
 #### Interface Preparation:
-=======
-**Interface Preparation:**
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 - Admin interface validates business rules
 - Model methods ready for view layer
@@ -408,11 +294,7 @@ Implement the foundational data models and database layer for the expense tracki
 
 ### 6.2 Extension Points
 
-<<<<<<< HEAD
 #### Planned Enhancements:
-=======
-**Planned Enhancements:**
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 - Additional model methods for business logic
 - Custom managers for common queries
@@ -423,41 +305,25 @@ Implement the foundational data models and database layer for the expense tracki
 
 ### 7.1 Functional Requirements
 
-<<<<<<< HEAD
 #### ✅ Model Creation:
-=======
-**✅ Model Creation:**
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 - All 5 models implemented with correct fields
 - Relationships properly defined
 - Validation rules enforced
 
-<<<<<<< HEAD
 #### ✅ Database Operations:
-=======
-**✅ Database Operations:**
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 - Migrations create proper schema
 - CRUD operations work for all models
 - Constraints prevent invalid data
 
-<<<<<<< HEAD
 #### ✅ Admin Interface:
-=======
-**✅ Admin Interface:**
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 - All models registered and functional
 - Search and filtering work correctly
 - Performance optimization implemented
 
-<<<<<<< HEAD
 #### ✅ Data Management:
-=======
-**✅ Data Management:**
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 - Initial data loads successfully
 - Management commands work properly
@@ -465,41 +331,25 @@ Implement the foundational data models and database layer for the expense tracki
 
 ### 7.2 Technical Requirements
 
-<<<<<<< HEAD
 #### ✅ Code Quality:
-=======
-**✅ Code Quality:**
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 - Models follow Django conventions
 - Proper documentation and comments
 - Consistent naming and structure
 
-<<<<<<< HEAD
 #### ✅ Performance:
-=======
-**✅ Performance:**
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 - Database queries optimized
 - Admin interface responsive
 - Appropriate indexing in place
 
-<<<<<<< HEAD
 #### ✅ Validation:
-=======
-**✅ Validation:**
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 - Model validation prevents invalid data
 - Business rules enforced at database level
 - Error messages clear and helpful
 
-<<<<<<< HEAD
 This Phase 1 implementation provides a solid foundation for the expense tracking system, with all
 core data structures properly defined and validated. The models support the full range of expense
 types and workflows defined in the main PRD, setting the stage for successful Phase 2 development of
 business logic and user interfaces.
-=======
-This Phase 1 implementation provides a solid foundation for the expense tracking system, with all core data structures properly defined and validated. The models support the full range of expense types and workflows defined in the main PRD, setting the stage for successful Phase 2 development of business logic and user interfaces.
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629

@@ -4,15 +4,11 @@
 
 ## Technical Approach
 
-<<<<<<< HEAD
 We'll implement the Budget model as a Django entity with a one-to-many relationship to Month model.
 The Budget will be added to the existing `expenses` app, maintaining consistency with current
 architecture. A Django migration will handle schema changes and data migration to link existing
 months to the default budget. The default budget will be seeded via the existing fixture loading
 mechanism.
-=======
-We'll implement the Budget model as a Django entity with a one-to-many relationship to Month model. The Budget will be added to the existing `expenses` app, maintaining consistency with current architecture. A Django migration will handle schema changes and data migration to link existing months to the default budget. The default budget will be seeded via the existing fixture loading mechanism.
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 ## Data Model
 

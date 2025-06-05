@@ -4,17 +4,27 @@
 
 ## Problem Statement
 
-Users cannot track split payment expenses when they start using the system mid-way through an installment plan. Currently, split payments always begin from installment #1, forcing users to either create inaccurate records or manually track partial payment histories outside the system. This affects 100% of users who have existing payment plans when adopting the expense tracker.
+Users cannot track split payment expenses when they start using the system mid-way through an
+installment plan. Currently, split payments always begin from installment #1, forcing users to
+either create inaccurate records or manually track partial payment histories outside the system.
+This affects 100% of users who have existing payment plans when adopting the expense tracker.
 
 ## Solution Overview
 
-Add an `initial_installment` field to split payment expenses that allows users to specify which installment number they want to start tracking from (default 0 for installment #1). The system will correctly calculate remaining payments and display accurate installment numbering like "Installment 5 of 10" for partial tracking scenarios. This field becomes immutable after expense creation to maintain data integrity.
+Add an `initial_installment` field to split payment expenses that allows users to specify which
+installment number they want to start tracking from (default 0 for installment #1). The system will
+correctly calculate remaining payments and display accurate installment numbering like "Installment
+5 of 10" for partial tracking scenarios. This field becomes immutable after expense creation to
+maintain data integrity.
 
 ## User Stories
 
-1. As a user with existing payment plans, I want to specify which installment I'm starting to track from, so that my records accurately reflect my real payment progress
-2. As a user viewing expense details, I want to see clear installment numbering (e.g., "Installment 5 of 10"), so that I understand my payment position in the plan
-3. As a user managing expenses, I want the system to automatically calculate remaining payments based on my starting point, so that completion tracking works correctly
+1. As a user with existing payment plans, I want to specify which installment I'm starting to track
+   from, so that my records accurately reflect my real payment progress
+1. As a user viewing expense details, I want to see clear installment numbering (e.g., "Installment
+   5 of 10"), so that I understand my payment position in the plan
+1As a user managing expenses, I want the system to automatically calculate remaining payments
+   based on my starting point, so that completion tracking works correctly
 
 ## Acceptance Criteria
 

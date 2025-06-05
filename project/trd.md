@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Technical Requirements Document (TRD)
 
 ## 1. Overview
@@ -6,44 +5,23 @@
 This Technical Requirements Document defines the specific technical implementation details
 for the Expense Tracker Proof of Concept. It complements the PRD and Architecture Specification
 by providing concrete technical specifications, constraints, and implementation guidelines.
-=======
-# Technical Requirements Document (TRD) - Expense Tracker PoC - Django Implementation
-
-## 1. Overview
-
-This Technical Requirements Document defines the specific technical implementation details for the Expense Tracker
-Proof of Concept. It complements the PRD and Architecture Specification by providing concrete technical
-specifications, constraints, and implementation guidelines.
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 ## 2. Technology Stack
 
 ### 2.1 Core Technologies
 
-<<<<<<< HEAD
 #### Backend Framework
-=======
-### Backend Framework
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 - Python 3.12+
 - Django 4.2+ (LTS)
 - Django ORM for database operations
 
-<<<<<<< HEAD
 #### Database
-=======
-### Database
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 - SQLite for development and PoC
 - PostgreSQL ready (future production)
 
-<<<<<<< HEAD
 #### Frontend
-=======
-### Frontend
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 - HTML5 semantic markup
 - CSS3 with Flexbox/Grid (processed via build tools)
@@ -51,11 +29,7 @@ specifications, constraints, and implementation guidelines.
 - Vite for fast development and bundling
 - PostCSS for CSS processing and autoprefixing
 
-<<<<<<< HEAD
 #### Development Tools
-=======
-### Development Tools
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 - Django development server
 - Django admin interface
@@ -67,11 +41,7 @@ specifications, constraints, and implementation guidelines.
 
 ### 2.2 Dependencies
 
-<<<<<<< HEAD
 #### Required Python Packages
-=======
-### Required Python Packages
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 ```python
 Django>=4.2,<5.0
@@ -80,11 +50,7 @@ django-extensions>=3.2  # Development utilities
 django-vite>=2.0        # Vite integration for Django
 ```
 
-<<<<<<< HEAD
 #### Frontend Build Tools
-=======
-### Frontend Build Tools
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 ```json
 {
@@ -97,11 +63,7 @@ django-vite>=2.0        # Vite integration for Django
 }
 ```
 
-<<<<<<< HEAD
 #### Optional Development Packages
-=======
-### Optional Development Packages
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 ```python
 django-debug-toolbar>=4.0  # Debug information
@@ -114,21 +76,13 @@ pytest-django>=4.5       # Testing framework
 
 ### 3.1 Database Schema
 
-<<<<<<< HEAD
 #### User Model
-=======
-### User Model
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 - Uses Django's built-in `django.contrib.auth.models.User`
 - No customization required for PoC
 - Authentication handled by Django admin
 
-<<<<<<< HEAD
 #### Core Models with Constraints
-=======
-### Core Models with Constraints
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 ```sql
 -- Payee Table
@@ -218,11 +172,7 @@ CREATE INDEX idx_month_lookup ON expenses_month(year, month);
 
 ### 3.2 Data Integrity Rules
 
-<<<<<<< HEAD
 #### Model-Level Validation
-=======
-### Model-Level Validation
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 ```python
 # In models.py
@@ -252,22 +202,14 @@ class ExpenseItem(models.Model):
 
 ### 3.3 Database Performance
 
-<<<<<<< HEAD
 #### Required Indexes
-=======
-### Required Indexes
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 - Foreign key indexes (automatic in Django)
 - Composite index on Month(year, month)
 - Index on Expense.closed_at for active expense queries
 - Index on ExpenseItem.status for pending/paid queries
 
-<<<<<<< HEAD
 #### Query Optimization
-=======
-### Query Optimization
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 - Use select_related() for foreign key relationships
 - Use prefetch_related() for reverse foreign key queries
@@ -313,11 +255,7 @@ urlpatterns = [
 
 ### 4.2 View Specifications
 
-<<<<<<< HEAD
 #### Function Signatures
-=======
-### Function Signatures
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 ```python
 def dashboard(request) -> HttpResponse:
@@ -347,11 +285,7 @@ def expense_item_pay(request, pk: int) -> HttpResponse:
 
 ### 4.3 Form Specifications
 
-<<<<<<< HEAD
 #### ExpenseForm
-=======
-### ExpenseForm
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 ```python
 class ExpenseForm(forms.ModelForm):
@@ -371,11 +305,7 @@ class ExpenseForm(forms.ModelForm):
         pass
 ```
 
-<<<<<<< HEAD
 #### PaymentForm
-=======
-### PaymentForm
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 ```python
 class PaymentForm(forms.ModelForm):
@@ -391,11 +321,7 @@ class PaymentForm(forms.ModelForm):
 
 ### 5.1 Core Services
 
-<<<<<<< HEAD
 #### Monthly Processing Service
-=======
-### Monthly Processing Service
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 ```python
 # expenses/services.py
@@ -496,33 +422,21 @@ def check_expense_completion(expense: Expense) -> bool:
 
 ### 5.2 Data Validation Rules
 
-<<<<<<< HEAD
 #### Expense Creation Rules
-=======
-### Expense Creation Rules
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 1. Split payments must have installments_count > 0
 2. Other expense types must have installments_count = 0
 3. total_amount must be > 0
 4. started_at cannot be in future beyond reasonable limit (1 year)
 
-<<<<<<< HEAD
 #### Payment Recording Rules
-=======
-### Payment Recording Rules
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 1. Can only pay pending expense items
 2. Payment date cannot be before due date (with grace period)
 3. Payment date cannot be in future
 4. Status and payment_date must be consistent
 
-<<<<<<< HEAD
 #### Month Processing Rules
-=======
-### Month Processing Rules
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 1. System must be initialized with a seed month (e.g., 2025-01)
 2. Cannot process same month twice
@@ -530,11 +444,7 @@ def check_expense_completion(expense: Expense) -> bool:
 4. Can only create the next sequential month after the most recent
 5. Only create items for expenses that have started
 
-<<<<<<< HEAD
 #### Month Deletion Rules
-=======
-### Month Deletion Rules
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 1. Can only delete the most recent month in the system
 2. Cannot delete if any expense items in that month are paid
@@ -544,22 +454,14 @@ def check_expense_completion(expense: Expense) -> bool:
 
 ### 6.1 Authentication & Authorization
 
-<<<<<<< HEAD
 #### For PoC (Simplified)
-=======
-### For PoC (Simplified)
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 - Use Django's built-in authentication
 - Single-user system (admin user)
 - All access through Django admin login
 - No public registration
 
-<<<<<<< HEAD
 #### Session Management
-=======
-### Session Management
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 - Django's default session handling
 - Session timeout: 2 weeks (Django default)
@@ -568,22 +470,14 @@ def check_expense_completion(expense: Expense) -> bool:
 
 ### 6.2 Input Validation
 
-<<<<<<< HEAD
 #### Form Validation
-=======
-### Form Validation
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 - All user inputs validated via Django forms
 - Decimal fields with appropriate precision limits
 - Date fields with reasonable ranges
 - Text fields with length limits
 
-<<<<<<< HEAD
 #### SQL Injection Prevention
-=======
-### SQL Injection Prevention
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 - Django ORM handles parameterized queries
 - No raw SQL in PoC
@@ -591,11 +485,7 @@ def check_expense_completion(expense: Expense) -> bool:
 
 ### 6.3 Data Protection
 
-<<<<<<< HEAD
 #### Sensitive Data
-=======
-### Sensitive Data
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 - No sensitive financial data in PoC
 - No PII beyond basic expense descriptions
@@ -605,11 +495,7 @@ def check_expense_completion(expense: Expense) -> bool:
 
 ### 7.1 Response Time Targets
 
-<<<<<<< HEAD
 #### Page Load Times (PoC Targets)
-=======
-### Page Load Times (PoC Targets)
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 - Dashboard: < 500ms
 - Expense list: < 1s
@@ -618,21 +504,13 @@ def check_expense_completion(expense: Expense) -> bool:
 
 ### 7.2 Database Performance
 
-<<<<<<< HEAD
 #### Query Limits
-=======
-### Query Limits
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 - Maximum 10 database queries per page load
 - Use select_related/prefetch_related for relationships
 - Pagination for lists > 50 items
 
-<<<<<<< HEAD
 #### Database Size Limits (PoC)
-=======
-### Database Size Limits (PoC)
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 - SQLite file size < 100MB
 - Maximum 10,000 expense items
@@ -640,11 +518,7 @@ def check_expense_completion(expense: Expense) -> bool:
 
 ### 7.3 Memory Usage
 
-<<<<<<< HEAD
 #### Development Server
-=======
-### Development Server
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 - Memory usage < 200MB
 - Django debug mode acceptable for PoC
@@ -653,11 +527,7 @@ def check_expense_completion(expense: Expense) -> bool:
 
 ### 8.1 Testing Strategy
 
-<<<<<<< HEAD
 #### Unit Tests
-=======
-### Unit Tests
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 ```python
 # Test model validation
@@ -676,11 +546,7 @@ def test_expense_form_validation():
     # Test valid/invalid inputs
 ```
 
-<<<<<<< HEAD
 #### Integration Tests
-=======
-### Integration Tests
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 ```python
 def test_expense_creation_workflow():
@@ -699,11 +565,7 @@ def test_payment_recording_workflow():
 
 ### 8.3 Test Data
 
-<<<<<<< HEAD
 #### Fixtures Required
-=======
-### Fixtures Required
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 ```python
 # fixtures/test_data.json
@@ -723,11 +585,7 @@ def test_payment_recording_workflow():
 
 ### 9.1 Development Environment
 
-<<<<<<< HEAD
 #### Setup Steps
-=======
-### Setup Steps
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 ```bash
 # Python environment
@@ -748,11 +606,7 @@ npm run dev        # Vite dev server with HMR
 python manage.py runserver  # Django server
 ```
 
-<<<<<<< HEAD
 #### Environment Variables
-=======
-### Environment Variables
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 ```bash
 # .env file
@@ -762,11 +616,7 @@ DATABASE_URL=sqlite:///db.sqlite3
 VITE_DEV_MODE=True
 ```
 
-<<<<<<< HEAD
 #### Build Configuration Files
-=======
-### Build Configuration Files
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 ```javascript
 // vite.config.js
@@ -815,21 +665,13 @@ module.exports = {
 
 ### 9.2 Production Considerations (Future)
 
-<<<<<<< HEAD
 #### Database Migration
-=======
-### Database Migration
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 - SQLite → PostgreSQL migration script
 - Data backup procedures
 - Database connection pooling
 
-<<<<<<< HEAD
 #### Security Hardening
-=======
-### Security Hardening
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 - HTTPS enforcement
 - Security headers
@@ -840,11 +682,7 @@ module.exports = {
 
 ### 10.1 Logging Requirements
 
-<<<<<<< HEAD
 #### Log Levels
-=======
-### Log Levels
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 ```python
 # settings.py
@@ -868,11 +706,7 @@ LOGGING = {
 }
 ```
 
-<<<<<<< HEAD
 #### Events to Log
-=======
-### Events to Log
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 - Expense creation/modification/deletion
 - Monthly processing execution
@@ -881,11 +715,7 @@ LOGGING = {
 
 ### 10.2 Error Handling
 
-<<<<<<< HEAD
 #### Exception Handling Strategy
-=======
-### Exception Handling Strategy
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 ```python
 # Custom exception classes
@@ -903,11 +733,7 @@ class PaymentRecordingError(ExpenseTrackerError):
 
 ### 11.1 Data Fixtures
 
-<<<<<<< HEAD
 #### Initial Data
-=======
-### Initial Data
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 ```python
 # management/commands/setup_initial_data.py
@@ -925,11 +751,7 @@ def handle(self):
 
 ### 11.2 Backup Strategy (PoC)
 
-<<<<<<< HEAD
 #### Development Backup
-=======
-### Development Backup
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 - SQLite file backup before major changes
 - Fixture export for data preservation
@@ -939,22 +761,14 @@ def handle(self):
 
 ### 12.1 Code Standards
 
-<<<<<<< HEAD
 #### Python Code Style
-=======
-### Python Code Style
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 - PEP 8 compliance
 - Black formatting
 - Type hints where beneficial
 - Docstrings for public methods
 
-<<<<<<< HEAD
 #### Django Best Practices
-=======
-### Django Best Practices
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 - Model validation in clean() methods
 - Form validation for user input
@@ -963,11 +777,7 @@ def handle(self):
 
 ### 12.2 Documentation Standards
 
-<<<<<<< HEAD
 #### Code Documentation
-=======
-### Code Documentation
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 - Docstrings for all models, views, and services
 - Inline comments for complex business logic
@@ -978,11 +788,7 @@ def handle(self):
 
 ### 13.1 Why Vite + PostCSS?
 
-<<<<<<< HEAD
 #### Development Benefits
-=======
-### Development Benefits
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 - **Hot Module Replacement**: Instant CSS/JS updates without page refresh
 - **Fast Build Times**: Vite's esbuild-powered bundling is 10-100x faster than webpack
@@ -990,22 +796,14 @@ def handle(self):
 - **Automatic Browser Prefixing**: PostCSS autoprefixer handles vendor prefixes
 - **CSS Optimization**: Automatic minification and duplicate removal
 
-<<<<<<< HEAD
 #### Production Benefits
-=======
-### Production Benefits
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 - **Optimized Bundles**: Tree-shaking removes unused code
 - **Asset Hashing**: Automatic cache-busting for deployments
 - **CSS Purging**: Remove unused CSS classes automatically
 - **Gzip Compression**: Smaller file sizes for faster loading
 
-<<<<<<< HEAD
 #### Developer Experience
-=======
-### Developer Experience
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 - **Zero Configuration**: Works out of the box with sensible defaults
 - **Error Overlay**: Clear error messages during development
@@ -1024,19 +822,12 @@ npm run build                    # Creates optimized static files
 python manage.py collectstatic   # Django collects all static files
 ```
 
-<<<<<<< HEAD
 #### File Structure with Build Tools
-=======
-### File Structure with Build Tools
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 - `frontend/` - Source files (editable)
 - `static/` - Built files (auto-generated, don't edit)
 - Hot reloading updates `static/` automatically during development
 
-<<<<<<< HEAD
-This TRD provides the technical foundation for implementing the Expense Tracker PoC with modern build tools that enhance development speed and production performance while maintaining the simplified Django approach.
-=======
-This TRD provides the technical foundation for implementing the Expense Tracker PoC with modern build tools that enhance
-development speed and production performance while maintaining the simplified Django approach.
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
+This TRD provides the technical foundation for implementing the Expense Tracker PoC with modern
+build tools that enhance development speed and production performance while maintaining the
+simplified Django approach.

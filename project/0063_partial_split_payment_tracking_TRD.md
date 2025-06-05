@@ -5,7 +5,10 @@
 
 ## Technical Approach
 
-We'll add an `initial_installment` field to the existing Expense model as a non-nullable integer with default 0. The Django form will conditionally show this field only for split payment types and make it read-only during edits. The expense item generation logic in `services.py` will be updated to account for the starting installment offset when calculating completion and display numbering.
+We'll add an `initial_installment` field to the existing Expense model as a non-nullable integer
+with default 0. The Django form will conditionally show this field only for split payment types and
+make it read-only during edits. The expense item generation logic in `services.py` will be updated
+to account for the starting installment offset when calculating completion and display numbering.
 
 ## Data Model
 
@@ -22,6 +25,7 @@ ADD COLUMN initial_installment INTEGER DEFAULT 0 NOT NULL;
 ```
 
 Updated Expense model documentation:
+
 ```python
 SPLIT_PAYMENT ('split_payment'):
     - total_amount: Monthly installment amount (not total cost)
@@ -35,6 +39,7 @@ SPLIT_PAYMENT ('split_payment'):
 ## Form & UI Changes
 
 **ExpenseForm Updates:**
+
 ```python
 # Add field to Meta.fields
 fields = [..., 'initial_installment']
@@ -50,6 +55,7 @@ if expense_type == TYPE_SPLIT_PAYMENT:
 ```
 
 **Template Updates:**
+
 - Add field with conditional display logic
 - Update installment display to show "Installment X of Y" format
 - X = current_installment_number + initial_installment + 1
@@ -57,6 +63,7 @@ if expense_type == TYPE_SPLIT_PAYMENT:
 ## Service Logic Changes
 
 **create_expense_items_for_month() Updates:**
+
 ```python
 elif expense.expense_type == expense.TYPE_SPLIT_PAYMENT:
     existing_count = ExpenseItem.objects.filter(expense=expense).count()
@@ -67,6 +74,7 @@ elif expense.expense_type == expense.TYPE_SPLIT_PAYMENT:
 ```
 
 **check_expense_completion() Updates:**
+
 ```python
 elif expense.expense_type == expense.TYPE_SPLIT_PAYMENT:
     paid_items = ExpenseItem.objects.filter(expense=expense, status='paid').count()

@@ -2,12 +2,8 @@
 
 ## Overview
 
-<<<<<<< HEAD
 Extract embedded CSS from HTML templates into dedicated CSS files using SASS preprocessing to
 improve maintainability, unify styling, and eliminate code duplication.
-=======
-Extract embedded CSS from HTML templates into dedicated CSS files using SASS preprocessing to improve maintainability, unify styling, and eliminate code duplication.
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 ## Goals
 

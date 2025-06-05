@@ -2,13 +2,8 @@
 
 ## Technical Overview
 
-<<<<<<< HEAD
 Integrate Font Awesome 6.5.1 via CDN and replace text-based action buttons with icon-based buttons
 across all Django templates.
-=======
-Integrate Font Awesome 6.5.1 via CDN and replace text-based action buttons with icon-based buttons across all Django templates.
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
-
 
 ## Architecture Changes
 
@@ -54,15 +49,10 @@ Add new CSS classes to existing `<style>` block in base.html:
 
 #### Button Pattern Changes:
 
-<<<<<<< HEAD
 - **Icon-only**:
   `<button class="btn btn-secondary btn-icon" title="Edit" aria-label="Edit"><i class="fas fa-pen-to-square"></i></button>`
 - **Icon + text**:
   `<button class="btn"><i class="fas fa-circle-plus icon-left"></i>Add New</button>`
-=======
-- **Icon-only**: `<button class="btn btn-secondary btn-icon" title="Edit" aria-label="Edit"><i class="fas fa-pen-to-square"></i></button>`
-- **Icon + text**: `<button class="btn"><i class="fas fa-circle-plus icon-left"></i>Add New</button>`
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 
 #### Templates to Modify:

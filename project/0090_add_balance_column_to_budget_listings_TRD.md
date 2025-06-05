@@ -5,11 +5,16 @@
 
 ## Technical Approach
 
-We'll implement balance calculation by adding a `get_current_balance()` method to the Budget model that calculates the difference between initial_amount and total paid expenses. The budget_list view will be modified to include balance data, and the budget_list.html template will be updated to display the new Balance column. This approach uses on-the-fly calculation for accuracy and simplicity, avoiding caching complexity in the initial implementation.
+We'll implement balance calculation by adding a `get_current_balance()` method to the Budget model
+that calculates the difference between initial_amount and total paid expenses. The budget_list view
+will be modified to include balance data, and the budget_list.html template will be updated to
+display the new Balance column. This approach uses on-the-fly calculation for accuracy and
+simplicity, avoiding caching complexity in the initial implementation.
 
 ## Data Model
 
 No new database tables or schema changes required. Existing models used:
+
 - `Budget.initial_amount` - starting budget amount
 - `ExpenseItem` - individual expense records with amount and status fields
 - Calculation: `Budget.initial_amount - sum(ExpenseItem.amount WHERE status='paid' AND expense.budget=budget)`
@@ -31,15 +36,19 @@ def budget_list(request):
 
 ## Security & Performance
 
-- Performance: Balance calculation involves one database query per budget (N+1 could be optimized with select_related/prefetch_related if needed)
+- Performance: Balance calculation involves one database query per budget (N+1 could be optimized
+  with select_related/prefetch_related if needed)
 - Target: <500ms page load time for up to 50 budgets
 - Security: No additional security considerations - uses existing model access patterns
 
 ## Technical Risks & Mitigations
 
-1. **Risk**: N+1 query problem with multiple budgets → **Mitigation**: Monitor performance, add query optimization if needed in future iterations
-2. **Risk**: Calculation inconsistency with stale data → **Mitigation**: Real-time calculation ensures accuracy, no caching to maintain
-3. **Risk**: Large expense datasets causing slow queries → **Mitigation**: Database indexes on expense.budget_id and expenseitem.status fields
+1. **Risk**: N+1 query problem with multiple budgets → **Mitigation**: Monitor performance, add
+   query optimization if needed in future iterations
+1. **Risk**: Calculation inconsistency with stale data → **Mitigation**: Real-time calculation
+   ensures accuracy, no caching to maintain
+1. **Risk**: Large expense datasets causing slow queries → **Mitigation**: Database indexes on
+   expense.budget_id and expenseitem.status fields
 
 ## Implementation Plan
 

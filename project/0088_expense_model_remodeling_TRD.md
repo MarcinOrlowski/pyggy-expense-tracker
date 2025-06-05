@@ -5,13 +5,20 @@
 
 ## Technical Approach
 
-We'll restructure the Expense model to separate schedule definition from actual occurrences. The Expense will define the payment pattern (when, how much, how often), while ExpenseItem represents individual payment instances with their own due dates. This eliminates the need for due_date on Expense and creates a cleaner separation of concerns. The refactoring will use Django data migrations to preserve existing data integrity.
+We'll restructure the Expense model to separate schedule definition from actual occurrences. The
+Expense will define the payment pattern (when, how much, how often), while ExpenseItem represents
+individual payment instances with their own due dates. This eliminates the need for due_date on
+Expense and creates a cleaner separation of concerns. The refactoring will use Django data
+migrations to preserve existing data integrity.
 
-**Documentation Standards**: All field meanings, validation logic, and business rules will be thoroughly documented in code comments and docstrings to ensure maintainability and clarity for future developers.
+**Documentation Standards**: All field meanings, validation logic, and business rules will be
+thoroughly documented in code comments and docstrings to ensure maintainability and clarity for
+future developers.
 
 ## Data Model
 
 ### Updated Expense Model
+
 ```python
 class Expense(models.Model):
     """
@@ -51,12 +58,14 @@ class Expense(models.Model):
 ```
 
 ### Field Usage by Type
+
 - **One-time**: `amount` = total cost, `day_of_month` from start_date
 - **Endless recurring**: `amount` = monthly cost, `day_of_month` for scheduling
 - **Recurring with end**: `amount` = monthly cost, `day_of_month` + `end_date`
 - **Split payment**: `amount` = per-installment, `total_parts` + `skip_parts`
 
 ### Day-of-Month Fallback Logic
+
 ```python
 def get_due_date_for_month(self, year, month):
     """

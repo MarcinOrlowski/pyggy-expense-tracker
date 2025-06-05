@@ -13,12 +13,8 @@ to store supplementary information that doesn't fit into the existing structured
 
 ## Problem Statement
 
-<<<<<<< HEAD
 Currently, the expense tracking system captures structured data (payee, amount, type, dates) but
 lacks a flexible field for users to add contextual information such as:
-=======
-Currently, the expense tracking system captures structured data (payee, amount, type, dates) but lacks a flexible field for users to add contextual information such as:
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 - Detailed descriptions of what the expense covers
 - Special circumstances or conditions
