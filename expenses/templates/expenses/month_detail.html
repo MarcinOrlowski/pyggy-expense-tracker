@@ -11,9 +11,4 @@
 <!-- Expense Items Table -->
 {% include "expenses/includes/expense_items_table.html" with table_title="Expense Items" month=month items=expense_items layout="month_detail" empty_message="No expense items for this month." %}
 
-<div class="card">
-    <div class="card-body">
-        <a href="{% url 'month_list' budget.id %}" class="btn btn-secondary"><i class="fas fa-arrow-left icon-left"></i>Back to Months</a>
-    </div>
-</div>
 {% endblock %}
