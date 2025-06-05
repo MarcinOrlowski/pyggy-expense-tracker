@@ -2,6 +2,7 @@
 
 ## @dev
 
+- [#0118] Changed expense item edit behavior to redirect to budget dashboard after save or cancel
 - [#0114] Added in-app help system that renders markdown documentation files with README.md priority, user-friendly error handling, and responsive design
 - [#0062] Added separate colors for expense type icons to improve visual differentiation between expense types
 - [#0102] Split application files into one-file-one-class model for improved code organization and maintainability
