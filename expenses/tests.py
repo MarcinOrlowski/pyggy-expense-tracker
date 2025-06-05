@@ -1,13 +1,18 @@
 import hashlib
 import os
+import sys
 from pathlib import Path
 
 from django.conf import settings
 from django.contrib.staticfiles import finders
 from django.core.management import call_command
-from django.test import TestCase
+from django.test import TestCase, override_settings
 
 
+@override_settings(
+    SASS_PROCESSOR_ENABLED=True,
+    SASS_PROCESSOR_AUTO_INCLUDE=True
+)
 class SCSSSassProcessorTest(TestCase):
     """Test SCSS auto-compilation functionality with django-sass-processor."""
 
