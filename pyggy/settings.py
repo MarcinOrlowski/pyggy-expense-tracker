@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -65,6 +66,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'expenses.context_processors.current_budget',
+                'expenses.context_processors.testing_context',
             ],
         },
     },
@@ -148,9 +150,19 @@ SASS_PROCESSOR_INCLUDE_DIRS = [
     BASE_DIR / 'src' / 'scss',
 ]
 
-# Enable SASS processor and auto-compilation for development
-SASS_PROCESSOR_ENABLED = True
-SASS_PROCESSOR_AUTO_INCLUDE = True
+# Detect if we're in a test environment (GitHub Actions or local testing)
+import sys
+TESTING = 'test' in sys.argv or 'pytest' in sys.modules or 'GITHUB_ACTIONS' in os.environ
+
+# Configure SASS processor for different environments
+if TESTING:
+    # In test environments, disable SASS processor to avoid file not found errors
+    SASS_PROCESSOR_ENABLED = False
+    SASS_PROCESSOR_AUTO_INCLUDE = False
+else:
+    # Enable SASS processor and auto-compilation for development
+    SASS_PROCESSOR_ENABLED = True
+    SASS_PROCESSOR_AUTO_INCLUDE = True
 
 # Development-specific SASS settings
 if DEBUG:
