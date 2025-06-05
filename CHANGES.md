@@ -2,6 +2,7 @@
 
 ## @dev
 
+- [#0112] Set default values for new expense creation (expense type defaults to "one-time", start date defaults to current date)
 - [#0120] Added comprehensive type hints to Python codebase for improved code quality and developer experience
 - [#0118] Changed expense item edit behavior to redirect to budget dashboard after save or cancel
 - [#0114] Added in-app help system that renders markdown documentation files with README.md priority, user-friendly error handling, and responsive design
