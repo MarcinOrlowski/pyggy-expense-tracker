@@ -188,6 +188,10 @@ class Expense(models.Model):
     def get_expense_type_icon(self):
         """Get Font Awesome icon class for the expense type."""
         return self.EXPENSE_TYPE_ICONS.get(self.expense_type, 'fa-question-circle')
+    
+    def get_expense_type_icon_css_class(self):
+        """Get CSS class for expense type icon color."""
+        return f'expense-type-icon-{self.expense_type.replace("_", "-")}'
 
     def can_be_deleted(self):
         """Check if this expense can be deleted (no paid expense items)"""

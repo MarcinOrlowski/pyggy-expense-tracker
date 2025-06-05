@@ -667,3 +667,20 @@ footer {
     font-weight: 500;
 }
 
+// Expense Type Icon Colors
+.expense-type-icon-endless-recurring {
+    color: var(--color-blue) !important;
+}
+
+.expense-type-icon-split-payment {
+    color: var(--color-orange) !important;
+}
+
+.expense-type-icon-one-time {
+    color: var(--color-green) !important;
+}
+
+.expense-type-icon-recurring-with-end {
+    color: var(--color-purple) !important;
+}
+
