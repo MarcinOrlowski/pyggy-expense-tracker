@@ -3,7 +3,6 @@
 
 ## 1. Overview
 
-<<<<<<< HEAD
 This document outlines the requirements for adding a calendar grid view feature to the Python
 Expense Tracker application. The calendar will provide a visual representation of unpaid items due
 for the current month.
@@ -12,16 +11,6 @@ for the current month.
 
 Currently, users can only view expense items in a list/table format. There's no visual way to see
 payment due dates distributed across a month, making it difficult to quickly identify:
-=======
-This document outlines the requirements for adding a calendar grid view feature to the Python Expense Tracker
-application. The calendar will provide a visual representation of unpaid items due for the current month.
-
-
-## 2. Problem Statement
-
-Currently, users can only view expense items in a list/table format. There's no visual way to see payment due
-dates distributed across a month, making it difficult to quickly identify:
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 - Which days have payments due
 - Whether there are overdue payments from previous months
@@ -39,16 +28,11 @@ dates distributed across a month, making it difficult to quickly identify:
 
 ## 4. User Stories
 
-<<<<<<< HEAD
 1. **As a user**, I want to see a calendar view of the current month so I can quickly identify which
    days have payments due.
-=======
-1. **As a user**, I want to see a calendar view of the current month so I can quickly identify which days have payments due.
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 2. **As a user**, I want to see overdue payments from previous months indicated on today's date.
 3. **As a mobile user**, I want the calendar to be responsive and usable on smaller screens.
 4. **As a user**, I want the calendar to respect my theme preference (dark theme).
-
 
 ## 5. Functional Requirements
 

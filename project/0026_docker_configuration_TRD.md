@@ -6,7 +6,6 @@
 
 ## Technical Approach
 
-<<<<<<< HEAD
 We'll create a multi-stage Dockerfile optimized for development with Python 3.12 base image,
 implementing a compose.yml file that orchestrates the Django application with volume mounts for
 hot-reloading. The setup will handle static files through Django's collectstatic and SCSS
@@ -17,13 +16,6 @@ compilation via the existing compile_scss.py script. Environment variables will 
 
 No database schema changes required. SQLite database file will be mounted as a Docker volume at
 `/app/db.sqlite3` to ensure persistence across container restarts.
-=======
-We'll create a multi-stage Dockerfile optimized for development with Python 3.12 base image, implementing a compose.yml file that orchestrates the Django application with volume mounts for hot-reloading. The setup will handle static files through Django's collectstatic and SCSS compilation via the existing compile_scss.py script. Environment variables will be managed through .env files with compose.yml variable substitution.
-
-## Data Model
-
-No database schema changes required. SQLite database file will be mounted as a Docker volume at `/app/db.sqlite3` to ensure persistence across container restarts.
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 ## API Design
 

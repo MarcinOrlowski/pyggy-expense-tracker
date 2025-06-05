@@ -5,16 +5,12 @@
 
 ## Technical Approach
 
-<<<<<<< HEAD
 We'll implement budget scoping by modifying URL patterns to include budget_id parameter and updating
 all views to filter data based on the budget from the URL. A context processor will make the current
 budget available in all templates by extracting it from the URL parameters. The current budget will
 be displayed in the header with a link to switch budgets. All views will be updated to filter data
 based on the budget_id from the URL, with automatic redirection to budget selection for users
 accessing the root URL.
-=======
-We'll implement budget scoping by modifying URL patterns to include budget_id parameter and updating all views to filter data based on the budget from the URL. A context processor will make the current budget available in all templates by extracting it from the URL parameters. The current budget will be displayed in the header with a link to switch budgets. All views will be updated to filter data based on the budget_id from the URL, with automatic redirection to budget selection for users accessing the root URL.
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 ## Data Model
 
@@ -34,35 +30,31 @@ request.session['current_budget_id'] = budget_id
 
 URL pattern changes:
 
-<<<<<<< HEAD
 ```text
-=======
-```
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 # From:
+
 /expenses/
 /months/
 /months/<year>/<month>/
 
 # To:
+
 /budgets/<int:budget_id>/expenses/
 /budgets/<int:budget_id>/months/
 /budgets/<int:budget_id>/months/<year>/<month>/
 /budgets/<int:budget_id>/dashboard/
 
 # Budget management (unchanged):
+
 /budgets/
 /budgets/create/
 /budgets/<int:pk>/edit/
+
 ```
 
 Budget selection endpoint:
 
-<<<<<<< HEAD
 ```text
-=======
-```
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 POST /budgets/select/
 Request: { budget_id: 1 }
 Response: Redirect to /budgets/1/dashboard/
@@ -146,10 +138,5 @@ def select_budget(request):
 ```
 
 ### 4. Template Updates:
-<<<<<<< HEAD
-=======
-
-- Replace `{% url 'expenses:month_list' %}` with `{% url 'expenses:month_list' current_budget_id %}`
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 - Replace `{% url 'expenses:month_list' %}` with `{% url 'expenses:month_list' current_budget_id %}`

@@ -5,7 +5,12 @@
 
 ## Technical Approach
 
-We'll implement expense item date validation by adding a new method to the ExpenseItem model that validates the due_date against the parent expense's creation month. A new ExpenseItemEditForm will handle the editing UI with both client-side JavaScript validation and server-side Django form validation. The implementation will reuse existing Django patterns for form validation and error handling, adding a new view for expense item editing that integrates with the current expense detail page.
+We'll implement expense item date validation by adding a new method to the ExpenseItem model that
+validates the due_date against the parent expense's creation month. A new ExpenseItemEditForm will
+handle the editing UI with both client-side JavaScript validation and server-side Django form
+validation. The implementation will reuse existing Django patterns for form validation and error
+handling, adding a new view for expense item editing that integrates with the current expense detail
+page.
 
 ## Data Model
 
@@ -56,9 +61,12 @@ Form handling follows existing pattern with validation errors displayed via Djan
 
 ## Technical Risks & Mitigations
 
-1. **Risk**: Users with existing invalid expense items may be locked out → **Mitigation**: Validation only applies to edits, not existing data
-2. **Risk**: Complex month boundary edge cases (leap years, timezone issues) → **Mitigation**: Use Python's calendar module and date objects for reliable month calculations
-3. **Risk**: Form submission bypassing client-side validation → **Mitigation**: Server-side validation is primary, client-side is UX enhancement only
+1. **Risk**: Users with existing invalid expense items may be locked out → **Mitigation**:
+   Validation only applies to edits, not existing data
+1. **Risk**: Complex month boundary edge cases (leap years, timezone issues) → **Mitigation**: Use
+   Python's calendar module and date objects for reliable month calculations
+1. **Risk**: Form submission bypassing client-side validation → **Mitigation**: Server-side
+   validation is primary, client-side is UX enhancement only
 
 ## Implementation Plan
 

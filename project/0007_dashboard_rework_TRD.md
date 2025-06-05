@@ -84,20 +84,13 @@ and establishing a foundation for future widget-based enhancements.
 - No expense items (lines 76-78)
 
 #### Phase 2: Enhance Headers and Context
-<<<<<<< HEAD
-=======
-
-1. **Summary Widget Header**
-   - Show month identifier when available
-   - Clear labeling for summary data
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 1. **Summary Widget Header**
 
 - Show month identifier when available
 - Clear labeling for summary data
 
-1**Expense List Header**
+1. **Expense List Header**
 
 - Contextual header based on data availability
 - Preserve month context display
@@ -239,11 +232,8 @@ and establishing a foundation for future widget-based enhancements.
 
 ### Scenario 2: Current Month Not Processed (`current_month = None`)
 
-<<<<<<< HEAD
-- **Display:** Summary widget with "not processed" message
-=======
 - **Display:** Summary widget with "not processed" message  
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
+
 - **Hide:** Expense list section
 - **Behavior:** Preserve current UX flow
 
@@ -296,14 +286,6 @@ and establishing a foundation for future widget-based enhancements.
 - All existing actions preserved
 
 ### UI/UX Testing
-<<<<<<< HEAD
-=======
-
-1. **Visual Hierarchy**
-   - Clear separation between summary and details
-   - Logical information flow (summary → details)
-   - Consistent styling and spacing
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 1. **Visual Hierarchy**
 

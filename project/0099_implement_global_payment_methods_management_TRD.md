@@ -4,10 +4,17 @@
 **PRD Reference**: 0099_implement_global_payment_methods_management_PRD.md
 
 ## Technical Approach
-We'll implement standard Django class-based views (CreateView, UpdateView, DeleteView) for payment method CRUD operations, following the existing pattern used for other entities like Payee. The PaymentMethod model remains unchanged as it's already global. We'll add protection against deleting payment methods that are referenced by ExpenseItem records. All views will integrate with the existing template structure and maintain consistent styling.
+
+We'll implement standard Django class-based views (CreateView, UpdateView, DeleteView) for payment
+method CRUD operations, following the existing pattern used for other entities like Payee. The
+PaymentMethod model remains unchanged as it's already global. We'll add protection against deleting
+payment methods that are referenced by ExpenseItem records. All views will integrate with the
+existing template structure and maintain consistent styling.
 
 ## Data Model
+
 No changes required - existing PaymentMethod model is sufficient:
+
 ```python
 PaymentMethod
 - id (PK)
@@ -19,8 +26,10 @@ ExpenseItem.payment_method (FK -> PaymentMethod, nullable)
 ```
 
 ## API Design
+
 URL patterns following existing conventions:
-```
+
+```text
 GET    /payment-methods/                 # List all (existing)
 GET    /payment-methods/create/          # Create form
 POST   /payment-methods/create/          # Create submission
@@ -31,20 +40,24 @@ POST   /payment-methods/<id>/delete/     # Delete submission
 ```
 
 Forms:
+
 - PaymentMethodForm with single 'name' field
 - Standard Django validation
 
 ## Security & Performance
+
 - Authentication: Uses existing @login_required decorator
 - Authorization: All authenticated users can manage payment methods
 - Validation: Prevent deletion of payment methods in use
 - Performance: Simple queries with no N+1 issues
 
 ## Technical Risks & Mitigations
+
 1. **Risk**: Deleting payment method breaks expense history → **Mitigation**: Check ExpenseItem references before deletion
 2. **Risk**: Concurrent editing conflicts → **Mitigation**: Use Django's built-in optimistic locking with updated_at field
 
 ## Implementation Plan
+
 - Phase 1 (S): Create forms.py entries for PaymentMethodForm - 15 min
 - Phase 2 (M): Implement CRUD views in views.py - 45 min
 - Phase 3 (M): Create templates (create, edit, delete confirmation) - 45 min
@@ -54,6 +67,7 @@ Forms:
 Dependencies: None
 
 ## Monitoring & Rollback
+
 - Feature flag: None needed (low-risk feature)
 - Key metrics: Track 500 errors on payment method endpoints
 - Rollback: Remove navigation links to disable UI access; Django admin remains available

@@ -2,12 +2,9 @@
 
 ## 1. Overview
 
-<<<<<<< HEAD
-This document provides the technical implementation details for the calendar grid view feature as specified in the PRD. The calendar will be a read-only view showing unpaid payment due dates for the current month.
-=======
-This document provides the technical implementation details for the calendar grid view feature as specified in the
-PRD. The calendar will be a read-only view showing unpaid payment due dates for the current month.
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
+This document provides the technical implementation details for the calendar grid view feature as
+specified in the PRD. The calendar will be a read-only view showing unpaid payment due dates for the
+current month.
 
 ## 2. Architecture
 
@@ -193,10 +190,7 @@ The calendar uses CSS variables for comprehensive theming:
 - Smooth transitions (0.2s) for all interactions
 - Today's cell scales to 110% on hover
 
-<<<<<<< HEAD
 ```css
-=======
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 /*Responsive Design*/
 @media (max-width: 768px) {
     .calendar-day {
@@ -223,7 +217,6 @@ The calendar uses CSS variables for comprehensive theming:
         font-size: 0.75rem;
     }
 }
-
 ```
 
 ### 3.5 Navigation Update

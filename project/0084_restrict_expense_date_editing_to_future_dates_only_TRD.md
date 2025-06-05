@@ -5,7 +5,12 @@
 
 ## Technical Approach
 
-We'll extend the existing expense editing validation system by adding new date editing restriction methods to the `Expense` model and updating the `ExpenseForm` validation logic. The implementation will leverage the existing `Month.get_most_recent()` method to determine the current active month and add `can_edit_date()` method to the expense model alongside existing editing restrictions. Form validation will occur in both `ExpenseForm.clean()` and the model's `clean()` method to ensure data integrity.
+We'll extend the existing expense editing validation system by adding new date editing restriction
+methods to the `Expense` model and updating the `ExpenseForm` validation logic. The implementation
+will leverage the existing `Month.get_most_recent()` method to determine the current active month
+and add `can_edit_date()` method to the expense model alongside existing editing restrictions. Form
+validation will occur in both `ExpenseForm.clean()` and the model's `clean()` method to ensure data
+integrity.
 
 ## Data Model
 

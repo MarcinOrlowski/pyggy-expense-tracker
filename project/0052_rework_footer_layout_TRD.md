@@ -6,14 +6,10 @@
 
 ## Technical Approach
 
-<<<<<<< HEAD
 We'll modify the existing footer in `base.html` to use flexbox layout with two sections (left and
 right), updating the SCSS in `_components.scss` to support responsive behavior. The application
 version will be hardcoded initially (v1.0.0) in the template. We'll use CSS media queries to stack
 footer sections vertically on mobile devices (<768px).
-=======
-We'll modify the existing footer in `base.html` to use flexbox layout with two sections (left and right), updating the SCSS in `_components.scss` to support responsive behavior. The application version will be hardcoded initially (v1.0.0) in the template. We'll use CSS media queries to stack footer sections vertically on mobile devices (<768px).
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 ## Data Model
 

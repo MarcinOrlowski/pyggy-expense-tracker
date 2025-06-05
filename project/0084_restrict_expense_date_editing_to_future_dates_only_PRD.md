@@ -4,17 +4,27 @@
 
 ## Problem Statement
 
-Users can currently modify expense dates to historical dates when editing expenses, which compromises data integrity and financial tracking accuracy. This creates confusion when reconciling past financial records and undermines the purpose of maintaining a chronological expense history. Without proper date editing restrictions, users may inadvertently corrupt their financial timeline.
+Users can currently modify expense dates to historical dates when editing expenses, which
+compromises data integrity and financial tracking accuracy. This creates confusion when reconciling
+past financial records and undermines the purpose of maintaining a chronological expense history.
+Without proper date editing restrictions, users may inadvertently corrupt their financial timeline.
 
 ## Solution Overview
 
-Implement date validation rules that restrict expense date editing based on the expense's current date and the system's active month. Users can only edit expense dates if the current date is not earlier than next month, and when editing is allowed, the new date must be in the future or no earlier than the currently active month plus one. This ensures financial data integrity while providing flexibility for legitimate date corrections.
+Implement date validation rules that restrict expense date editing based on the expense's current
+date and the system's active month. Users can only edit expense dates if the current date is not
+earlier than next month, and when editing is allowed, the new date must be in the future or no
+earlier than the currently active month plus one. This ensures financial data integrity while
+providing flexibility for legitimate date corrections.
 
 ## User Stories
 
-1. As a user editing an expense, I want to be prevented from setting historical dates, so that my financial records maintain chronological integrity
-2. As a user with an expense from the current active month, I want to be able to update the date to future months only, so that I can correct upcoming payment schedules without corrupting past data
-3. As a user trying to edit an old expense date, I want to see clear error messages explaining why the edit is restricted, so that I understand the system's validation rules
+1. As a user editing an expense, I want to be prevented from setting historical dates, so that my
+   financial records maintain chronological integrity
+1. As a user with an expense from the current active month, I want to be able to update the date to
+   future months only, so that I can correct upcoming payment schedules without corrupting past data
+1As a user trying to edit an old expense date, I want to see clear error messages explaining why
+   the edit is restricted, so that I understand the system's validation rules
 
 ## Acceptance Criteria
 

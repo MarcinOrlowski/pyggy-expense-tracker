@@ -1,10 +1,6 @@
-<<<<<<< HEAD
 # Architecture Specification
 
 Expense Tracker PoC Implementation
-=======
-# Architecture Specification - Expense Tracker PoC Implementation
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 ## 1. Overview
 
@@ -416,11 +412,7 @@ Simple HTML templates with basic CSS:
 
 ### 7.2 Form Validation Guidelines
 
-<<<<<<< HEAD
 #### Expense Creation Form
-=======
-**Expense Creation Form**
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 - Default start date set to first day of current month
 - Client-side validation prevents earlier dates
@@ -470,33 +462,21 @@ nav a {
 
 ### 8.1 Development Phases
 
-<<<<<<< HEAD
 #### Phase 1: Setup (Day 1)
-=======
-**Phase 1: Setup (Day 1)**
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 1. Create Django project and expenses app
 2. Define models and create migrations
 3. Set up Django admin
 4. Create fixtures for test data including initial seed month
 
-<<<<<<< HEAD
 #### Phase 2: Core Views (Days 2-3)
-=======
-**Phase 2: Core Views (Days 2-3)**
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 1. Implement basic CRUD views
 2. Create simple templates
 3. Add basic forms
 4. Implement business logic functions
 
-<<<<<<< HEAD
 #### Phase 3: Polish (Days 4-5)
-=======
-**Phase 3: Polish (Days 4-5)**
->>>>>>> 5e8c4ef357def9f66782b45b0ad8d57943146629
 
 1. Add dashboard functionality
 2. Improve styling
