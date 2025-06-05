@@ -61,8 +61,3 @@ Payments record when expense items are actually paid, including the payment date
   **: [Report bugs or request features](https://github.com/MarcinOrlowski/pyggy-expense-tracker/issues)
 - **Source Code
   **: [View the project on GitHub](https://github.com/MarcinOrlowski/pyggy-expense-tracker)
-
----
-
-*Choose a topic from the Table of Contents above to dive deeper into PyGGy's features and
-capabilities.*
