@@ -2,7 +2,7 @@
 #
 ####################################################################
 
-name: "Code lint"
+name: "mypy lint"
 
 on:
   push:
@@ -40,12 +40,6 @@ jobs:
         uses: actions/setup-python@master
         with:
           python-version: ${{ matrix.python }}
-
-      # https://github.com/marketplace/actions/wemake-python-styleguide
-      # https://wemake-python-stylegui.de/en/latest/pages/usage/integrations/github-actions.html
-      - name: "Running linter..."
-        if: steps.filter.outputs.srcs == 'true'
-        uses: wemake-services/wemake-python-styleguide@1.1.0
 
       - name: "Running mypy..."
         if: steps.filter.outputs.srcs == 'true'
