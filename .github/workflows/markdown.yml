@@ -35,8 +35,8 @@ jobs:
         uses: ruzickap/action-my-markdown-linter@v1
         if: steps.filter.outputs.docs == 'true'
         with:
+          # LICENSE is externally sourced and we're not going to fix it.
           exclude: |
-            # LICENSE is externally sourced and we're not going to fix it.
             "LICENSE.md"
             "project/"
           config_file: .markdownlint.yaml.dist
