@@ -4,7 +4,7 @@ from django.db import transaction
 from django.core.cache import cache
 from decimal import Decimal
 from datetime import date, datetime
-from typing import List
+from typing import List, Optional, Union
 from babel.numbers import format_currency as babel_format_currency
 from babel.core import Locale
 from .models import Expense, ExpenseItem, Month, Settings, Budget
@@ -206,7 +206,7 @@ class SettingsService:
     CACHE_TIMEOUT = 3600  # 1 hour
     
     @classmethod
-    def get_settings(cls):
+    def get_settings(cls) -> Settings:
         """Get cached settings or load from database."""
         settings = cache.get(cls.CACHE_KEY)
         if settings is None:
@@ -215,17 +215,17 @@ class SettingsService:
         return settings
     
     @classmethod
-    def get_currency(cls):
+    def get_currency(cls) -> str:
         """Get current currency code."""
         return cls.get_settings().currency
     
     @classmethod
-    def get_locale(cls):
+    def get_locale(cls) -> str:
         """Get current locale."""
         return cls.get_settings().locale
     
     @classmethod
-    def format_currency(cls, amount, include_symbol=True):
+    def format_currency(cls, amount: Optional[Union[Decimal, float, int]], include_symbol: bool = True) -> str:
         """
         Format amount as currency using current settings.
         
@@ -259,6 +259,6 @@ class SettingsService:
             return f"{settings.currency} {amount:.2f}"
     
     @classmethod
-    def clear_cache(cls):
+    def clear_cache(cls) -> None:
         """Clear settings cache."""
         cache.delete(cls.CACHE_KEY)

@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.exceptions import ValidationError
 from datetime import date
+from decimal import Decimal
 
 
 class Budget(models.Model):
@@ -12,25 +13,25 @@ class Budget(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    def clean(self):
+    def clean(self) -> None:
         if self.start_date and self.start_date < date.today():
             # Allow past dates only if this budget has no months
             if hasattr(self, 'pk') and self.pk:
                 if self.month_set.exists():
                     raise ValidationError('Start date cannot be in the past when budget has existing months')
 
-    def can_be_deleted(self):
+    def can_be_deleted(self) -> bool:
         """Check if this budget can be deleted (no associated months)"""
         return not self.month_set.exists()
 
-    def get_current_balance(self):
+    def get_current_balance(self) -> Decimal:
         """
         Calculate current balance: initial_amount - total_committed
         
         Returns:
             Decimal: Current balance (positive = remaining, negative = overcommitted)
         """
-        from decimal import Decimal
+        # Decimal already imported at module level
         from django.db.models import Sum
         
         # Import here to avoid circular imports
@@ -46,7 +47,7 @@ class Budget(models.Model):
         # Return initial amount minus total committed
         return self.initial_amount - total_committed
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name
 
     class Meta:

@@ -1,5 +1,6 @@
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
+from typing import Optional, Dict, Union
 
 
 class Month(models.Model):
@@ -17,26 +18,26 @@ class Month(models.Model):
         unique_together = ['budget', 'year', 'month']
         ordering = ['-year', '-month']
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.year}-{self.month:02d}"
 
-    def has_paid_expenses(self):
+    def has_paid_expenses(self) -> bool:
         """Check if this month has any paid expense items"""
         return self.expenseitem_set.filter(status='paid').exists()
 
-    def can_be_deleted(self):
+    def can_be_deleted(self) -> bool:
         """Check if this month can be deleted (no paid expenses)"""
         return not self.has_paid_expenses()
 
     @classmethod
-    def get_most_recent(cls, budget=None):
+    def get_most_recent(cls, budget=None) -> Optional['Month']:
         """Get the most recent month in the system or for a specific budget"""
         if budget:
             return cls.objects.filter(budget=budget).first()
         return cls.objects.first()  # Due to ordering, first() returns most recent
 
     @classmethod
-    def get_next_allowed_month(cls, budget=None):
+    def get_next_allowed_month(cls, budget=None) -> Optional[Dict[str, int]]:
         """Calculate the next month that can be created"""
         most_recent = cls.get_most_recent(budget)
         if not most_recent:

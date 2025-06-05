@@ -6,10 +6,10 @@ class PaymentMethod(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name
 
-    def can_be_deleted(self):
+    def can_be_deleted(self) -> bool:
         """Check if this payment method can be deleted (not used in any expense items)"""
         return not self.expenseitem_set.exists()
 
