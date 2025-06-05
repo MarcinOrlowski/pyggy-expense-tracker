@@ -11,7 +11,12 @@ from django.test import TestCase, override_settings
 
 @override_settings(
     SASS_PROCESSOR_ENABLED=True,
-    SASS_PROCESSOR_AUTO_INCLUDE=True
+    SASS_PROCESSOR_AUTO_INCLUDE=True,
+    STATICFILES_FINDERS=[
+        'django.contrib.staticfiles.finders.FileSystemFinder',
+        'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+        'sass_processor.finders.CssFinder',
+    ]
 )
 class SCSSSassProcessorTest(TestCase):
     """Test SCSS auto-compilation functionality with django-sass-processor."""
