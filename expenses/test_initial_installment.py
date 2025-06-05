@@ -215,8 +215,10 @@ class InitialInstallmentServiceTest(TestCase):
         
         # Pay the last item - should be complete
         remaining_item = ExpenseItem.objects.filter(expense=expense, status='pending').first()
-        remaining_item.status = 'paid'
-        remaining_item.save()
+        self.assertIsNotNone(remaining_item)
+        if remaining_item is not None:
+            remaining_item.status = 'paid'
+            remaining_item.save()
         
         self.assertTrue(check_expense_completion(expense))
         expense.refresh_from_db()

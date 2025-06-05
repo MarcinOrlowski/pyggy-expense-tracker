@@ -116,7 +116,7 @@ class BudgetMonthRelationshipTest(TestCase):
             Month.objects.create(
                 year=2024,
                 month=2,
-                budget=None
+                budget=None  # type: ignore[misc]
             )
     
     def test_budget_month_relationship(self):
@@ -210,7 +210,7 @@ class ProcessNewMonthWithBudgetTest(TestCase):
         # This test documents that the function now requires a budget parameter
         # If called without a budget, it should raise TypeError
         with self.assertRaises(TypeError) as context:
-            process_new_month(2024, 1)  # Missing budget parameter
+            process_new_month(2024, 1)  # type: ignore[call-arg]  # Missing budget parameter
         
         self.assertIn("missing 1 required positional argument: 'budget'", str(context.exception))
     
@@ -591,13 +591,13 @@ class BudgetListViewTest(TestCase):
         
         # Simulate what the view does
         for budget in budgets:
-            budget.current_balance = budget.get_current_balance()
+            budget.current_balance = budget.get_current_balance()  # type: ignore[attr-defined]
         
         # Check that balance attribute was added
         for budget in budgets:
             self.assertTrue(hasattr(budget, 'current_balance'))
-            self.assertIsInstance(budget.current_balance, Decimal)
-            self.assertEqual(budget.current_balance, Decimal('1000.00'))
+            self.assertIsInstance(budget.current_balance, Decimal)  # type: ignore[attr-defined]
+            self.assertEqual(budget.current_balance, Decimal('1000.00'))  # type: ignore[attr-defined]
     
     def test_budget_list_view_with_expenses(self):
         """Test that budget list view calculates balance correctly with expenses."""
@@ -626,13 +626,13 @@ class BudgetListViewTest(TestCase):
         # Test the view logic (as fixed in the view)
         budgets = list(Budget.objects.all())
         for budget in budgets:
-            budget.current_balance = budget.get_current_balance()
+            budget.current_balance = budget.get_current_balance()  # type: ignore[attr-defined]
         
         budget = budgets[0]  # Should be our test budget
         
         # Check balance calculation
         expected_balance = Decimal('700.00')  # 1000 - 300
-        self.assertEqual(budget.current_balance, expected_balance)
+        self.assertEqual(budget.current_balance, expected_balance)  # type: ignore[attr-defined]
     
     def test_budget_list_template_rendering(self):
         """Test that budget list template can render with balance data."""
@@ -640,7 +640,7 @@ class BudgetListViewTest(TestCase):
         from django.template import Context, Template
         
         # Add balance to budget (simulating what the view does)
-        self.budget.current_balance = self.budget.get_current_balance()
+        self.budget.current_balance = self.budget.get_current_balance()  # type: ignore[attr-defined]
         
         # Test template rendering with new amount_with_class filter
         template_content = '''
@@ -666,7 +666,7 @@ class BudgetListViewTest(TestCase):
         from django.template import Context, Template
         
         # Set negative balance
-        self.budget.current_balance = Decimal('-100.00')
+        self.budget.current_balance = Decimal('-100.00')  # type: ignore[attr-defined]
         
         template_content = '''
         {% load currency_tags %}

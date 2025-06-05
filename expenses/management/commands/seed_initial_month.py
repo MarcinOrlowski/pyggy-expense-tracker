@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand
 from django.db import transaction
-from expenses.models import Month
+from expenses.models import Month, Budget
 from expenses.services import process_new_month
 
 
@@ -49,7 +49,11 @@ class Command(BaseCommand):
         
         try:
             with transaction.atomic():
-                month_obj = process_new_month(year, month)
+                # Get or create a default budget
+                budget, created = Budget.objects.get_or_create(
+                    defaults={'name': 'Default Budget', 'description': 'Default budget for initial setup'}
+                )
+                month_obj = process_new_month(year, month, budget)
                 self.stdout.write(
                     self.style.SUCCESS(
                         f'Successfully seeded initial month: {month_obj}'

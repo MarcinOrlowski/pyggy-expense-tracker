@@ -11,7 +11,7 @@ def budget_list(request):
     
     # Add balance calculation for each budget
     for budget in budgets:
-        budget.current_balance = budget.get_current_balance()
+        budget.current_balance = budget.get_current_balance()  # type: ignore[attr-defined]
     
     context = {
         'budgets': budgets,

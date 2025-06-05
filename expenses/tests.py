@@ -75,10 +75,11 @@ class SCSSSassProcessorTest(TestCase):
             "Static file finder should be able to locate the compiled CSS file"
         )
 
-        self.assertTrue(
-            os.path.exists(found_css),
-            f"Found CSS file should exist at {found_css}"
-        )
+        if found_css is not None:
+            self.assertTrue(
+                os.path.exists(found_css),
+                f"Found CSS file should exist at {found_css}"
+            )
 
     def test_scss_compilation_produces_valid_css(self):
         """Test that SCSS compilation produces valid CSS output."""

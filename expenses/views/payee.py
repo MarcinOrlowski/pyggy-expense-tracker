@@ -16,7 +16,7 @@ def payee_list(request):
     
     # Add expense count for each payee
     for payee in payees:
-        payee.expense_count = Expense.objects.filter(payee=payee).count()
+        payee.expense_count = Expense.objects.filter(payee=payee).count()  # type: ignore[attr-defined]
     
     context = {
         'payees': payees,

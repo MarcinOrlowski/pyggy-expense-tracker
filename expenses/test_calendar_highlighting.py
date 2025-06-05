@@ -15,7 +15,7 @@ class CalendarHighlightingTest(TestCase):
         # Clear any existing settings
         Settings.objects.all().delete()
         # Create test settings
-        self.settings = Settings.objects.create(
+        self.test_settings = Settings.objects.create(
             locale='en_US',
             currency='USD'
         )
@@ -222,7 +222,7 @@ class DashboardCalendarIntegrationTest(TestCase):
         """Set up test data."""
         # Clear any existing settings
         Settings.objects.all().delete()
-        self.settings = Settings.objects.create(
+        self.test_settings = Settings.objects.create(
             locale='en_US',
             currency='USD'
         )

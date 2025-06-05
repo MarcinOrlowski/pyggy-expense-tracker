@@ -110,8 +110,10 @@ class DueDateMonthProcessingTestCase(TestCase):
         
         # Item should be in February with correct due date
         item = items.first()
-        self.assertEqual(item.month, february_month)
-        self.assertEqual(item.due_date, date(2024, 2, 15))
+        self.assertIsNotNone(item)
+        if item is not None:
+            self.assertEqual(item.month, february_month)
+            self.assertEqual(item.due_date, date(2024, 2, 15))
     
     def test_recurring_expenses_still_use_started_at(self):
         """Test that recurring expenses still use started_at for month processing."""

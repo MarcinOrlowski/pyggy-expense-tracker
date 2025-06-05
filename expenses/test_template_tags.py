@@ -16,7 +16,7 @@ class CurrencyFilterTest(TestCase):
         # Clear any existing settings
         Settings.objects.all().delete()
         # Create test settings
-        self.settings = Settings.objects.create(
+        self.test_settings = Settings.objects.create(
             locale='en_US',
             currency='USD'
         )
@@ -77,9 +77,9 @@ class CurrencyFilterTest(TestCase):
     def test_currency_filter_with_different_locale(self):
         """Test currency filter with different locale settings."""
         # Change settings to Euro
-        self.settings.locale = 'de_DE'
-        self.settings.currency = 'EUR'
-        self.settings.save()
+        self.test_settings.locale = 'de_DE'
+        self.test_settings.currency = 'EUR'
+        self.test_settings.save()
         
         # Clear cache to ensure new settings are used
         SettingsService.clear_cache()
@@ -96,7 +96,7 @@ class CurrencySymbolTagTest(TestCase):
     def setUp(self):
         """Set up test data."""
         Settings.objects.all().delete()
-        self.settings = Settings.objects.create(
+        self.test_settings = Settings.objects.create(
             locale='en_US',
             currency='USD'
         )
@@ -108,8 +108,8 @@ class CurrencySymbolTagTest(TestCase):
     
     def test_currency_symbol_eur(self):
         """Test currency symbol for EUR."""
-        self.settings.currency = 'EUR'
-        self.settings.save()
+        self.test_settings.currency = 'EUR'
+        self.test_settings.save()
         SettingsService.clear_cache()
         
         result = currency_symbol()
@@ -117,9 +117,9 @@ class CurrencySymbolTagTest(TestCase):
     
     def test_currency_symbol_gbp(self):
         """Test currency symbol for GBP."""
-        self.settings.currency = 'GBP'
-        self.settings.locale = 'en_GB'
-        self.settings.save()
+        self.test_settings.currency = 'GBP'
+        self.test_settings.locale = 'en_GB'
+        self.test_settings.save()
         SettingsService.clear_cache()
         
         result = currency_symbol()
@@ -127,9 +127,9 @@ class CurrencySymbolTagTest(TestCase):
     
     def test_currency_symbol_jpy(self):
         """Test currency symbol for JPY."""
-        self.settings.currency = 'JPY'
-        self.settings.locale = 'ja_JP'
-        self.settings.save()
+        self.test_settings.currency = 'JPY'
+        self.test_settings.locale = 'ja_JP'
+        self.test_settings.save()
         SettingsService.clear_cache()
         
         result = currency_symbol()
@@ -147,8 +147,8 @@ class CurrencySymbolTagTest(TestCase):
     
     def test_currency_symbol_with_invalid_currency(self):
         """Test currency symbol with invalid currency code."""
-        self.settings.currency = 'XXX'  # Invalid currency code
-        self.settings.save()
+        self.test_settings.currency = 'XXX'  # Invalid currency code
+        self.test_settings.save()
         SettingsService.clear_cache()
         
         result = currency_symbol()
@@ -169,7 +169,7 @@ class FormatAmountTagTest(TestCase):
     def setUp(self):
         """Set up test data."""
         Settings.objects.all().delete()
-        self.settings = Settings.objects.create(
+        self.test_settings = Settings.objects.create(
             locale='en_US',
             currency='USD'
         )
@@ -225,9 +225,9 @@ class FormatAmountTagTest(TestCase):
     def test_format_amount_with_different_locale(self):
         """Test format_amount with different locale."""
         # Change to French locale
-        self.settings.locale = 'fr_FR'
-        self.settings.currency = 'EUR'
-        self.settings.save()
+        self.test_settings.locale = 'fr_FR'
+        self.test_settings.currency = 'EUR'
+        self.test_settings.save()
         SettingsService.clear_cache()
         
         result = format_amount(Decimal('1234.56'))
@@ -251,7 +251,7 @@ class TemplateTagIntegrationTest(TestCase):
     def setUp(self):
         """Set up test data."""
         Settings.objects.all().delete()
-        self.settings = Settings.objects.create(
+        self.test_settings = Settings.objects.create(
             locale='en_US',
             currency='USD'
         )
@@ -287,9 +287,9 @@ class TemplateTagIntegrationTest(TestCase):
         self.assertIn('$ - $100.00', result1)
         
         # Change to GBP
-        self.settings.currency = 'GBP'
-        self.settings.locale = 'en_GB'
-        self.settings.save()
+        self.test_settings.currency = 'GBP'
+        self.test_settings.locale = 'en_GB'
+        self.test_settings.save()
         SettingsService.clear_cache()
         
         # Re-render with same context
@@ -304,7 +304,7 @@ class AmountWithClassFilterTest(TestCase):
     def setUp(self):
         """Set up test data."""
         Settings.objects.all().delete()
-        self.settings = Settings.objects.create(
+        self.test_settings = Settings.objects.create(
             locale='en_US',
             currency='USD'
         )
@@ -361,9 +361,9 @@ class AmountWithClassFilterTest(TestCase):
     def test_amount_with_class_with_different_locale(self):
         """Test amount_with_class filter with different locale settings."""
         # Change settings to Euro
-        self.settings.locale = 'de_DE'
-        self.settings.currency = 'EUR'
-        self.settings.save()
+        self.test_settings.locale = 'de_DE'
+        self.test_settings.currency = 'EUR'
+        self.test_settings.save()
         
         # Clear cache to ensure new settings are used
         SettingsService.clear_cache()
