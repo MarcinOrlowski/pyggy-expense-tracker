@@ -2,6 +2,7 @@
 
 ## @dev
 
+- [#0096] Fixed calendar weekday highlighting to only appear when viewing current month
 - [#0099] Added payment methods management UI with full CRUD operations
 - [#0095] Fixed budget dashboard edit action to redirect to expense item editing instead of expense editing
 - [#0095] Enhanced expense item editing to allow modification of both amount and due date (restricted to same month)
