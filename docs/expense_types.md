@@ -105,18 +105,22 @@ closes.
 Ask yourself these questions:
 
 1. **Is this a one-time expense?**
-  - Yes → **One Time**
 
-2. **Is this a recurring expense?**
-  - Yes, continue to question 3
+- Yes → **One Time**
 
-3. **Do you know when it will end?**
-  - No → **Endless Recurring**
-  - Yes, continue to question 4
+1. **Is this a recurring expense?**
 
-4. **Do you know the exact number of payments?**
-  - Yes → **Split Payment**
-  - No, but I know the end date → **Recurring with End Date**
+- Yes, continue to question 3
+
+1. **Do you know when it will end?**
+
+- No → **Endless Recurring**
+- Yes, continue to question 4
+
+1. **Do you know the exact number of payments?**
+
+- Yes → **Split Payment**
+- No, but I know the end date → **Recurring with End Date**
 
 ### Common Scenarios
 

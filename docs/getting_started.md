@@ -24,10 +24,10 @@ expenses, business costs, or household bills.
 1. **Navigate to Budgets**: Click "Budgets" in the main navigation
 2. **Add New Budget**: Click the "Add Budget" button
 3. **Fill in Details**:
-  - **Name**: Choose something descriptive like "Personal Expenses" or "Household Bills"
-  - **Initial Amount**: Enter your starting budget balance (e.g., 0.00 for new tracking, positive
-    for available funds, or negative if starting with a deficit)
-  - **Description**: Add optional notes about this budget's purpose
+   - **Name**: Choose something descriptive like "Personal Expenses" or "Household Bills"
+   - **Initial Amount**: Enter your starting budget balance (e.g., 0.00 for new tracking, positive
+       for available funds, or negative if starting with a deficit)
+   - **Description**: Add optional notes about this budget's purpose
 4. **Save**: Click "Save" to create your budget
 
 *Note: The initial amount is your starting budget balance. Use 0.00 if starting fresh, positive
@@ -39,10 +39,10 @@ Before adding expenses, set up how you typically pay bills.
 
 1. **Navigate to Payment Methods**: Click "Payment Methods" in the navigation
 2. **Add Common Methods**: Create entries like:
-  - "Bank Transfer"
-  - "Credit Card"
-  - "Cash"
-  - "Check"
+   - "Bank Transfer"
+   - "Credit Card"
+   - "Cash"
+   - "Check"
 3. **For each method**: Just enter a name and optional description
 
 ### Step 4: Add Your First Payee
@@ -52,8 +52,8 @@ Payees are who you pay money to - landlords, utility companies, subscription ser
 1. **Navigate to Payees**: Click "Payees" in the navigation
 2. **Add New Payee**: Click "Add Payee"
 3. **Enter Details**:
-  - **Name**: Company or person name (e.g., "Electric Company", "Netflix")
-  - **Description**: Optional notes about this payee
+   - **Name**: Company or person name (e.g., "Electric Company", "Netflix")
+   - **Description**: Optional notes about this payee
 
 ### Step 5: Create Your First Expense
 
@@ -62,17 +62,17 @@ Now you'll create an expense - this defines what you need to pay regularly.
 1. **Navigate to Expenses**: Click "Expenses" in the navigation
 2. **Add New Expense**: Click "Add Expense"
 3. **Choose Expense Details**:
-  - **Budget**: Select the budget you created
-  - **Payee**: Select the payee you created
-  - **Name**: Descriptive name (e.g., "Monthly Rent", "Netflix Subscription")
-  - **Amount**: How much you pay each time
-  - **Expense Type**: Choose from:
-    - **Endless Recurring**: Bills that continue indefinitely (rent, utilities)
-    - **One Time**: Single payments (one-off purchases)
-    - **Split Payment**: Fixed installments (loan payments)
-    - **Recurring with End**: Limited-time recurring (gym membership with end date)
-  - **Start Date**: When this expense begins (defaults to current month)
-  - **Day of Month**: Which day of the month it's due (e.g., 1st, 15th)
+   - **Budget**: Select the budget you created
+   - **Payee**: Select the payee you created
+   - **Name**: Descriptive name (e.g., "Monthly Rent", "Netflix Subscription")
+   - **Amount**: How much you pay each time
+   - **Expense Type**: Choose from:
+     - **Endless Recurring**: Bills that continue indefinitely (rent, utilities)
+     - **One Time**: Single payments (one-off purchases)
+     - **Split Payment**: Fixed installments (loan payments)
+     - **Recurring with End**: Limited-time recurring (gym membership with end date)
+   - **Start Date**: When this expense begins (defaults to current month)
+   - **Day of Month**: Which day of the month it's due (e.g., 1st, 15th)
 
 4. **Save the Expense**
 
@@ -84,10 +84,11 @@ Return to the dashboard to see your expense tracking in action:
 
 1. **Click "Dashboard"** in the navigation
 2. **Review the Month Summary**:
-  - Total budgeted amount
-  - Total expenses created
-  - Amount paid so far
-  - Remaining balance
+   - Total budgeted amount
+   - Total expenses created
+   - Amount paid so far
+   - Remaining balance
+
 3. **Check Expense Items**: See the monthly instances of your expenses
 
 ### Step 7: Record a Payment
@@ -97,9 +98,10 @@ When you actually pay a bill, record it in PyGGy:
 1. **Find the Expense Item**: On the dashboard, locate the expense item
 2. **Click "Pay"**: Click the payment button next to the expense
 3. **Enter Payment Details**:
-  - **Payment Date**: When you made the payment (defaults to today)
-  - **Payment Method**: How you paid (select from your payment methods)
-  - **Amount**: Confirm the payment amount
+   - **Payment Date**: When you made the payment (defaults to today)
+   - **Payment Method**: How you paid (select from your payment methods)
+   - **Amount**: Confirm the payment amount
+
 4. **Save**: Record the payment
 
 The expense item will now show as "Paid" and your dashboard totals will update.
@@ -138,7 +140,3 @@ Now that you've completed the basic workflow:
 - **Missing expense items?** Recurring expenses only create items for the current month initially
 - **Want to modify an expense?** You can edit most expense details, but some restrictions apply to
   prevent data inconsistency
-
----
-
-*Ready to dive deeper? Explore the other documentation topics to master PyGGy's full capabilities.*

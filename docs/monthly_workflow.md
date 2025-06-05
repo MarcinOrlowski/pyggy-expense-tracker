@@ -96,9 +96,9 @@ Each expense item shows:
 1. **Find the Expense Item**: On dashboard or month detail
 2. **Click Pay Button**: Start payment recording process
 3. **Enter Payment Details**:
-  - **Payment Date**: When you actually paid (defaults to today)
-  - **Payment Method**: How you paid (select from your methods)
-  - **Amount**: Confirm payment amount (usually matches expense)
+   - **Payment Date**: When you actually paid (defaults to today)
+   - **Payment Method**: How you paid (select from your methods)
+   - **Amount**: Confirm payment amount (usually matches expense)
 4. **Save Payment**: Complete the payment record
 
 ### Payment Information Tracked

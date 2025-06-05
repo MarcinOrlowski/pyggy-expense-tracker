@@ -20,9 +20,10 @@ Budgets are organizational tools that:
 1. **Navigate to Budgets**: Click "Budgets" in the main navigation
 2. **Add New Budget**: Click the "Add Budget" button
 3. **Fill in the details**:
-  - **Name**: Choose a clear, descriptive name
-  - **Initial Amount**: Set your monthly budget target
-  - **Description**: Add optional context about this budget's purpose
+
+- **Name**: Choose a clear, descriptive name
+- **Initial Amount**: Set your monthly budget target
+- **Description**: Add optional context about this budget's purpose
 
 ### Budget Fields Explained
 
@@ -48,7 +49,7 @@ works well for:
 
 #### By Expense Category
 
-```
+```text
 - Household Bills (rent, utilities, insurance)
 - Personal Expenses (food, entertainment, subscriptions)
 - Transportation (car payment, gas, maintenance)
@@ -57,7 +58,7 @@ works well for:
 
 #### By Financial Stream
 
-```
+```text
 - Personal Budget (individual spending)
 - Joint Budget (shared household expenses)
 - Business Expenses (work-related costs)
@@ -66,7 +67,7 @@ works well for:
 
 #### By Family Member
 
-```
+```text
 - John's Expenses
 - Jane's Expenses
 - Shared Family Expenses
@@ -75,7 +76,7 @@ works well for:
 
 #### By Priority Level
 
-```
+```text
 - Essential Expenses (rent, utilities, insurance)
 - Important Expenses (groceries, transportation)
 - Discretionary Expenses (entertainment, subscriptions)
