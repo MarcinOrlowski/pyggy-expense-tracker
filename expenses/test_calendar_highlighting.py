@@ -236,7 +236,7 @@ class DashboardCalendarIntegrationTest(TestCase):
         
         self.client = Client()
     
-    @patch('expenses.views.date')
+    @patch('expenses.views.dashboard.date')
     def test_dashboard_calendar_highlighting_current_month(self, mock_date):
         """Test dashboard shows correct weekday highlighting for current month."""
         # Mock today as Wednesday, January 17, 2024
@@ -264,7 +264,7 @@ class DashboardCalendarIntegrationTest(TestCase):
         content = response.content.decode()
         self.assertIn('calendar-weekday--today', content)
     
-    @patch('expenses.views.date')
+    @patch('expenses.views.dashboard.date')
     def test_dashboard_calendar_highlighting_different_month(self, mock_date):
         """Test dashboard shows no weekday highlighting when viewing different month."""
         # Mock today as Wednesday, January 17, 2024
