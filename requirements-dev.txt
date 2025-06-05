@@ -8,3 +8,5 @@ setuptools
 twine
 faker
 flake8
+mypy
+django-stubs
