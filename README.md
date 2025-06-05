@@ -182,9 +182,3 @@ Run Django tests:
 ```bash
 python manage.py test
 ```
-
-### Database
-
-The project uses SQLite by default but is designed to work with PostgreSQL.
-Database configuration is in `pyggy/settings.py`.
-

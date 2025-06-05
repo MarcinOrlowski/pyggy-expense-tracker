@@ -1,39 +1,41 @@
 {% extends 'expenses/base.html' %}
 
-{% block title %}Payment Methods {% endblock %}
+{% block title %}Payment Methods{% endblock %}
 
 {% block content %}
 <h1><i class="fas fa-credit-card"></i> Payment Methods</h1>
 
 <div class="card">
-    <div class="card-header">All Payment Methods ({{ payment_methods|length }})</div>
+    <div class="card-header">
+        All Payment Methods ({{ payment_methods|length }})
+        <span class="card-header-action">
+            <a href="{% url 'payment_method_create' %}" class="btn"><i class="fas fa-circle-plus icon-left"></i>Add New Payment Method</a>
+        </span>
+    </div>
     <div class="card-body">
         {% if payment_methods %}
             <table class="table">
                 <thead>
                     <tr>
                         <th>Name</th>
-                        <th>Created</th>
+                        <th class="actions-column">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for method in payment_methods %}
                     <tr>
-                        <td>{{ method.name }}</td>
-                        <td>{{ method.created_at|date:"Y-m-d" }}</td>
+                        <td><a href="{% url 'payment_method_edit' method.pk %}">{{ method.name }}</a></td>
+                        <td class="actions-column">
+                            <a href="{% url 'payment_method_edit' method.pk %}" class="btn btn-sm" title="Edit Payment Method" aria-label="Edit Payment Method"><i class="fas fa-pen-to-square"></i></a>
+                            <a href="{% url 'payment_method_delete' method.pk %}" class="btn btn-sm btn-danger" title="Delete Payment Method" aria-label="Delete Payment Method"><i class="fas fa-trash-can"></i></a>
+                        </td>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
         {% else %}
-            <p>No payment methods found. You can add payment methods through the Django admin interface.</p>
+            <p>No payment methods found. <a href="{% url 'payment_method_create' %}"><i class="fas fa-circle-plus icon-left"></i>Create your first payment method</a>.</p>
         {% endif %}
-    </div>
-</div>
-
-<div class="card">
-    <div class="card-body">
-        <a href="/admin/expenses/paymentmethod/" class="btn"><i class="fas fa-user-shield icon-left"></i>Manage Payment Methods (Admin)</a>
     </div>
 </div>
 {% endblock %}
