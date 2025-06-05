@@ -264,7 +264,6 @@ class BudgetForm(forms.ModelForm):
     initial_amount = SanitizedDecimalField(
         max_digits=10,
         decimal_places=2,
-        min_value=0,
         widget=forms.TextInput(attrs={
             'placeholder': '100.00, 100,00, $100.00, €100,00',
             'class': 'form-control'

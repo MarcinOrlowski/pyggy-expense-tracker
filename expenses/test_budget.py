@@ -50,15 +50,32 @@ class BudgetModelTest(TestCase):
         )
         self.assertEqual(budget.initial_amount, Decimal('0'))
     
-    def test_budget_negative_initial_amount_validation(self):
-        """Test that negative initial amounts are not allowed."""
+    def test_budget_negative_initial_amount_allowed(self):
+        """Test that negative initial amounts are allowed."""
         budget = Budget(
-            name='Invalid Budget',
+            name='Deficit Budget',
             start_date=date(2024, 1, 1),
             initial_amount=Decimal('-100.00')
         )
-        with self.assertRaises(ValidationError):
-            budget.full_clean()
+        budget.full_clean()  # Should not raise ValidationError
+        budget.save()
+        self.assertEqual(budget.initial_amount, Decimal('-100.00'))
+    
+    def test_budget_form_negative_initial_amount(self):
+        """Test that BudgetForm accepts negative initial amounts."""
+        from expenses.forms import BudgetForm
+        
+        form_data = {
+            'name': 'Test Negative Budget',
+            'start_date': '2024-06-01',
+            'initial_amount': '-250.50'
+        }
+        
+        form = BudgetForm(data=form_data)
+        self.assertTrue(form.is_valid(), f"Form should be valid but got errors: {form.errors}")
+        
+        budget = form.save()
+        self.assertEqual(budget.initial_amount, Decimal('-250.50'))
 
 
 class BudgetMonthRelationshipTest(TestCase):

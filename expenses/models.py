@@ -11,8 +11,7 @@ class Budget(models.Model):
     name = models.CharField(max_length=100)
     start_date = models.DateField()
     initial_amount = models.DecimalField(
-        max_digits=10, decimal_places=2, default=0,
-        validators=[MinValueValidator(0)]
+        max_digits=10, decimal_places=2, default=0
     )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

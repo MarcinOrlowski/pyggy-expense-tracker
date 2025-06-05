@@ -2,6 +2,7 @@
 
 ## @dev
 
+- [#0105] Allow negative initial values for budget creation and editing to support deficit tracking
 - [#0104] Added balance column to month list view showing total amount for each month
 - [#0096] Fixed calendar weekday highlighting to only appear when viewing current month
 - [#0099] Added payment methods management UI with full CRUD operations
