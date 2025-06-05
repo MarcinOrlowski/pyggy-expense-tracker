@@ -26,14 +26,16 @@ By default, Django shows detailed debug pages when `DEBUG = True`. To test user-
 ### Error Page Types
 
 #### 1. General 404 Error Page
+
 - **Template**: `expenses/templates/404.html`
 - **Handler**: `expenses.views.custom_404`
-- **Test URLs**: 
+- **Test URLs**:
   - `/budgets/999/dashboard/` (non-existent budget)
   - `/invalid-url/`
   - `/budgets/1/expenses/999/` (non-existent expense)
 
 #### 2. Help System Error Pages
+
 - **Template**: `expenses/templates/expenses/help_page.html` (with error styling)
 - **Handler**: `expenses.views._render_help_error`
 - **Test URLs**:
@@ -43,12 +45,14 @@ By default, Django shows detailed debug pages when `DEBUG = True`. To test user-
 ## Error Page Features
 
 ### General 404 Page
+
 - Clean, branded design matching the application
 - Helpful explanations of why the error occurred
 - Navigation buttons to return to safety (Budget List, Help)
 - Mobile-responsive design
 
 ### Help System Error Pages
+
 - Context-aware error messages
 - Navigation back to Help Index or documentation listing
 - Maintains help system styling and layout
