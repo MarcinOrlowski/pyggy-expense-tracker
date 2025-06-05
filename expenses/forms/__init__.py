@@ -7,10 +7,10 @@ from .payment_method import PaymentMethodForm
 
 # Make all form classes available when importing from expenses.forms
 __all__ = [
-    'ExpenseForm',
-    'PaymentForm',
-    'ExpenseItemEditForm', 
-    'PayeeForm',
-    'BudgetForm',
-    'PaymentMethodForm',
+    "ExpenseForm",
+    "PaymentForm",
+    "ExpenseItemEditForm",
+    "PayeeForm",
+    "BudgetForm",
+    "PaymentMethodForm",
 ]

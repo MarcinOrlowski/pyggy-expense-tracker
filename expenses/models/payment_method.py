@@ -14,4 +14,4 @@ class PaymentMethod(models.Model):
         return not self.expenseitem_set.exists()
 
     class Meta:
-        ordering = ['name']
+        ordering = ["name"]

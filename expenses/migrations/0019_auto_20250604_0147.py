@@ -8,13 +8,13 @@ def migrate_expense_fields_forward(apps, schema_editor):
     """
     Migrate existing expense data to new field structure:
     1. started_at -> start_date (rename)
-    2. total_amount -> amount (rename) 
+    2. total_amount -> amount (rename)
     3. installments_count -> total_parts (rename)
     4. initial_installment -> skip_parts (rename)
     5. Add day_of_month from start_date.day
     """
-    Expense = apps.get_model('expenses', 'Expense')
-    
+    Expense = apps.get_model("expenses", "Expense")
+
     for expense in Expense.objects.all():
         # Set day_of_month from start_date
         expense.day_of_month = expense.start_date.day
@@ -29,93 +29,94 @@ def migrate_expense_fields_reverse(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('expenses', '0018_remove_expense_due_date'),
+        ("expenses", "0018_remove_expense_due_date"),
     ]
 
     operations = [
         # Step 1: Add new fields as nullable initially
         migrations.AddField(
-            model_name='expense',
-            name='day_of_month',
+            model_name="expense",
+            name="day_of_month",
             field=models.PositiveIntegerField(
                 null=True,
                 validators=[MinValueValidator(1), MaxValueValidator(31)],
-                help_text='Day of month when payment is due (fallback logic for shorter months)'
+                help_text="Day of month when payment is due (fallback logic for shorter months)",
             ),
         ),
-        
         # Step 2: Rename existing fields
         migrations.RenameField(
-            model_name='expense',
-            old_name='started_at',
-            new_name='start_date',
+            model_name="expense",
+            old_name="started_at",
+            new_name="start_date",
         ),
         migrations.RenameField(
-            model_name='expense',
-            old_name='total_amount',
-            new_name='amount',
+            model_name="expense",
+            old_name="total_amount",
+            new_name="amount",
         ),
         migrations.RenameField(
-            model_name='expense',
-            old_name='installments_count',
-            new_name='total_parts',
+            model_name="expense",
+            old_name="installments_count",
+            new_name="total_parts",
         ),
         migrations.RenameField(
-            model_name='expense',
-            old_name='initial_installment',
-            new_name='skip_parts',
+            model_name="expense",
+            old_name="initial_installment",
+            new_name="skip_parts",
         ),
-        
         # Step 3: Populate new fields with data
-        migrations.RunPython(migrate_expense_fields_forward, migrate_expense_fields_reverse),
-        
+        migrations.RunPython(
+            migrate_expense_fields_forward, migrate_expense_fields_reverse
+        ),
         # Step 4: Make new fields non-nullable and update help text
         migrations.AlterField(
-            model_name='expense',
-            name='day_of_month',
+            model_name="expense",
+            name="day_of_month",
             field=models.PositiveIntegerField(
                 validators=[MinValueValidator(1), MaxValueValidator(31)],
-                help_text='Day of month when payment is due (fallback logic for shorter months)'
+                help_text="Day of month when payment is due (fallback logic for shorter months)",
             ),
         ),
         migrations.AlterField(
-            model_name='expense',
-            name='amount',
+            model_name="expense",
+            name="amount",
             field=models.DecimalField(
-                max_digits=13, decimal_places=2,
+                max_digits=13,
+                decimal_places=2,
                 validators=[MinValueValidator(0.01)],
-                help_text='Per-installment amount for split payments, total amount for others'
+                help_text="Per-installment amount for split payments, total amount for others",
             ),
         ),
         migrations.AlterField(
-            model_name='expense',
-            name='start_date',
+            model_name="expense",
+            name="start_date",
             field=models.DateField(
-                help_text='When this expense schedule begins (renamed from started_at)'
+                help_text="When this expense schedule begins (renamed from started_at)"
             ),
         ),
         migrations.AlterField(
-            model_name='expense',
-            name='total_parts',
+            model_name="expense",
+            name="total_parts",
             field=models.PositiveIntegerField(
                 default=0,
-                help_text='Total number of installments for split payments (renamed from installments_count)'
+                help_text="Total number of installments for split payments (renamed from installments_count)",
             ),
         ),
         migrations.AlterField(
-            model_name='expense',
-            name='skip_parts',
+            model_name="expense",
+            name="skip_parts",
             field=models.PositiveIntegerField(
                 default=0,
-                help_text='Number of initial parts to skip - for tracking remaining payments (renamed from initial_installment)'
+                help_text="Number of initial parts to skip - for tracking remaining payments (renamed from initial_installment)",
             ),
         ),
         migrations.AlterField(
-            model_name='expense',
-            name='end_date',
+            model_name="expense",
+            name="end_date",
             field=models.DateField(
-                null=True, blank=True,
-                help_text='Last month to create charges (only for recurring_with_end type)'
+                null=True,
+                blank=True,
+                help_text="Last month to create charges (only for recurring_with_end type)",
             ),
         ),
     ]

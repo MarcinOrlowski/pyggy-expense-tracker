@@ -5,7 +5,7 @@ from django.db import migrations, models
 
 def populate_due_dates(apps, schema_editor):
     """Populate due_date with started_at values for existing expenses"""
-    Expense = apps.get_model('expenses', 'Expense')
+    Expense = apps.get_model("expenses", "Expense")
     for expense in Expense.objects.all():
         expense.due_date = expense.started_at
         expense.save()
@@ -19,19 +19,19 @@ def reverse_populate_due_dates(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('expenses', '0016_expense_budget'),
+        ("expenses", "0016_expense_budget"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='expense',
-            name='due_date',
-            field=models.DateField(help_text='Due date for expense', null=True),
+            model_name="expense",
+            name="due_date",
+            field=models.DateField(help_text="Due date for expense", null=True),
         ),
         migrations.RunPython(populate_due_dates, reverse_populate_due_dates),
         migrations.AlterField(
-            model_name='expense',
-            name='due_date',
-            field=models.DateField(help_text='Due date for expense'),
+            model_name="expense",
+            name="due_date",
+            field=models.DateField(help_text="Due date for expense"),
         ),
     ]

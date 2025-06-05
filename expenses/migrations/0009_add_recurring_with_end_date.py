@@ -6,18 +6,26 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('expenses', '0008_expense_notes'),
+        ("expenses", "0008_expense_notes"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='expense',
-            name='end_date',
+            model_name="expense",
+            name="end_date",
             field=models.DateField(blank=True, null=True),
         ),
         migrations.AlterField(
-            model_name='expense',
-            name='expense_type',
-            field=models.CharField(choices=[('endless_recurring', 'Endless Recurring'), ('split_payment', 'Split Payment'), ('one_time', 'One Time'), ('recurring_with_end', 'Recurring with End Date')], max_length=20),
+            model_name="expense",
+            name="expense_type",
+            field=models.CharField(
+                choices=[
+                    ("endless_recurring", "Endless Recurring"),
+                    ("split_payment", "Split Payment"),
+                    ("one_time", "One Time"),
+                    ("recurring_with_end", "Recurring with End Date"),
+                ],
+                max_length=20,
+            ),
         ),
     ]

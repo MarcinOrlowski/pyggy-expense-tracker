@@ -6,13 +6,17 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('expenses', '0007_add_settings_model'),
+        ("expenses", "0007_add_settings_model"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='expense',
-            name='notes',
-            field=models.TextField(blank=True, help_text='Optional notes or additional context about this expense', null=True),
+            model_name="expense",
+            name="notes",
+            field=models.TextField(
+                blank=True,
+                help_text="Optional notes or additional context about this expense",
+                null=True,
+            ),
         ),
     ]
