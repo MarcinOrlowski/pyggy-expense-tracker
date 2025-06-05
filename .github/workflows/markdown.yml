@@ -29,7 +29,6 @@ jobs:
             docs:
               - 'README.md'
               - 'docs/*.md'
-              - 'project/*.md'
 
       # https://github.com/marketplace/actions/my-markdown-linter
       - name: "Running markdown linter..."
@@ -39,4 +38,5 @@ jobs:
           exclude: |
             # LICENSE is externally sourced and we're not going to fix it.
             "LICENSE.md"
+            "project/"
           config_file: .markdownlint.yaml.dist
