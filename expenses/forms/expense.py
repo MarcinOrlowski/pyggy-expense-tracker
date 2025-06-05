@@ -88,6 +88,16 @@ class ExpenseForm(forms.ModelForm):
         if hasattr(payee_field, "empty_label"):
             payee_field.empty_label = "Select payee (optional)"  # type: ignore[attr-defined]
 
+        # Set default values for new expense creation
+        if not self.instance.pk:  # Only for new expenses, not edits
+            # Set default expense type to "one_time"
+            if not self.fields["expense_type"].initial:
+                self.fields["expense_type"].initial = Expense.TYPE_ONE_TIME
+            
+            # Set default start date to current date
+            if not self.fields["start_date"].initial:
+                self.fields["start_date"].initial = date.today()
+
         # Update amount field attributes for split payments
         self.fields["amount"].widget.attrs.update(
             {
