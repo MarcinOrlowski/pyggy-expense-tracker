@@ -5,7 +5,7 @@ from django.db.models import Q
 from django.utils import timezone
 from datetime import datetime, date
 from .models import Expense, ExpenseItem, Month, Payee, PaymentMethod, Budget
-from .forms import ExpenseForm, PaymentForm, PayeeForm, BudgetForm, ExpenseItemEditForm
+from .forms import ExpenseForm, PaymentForm, PayeeForm, BudgetForm, ExpenseItemEditForm, PaymentMethodForm
 
 
 def dashboard(request, budget_id):
@@ -533,6 +533,66 @@ def payment_method_list(request):
         'payment_methods': payment_methods,
     }
     return render(request, 'expenses/payment_method_list.html', context)
+
+
+def payment_method_create(request):
+    """Create a new payment method"""
+    if request.method == 'POST':
+        form = PaymentMethodForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Payment method created successfully.')
+            return redirect('payment_method_list')
+    else:
+        form = PaymentMethodForm()
+    
+    context = {
+        'form': form,
+        'title': 'Create Payment Method',
+    }
+    return render(request, 'expenses/payment_method_form.html', context)
+
+
+def payment_method_edit(request, pk):
+    """Edit an existing payment method"""
+    payment_method = get_object_or_404(PaymentMethod, pk=pk)
+    
+    if request.method == 'POST':
+        form = PaymentMethodForm(request.POST, instance=payment_method)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Payment method updated successfully.')
+            return redirect('payment_method_list')
+    else:
+        form = PaymentMethodForm(instance=payment_method)
+    
+    context = {
+        'form': form,
+        'payment_method': payment_method,
+        'title': 'Edit Payment Method',
+    }
+    return render(request, 'expenses/payment_method_form.html', context)
+
+
+def payment_method_delete(request, pk):
+    """Delete a payment method"""
+    payment_method = get_object_or_404(PaymentMethod, pk=pk)
+    
+    if request.method == 'POST':
+        if not payment_method.can_be_deleted():
+            expense_items_count = payment_method.expenseitem_set.count()
+            messages.error(request, f'Cannot delete payment method "{payment_method.name}" because it is used by {expense_items_count} expense item(s).')
+        else:
+            payment_method.delete()
+            messages.success(request, 'Payment method deleted successfully.')
+        return redirect('payment_method_list')
+    
+    context = {
+        'payment_method': payment_method,
+        'can_delete': payment_method.can_be_deleted(),
+        'expense_items_count': payment_method.expenseitem_set.count() if not payment_method.can_be_deleted() else 0,
+    }
+    return render(request, 'expenses/payment_method_confirm_delete.html', context)
 
 
 # Budget views

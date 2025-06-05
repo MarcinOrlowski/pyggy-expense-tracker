@@ -38,4 +38,7 @@ urlpatterns = [
     path('payees/<int:pk>/hide/', views.payee_hide, name='payee_hide'),
     path('payees/<int:pk>/unhide/', views.payee_unhide, name='payee_unhide'),
     path('payment-methods/', views.payment_method_list, name='payment_method_list'),
+    path('payment-methods/create/', views.payment_method_create, name='payment_method_create'),
+    path('payment-methods/<int:pk>/edit/', views.payment_method_edit, name='payment_method_edit'),
+    path('payment-methods/<int:pk>/delete/', views.payment_method_delete, name='payment_method_delete'),
 ]

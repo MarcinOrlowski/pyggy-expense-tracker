@@ -65,3 +65,5 @@ package-lock.json
 # Do not add trailing slash for .roo entry, it will not work for symlinked folders
 .roo
 .roomodes
+
+/.pre-commit-config.yaml

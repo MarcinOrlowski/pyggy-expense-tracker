@@ -344,3 +344,14 @@ class ExpenseItemEditForm(forms.ModelForm):
                 raise ValidationError(f'Due date must be within {month_name}')
         
         return due_date
+
+
+class PaymentMethodForm(forms.ModelForm):
+    """Form for creating and editing payment methods"""
+    
+    class Meta:
+        model = PaymentMethod
+        fields = ['name']
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter payment method name'}),
+        }

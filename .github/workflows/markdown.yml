@@ -27,7 +27,7 @@ jobs:
         with:
           filters: |
             docs:
-              - 'README.md'
+              - '*.md'
               - 'docs/*.md'
 
       # https://github.com/marketplace/actions/my-markdown-linter
@@ -35,7 +35,8 @@ jobs:
         uses: ruzickap/action-my-markdown-linter@v1
         if: steps.filter.outputs.docs == 'true'
         with:
+          # LICENSE is externally sourced and we're not going to fix it.
           exclude: |
-            # LICENSE is externally sourced and we're not going to fix it.
             "LICENSE.md"
+            "project/.*.md"
           config_file: .markdownlint.yaml.dist
