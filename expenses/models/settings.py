@@ -1,6 +1,6 @@
 from django.db import models
 from django.core.cache import cache
-from typing import Any
+from typing import Any, Tuple, Dict
 
 
 class Settings(models.Model):
@@ -32,9 +32,9 @@ class Settings(models.Model):
         # Clear cache when settings are saved
         cache.delete('app_settings')
 
-    def delete(self, *args: Any, **kwargs: Any) -> None:
+    def delete(self, *args: Any, **kwargs: Any) -> Tuple[int, Dict[str, int]]:
         """Prevent deletion of settings."""
-        pass
+        return (0, {})
 
     @classmethod
     def load(cls) -> 'Settings':

@@ -59,7 +59,7 @@ def create_expense_items_for_month(expense: Expense, month: Month) -> List[Expen
     - one_time: Create single item only in start month
     - recurring_with_end: Create one item per month until end date month
     """
-    items = []
+    items: List[ExpenseItem] = []
     expense_start_date = expense.start_date
 
     # Check if the expense is relevant for this month
@@ -87,19 +87,20 @@ def create_expense_items_for_month(expense: Expense, month: Month) -> List[Expen
 
     elif expense.expense_type == expense.TYPE_RECURRING_WITH_END:
         # Create one item per month until end date month (inclusive)
-        target_date = date(month.year, month.month, 1)
-        end_month_date = date(expense.end_date.year, expense.end_date.month, 1)
-        
-        if target_date <= end_month_date:
-            due_date = expense.get_due_date_for_month(month.year, month.month)
+        if expense.end_date is not None:
+            target_date = date(month.year, month.month, 1)
+            end_month_date = date(expense.end_date.year, expense.end_date.month, 1)
+            
+            if target_date <= end_month_date:
+                due_date = expense.get_due_date_for_month(month.year, month.month)
 
-            item = ExpenseItem.objects.create(
-                expense=expense,
-                month=month,
-                due_date=due_date,
-                amount=expense.amount
-            )
-            items.append(item)
+                item = ExpenseItem.objects.create(
+                    expense=expense,
+                    month=month,
+                    due_date=due_date,
+                    amount=expense.amount
+                )
+                items.append(item)
 
     elif expense.expense_type == expense.TYPE_SPLIT_PAYMENT:
         # Check how many items we've already created
@@ -212,7 +213,7 @@ class SettingsService:
         if settings is None:
             settings = Settings.load()
             cache.set(cls.CACHE_KEY, settings, cls.CACHE_TIMEOUT)
-        return settings
+        return settings  # type: ignore[no-any-return]
     
     @classmethod
     def get_currency(cls) -> str:

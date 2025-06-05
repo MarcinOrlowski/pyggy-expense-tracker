@@ -52,8 +52,8 @@ def dashboard(request, budget_id):
         if has_overdue and current_date.month == current_month.month and current_date.year == current_month.year:
             due_days.add(current_date.day)
     else:
-        # No months exist in the system
-        all_expense_items = []
+        # No months exist in the system  
+        all_expense_items = ExpenseItem.objects.none()
         pending_items = []
         paid_items = []
         total_pending = 0

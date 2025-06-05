@@ -10,3 +10,4 @@ faker
 flake8
 mypy
 django-stubs
+types-Markdown

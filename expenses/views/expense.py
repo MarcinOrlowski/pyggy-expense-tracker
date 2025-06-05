@@ -103,7 +103,9 @@ def expense_edit(request, budget_id, pk):
     # Check if expense can be edited
     if not expense.can_be_edited():
         restrictions = expense.get_edit_restrictions()
-        messages.error(request, f'This expense cannot be edited. {" ".join(restrictions["reasons"])}')
+        reasons = restrictions["reasons"]
+        reason_text = " ".join(reasons) if isinstance(reasons, list) else str(reasons)
+        messages.error(request, f'This expense cannot be edited. {reason_text}')
         return redirect('expense_detail', budget_id=budget_id, pk=expense.pk)
     
     if request.method == 'POST':

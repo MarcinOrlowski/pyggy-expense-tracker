@@ -4,7 +4,7 @@ from django.core.exceptions import ValidationError
 from django.utils import timezone
 from datetime import date
 from decimal import Decimal
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Any, Union
 import calendar
 
 
@@ -272,30 +272,33 @@ class Expense(models.Model):
         else:
             return date(most_recent_month.year, most_recent_month.month + 1, 1)
 
-    def get_edit_restrictions(self) -> Dict[str, object]:
+    def get_edit_restrictions(self) -> Dict[str, Union[bool, List[str]]]:
         """Get detailed information about edit restrictions"""
-        restrictions = {
+        restrictions: Dict[str, Union[bool, List[str]]] = {
             'can_edit': self.can_be_edited(),
             'can_edit_amount': self.can_edit_amount(),
             'can_edit_date': self.can_edit_date(),
             'reasons': []
         }
 
+        reasons_list = restrictions['reasons']
+        assert isinstance(reasons_list, list)  # Type narrowing for mypy
+        
         if self.closed_at:
-            restrictions['reasons'].append('Expense is closed')
+            reasons_list.append('Expense is closed')
 
         if self.expense_type == self.TYPE_SPLIT_PAYMENT:
-            restrictions['reasons'].append('Split payment expenses cannot be edited')
+            reasons_list.append('Split payment expenses cannot be edited')
         elif self.expense_type == self.TYPE_RECURRING_WITH_END:
-            restrictions['reasons'].append('Recurring expenses with end date cannot be edited')
+            reasons_list.append('Recurring expenses with end date cannot be edited')
 
         if restrictions['can_edit'] and not restrictions['can_edit_amount']:
             has_paid_items = self.expenseitem_set.filter(status='paid').exists()
             if has_paid_items:
-                restrictions['reasons'].append('Amount cannot be edited because expense has paid items')
+                reasons_list.append('Amount cannot be edited because expense has paid items')
 
         if restrictions['can_edit'] and not restrictions['can_edit_date']:
-            restrictions['reasons'].append('Date cannot be edited for expenses earlier than next month')
+            reasons_list.append('Date cannot be edited for expenses earlier than next month')
 
         return restrictions
 

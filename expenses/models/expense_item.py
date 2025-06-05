@@ -2,7 +2,7 @@ from django.db import models
 from django.core.validators import MinValueValidator
 from django.core.exceptions import ValidationError
 from datetime import date
-from typing import Optional, Tuple
+from typing import Tuple
 import calendar
 
 
@@ -56,13 +56,13 @@ class ExpenseItem(models.Model):
                 else:
                     raise ValidationError(f'Due date must be within {expense_month_name}')
 
-    def get_allowed_month_range(self) -> Tuple[Optional[date], Optional[date]]:
+    def get_allowed_month_range(self) -> Tuple[date, date]:
         """Returns (start_date, end_date) tuple for allowed month range based on expense type and creation month"""
         # Import here to avoid circular imports
         from .month import Month
         
         if not self.expense_id:
-            return None, None
+            raise ValueError("Cannot determine allowed month range without an expense")
 
         expense_month = self.expense.start_date
         year, month = expense_month.year, expense_month.month

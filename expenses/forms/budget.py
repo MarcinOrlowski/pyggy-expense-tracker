@@ -34,7 +34,8 @@ class BudgetForm(forms.ModelForm):
         }
     
     def __init__(self, *args, **kwargs):
-        self.instance_pk = kwargs.get('instance').pk if kwargs.get('instance') else None
+        instance = kwargs.get('instance')
+        self.instance_pk = instance.pk if instance and hasattr(instance, 'pk') else None
         super().__init__(*args, **kwargs)
         
         # Disable start_date field if budget has existing months

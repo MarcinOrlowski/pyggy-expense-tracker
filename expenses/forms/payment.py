@@ -34,6 +34,9 @@ class PaymentForm(forms.ModelForm):
     
     def clean(self):
         cleaned_data = super().clean()
+        if cleaned_data is None:
+            return cleaned_data
+            
         status = cleaned_data.get('status')
         payment_date = cleaned_data.get('payment_date')
         

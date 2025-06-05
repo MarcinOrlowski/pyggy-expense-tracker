@@ -18,7 +18,7 @@ def month_list(request, budget_id):
         )['total'] or Decimal('0.00')
         
         # Balance shows financial impact (negative for expenses)
-        month.balance = -total_expenses
+        month.balance = -total_expenses  # type: ignore[attr-defined]
     
     # Get next allowed month for this budget
     next_allowed = Month.get_next_allowed_month(budget=budget)

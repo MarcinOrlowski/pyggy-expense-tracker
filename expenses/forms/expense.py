@@ -65,9 +65,13 @@ class ExpenseForm(forms.ModelForm):
         self.budget = kwargs.pop('budget', None)
         super().__init__(*args, **kwargs)
         # Only show non-hidden payees in the dropdown
-        self.fields['payee'].queryset = Payee.objects.filter(hidden_at__isnull=True)
-        self.fields['payee'].required = False
-        self.fields['payee'].empty_label = "Select payee (optional)"
+        payee_field = self.fields['payee']
+        if hasattr(payee_field, 'queryset'):
+            payee_field.queryset = Payee.objects.filter(hidden_at__isnull=True)  # type: ignore[attr-defined]
+        if hasattr(payee_field, 'required'):
+            payee_field.required = False
+        if hasattr(payee_field, 'empty_label'):
+            payee_field.empty_label = "Select payee (optional)"  # type: ignore[attr-defined]
         
         # Update amount field attributes for split payments
         self.fields['amount'].widget.attrs.update({
@@ -116,6 +120,9 @@ class ExpenseForm(forms.ModelForm):
            - Others: total_parts=0, skip_parts=0
         """
         cleaned_data = super().clean()
+        if cleaned_data is None:
+            return cleaned_data
+            
         expense_type = cleaned_data.get('expense_type')
         total_parts = cleaned_data.get('total_parts', 0)
         skip_parts = cleaned_data.get('skip_parts', 0)

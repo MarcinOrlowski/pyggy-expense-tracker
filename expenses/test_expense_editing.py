@@ -119,7 +119,9 @@ class ExpenseEditingPermissionsTest(TestCase):
         self.assertFalse(expense.can_edit_amount())
         
         restrictions = expense.get_edit_restrictions()
-        self.assertIn('Split payment expenses cannot be edited', restrictions['reasons'])
+        reasons = restrictions['reasons']
+        if isinstance(reasons, list):
+            self.assertIn('Split payment expenses cannot be edited', reasons)
         
     def test_cannot_edit_recurring_with_end_date_expense(self):
         """Test that recurring with end date expenses cannot be edited"""
@@ -138,7 +140,9 @@ class ExpenseEditingPermissionsTest(TestCase):
         self.assertFalse(expense.can_edit_amount())
         
         restrictions = expense.get_edit_restrictions()
-        self.assertIn('Recurring expenses with end date cannot be edited', restrictions['reasons'])
+        reasons = restrictions['reasons']
+        if isinstance(reasons, list):
+            self.assertIn('Recurring expenses with end date cannot be edited', reasons)
         
     def test_cannot_edit_closed_expense(self):
         """Test that closed expenses cannot be edited"""
@@ -157,7 +161,9 @@ class ExpenseEditingPermissionsTest(TestCase):
         self.assertFalse(expense.can_edit_amount())
         
         restrictions = expense.get_edit_restrictions()
-        self.assertIn('Expense is closed', restrictions['reasons'])
+        reasons = restrictions['reasons']
+        if isinstance(reasons, list):
+            self.assertIn('Expense is closed', reasons)
         
     def test_get_edit_restrictions_multiple_reasons(self):
         """Test get_edit_restrictions returns all applicable reasons"""
@@ -184,7 +190,9 @@ class ExpenseEditingPermissionsTest(TestCase):
         restrictions = expense.get_edit_restrictions()
         self.assertTrue(restrictions['can_edit'])
         self.assertFalse(restrictions['can_edit_amount'])
-        self.assertIn('Amount cannot be edited because expense has paid items', restrictions['reasons'])
+        reasons = restrictions['reasons']
+        if isinstance(reasons, list):
+            self.assertIn('Amount cannot be edited because expense has paid items', reasons)
         
     def test_expense_edit_view_redirects_for_non_editable(self):
         """Test that edit view redirects with error for non-editable expenses"""

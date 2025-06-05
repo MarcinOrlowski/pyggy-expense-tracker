@@ -232,8 +232,8 @@ class SettingsModelTest(TestCase):
         
         # Check that settings still exists
         self.assertTrue(Settings.objects.filter(pk=settings.pk).exists())
-        # The delete method should return None (it just passes)
-        self.assertIsNone(result)
+        # The delete method should return (0, {}) to match Django's delete signature
+        self.assertEqual(result, (0, {}))
     
     def test_settings_unique_constraint(self):
         """Test that only one settings instance can exist."""
