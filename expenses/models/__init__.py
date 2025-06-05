@@ -9,11 +9,11 @@ from .settings import Settings
 
 # Make all models available when importing from expenses.models
 __all__ = [
-    'Budget',
-    'Payee', 
-    'PaymentMethod',
-    'Month',
-    'Expense',
-    'ExpenseItem',
-    'Settings'
+    "Budget",
+    "Payee",
+    "PaymentMethod",
+    "Month",
+    "Expense",
+    "ExpenseItem",
+    "Settings",
 ]

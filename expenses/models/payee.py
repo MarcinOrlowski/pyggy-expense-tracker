@@ -19,4 +19,4 @@ class Payee(models.Model):
         return not self.expense_set.exists() and not self.is_hidden
 
     class Meta:
-        ordering = ['name']
+        ordering = ["name"]

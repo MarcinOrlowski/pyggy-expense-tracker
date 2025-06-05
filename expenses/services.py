@@ -34,14 +34,14 @@ def process_new_month(year: int, month: int, budget: Budget) -> Month:
 
     with transaction.atomic():
         month_obj, created = Month.objects.get_or_create(
-            budget=budget,
-            year=year,
-            month=month
+            budget=budget, year=year, month=month
         )
 
         if created:
             # Generate expense items for all active expenses in this budget
-            active_expenses = Expense.objects.filter(closed_at__isnull=True, budget=budget)
+            active_expenses = Expense.objects.filter(
+                closed_at__isnull=True, budget=budget
+            )
 
             for expense in active_expenses:
                 create_expense_items_for_month(expense, month_obj)
@@ -65,6 +65,7 @@ def create_expense_items_for_month(expense: Expense, month: Month) -> List[Expen
     # Check if the expense is relevant for this month
     # For other expense types (not one-time), check start date
     import calendar
+
     last_day = calendar.monthrange(month.year, month.month)[1]
     month_end_date = date(month.year, month.month, last_day)
 
@@ -78,10 +79,7 @@ def create_expense_items_for_month(expense: Expense, month: Month) -> List[Expen
         due_date = expense.get_due_date_for_month(month.year, month.month)
 
         item = ExpenseItem.objects.create(
-            expense=expense,
-            month=month,
-            due_date=due_date,
-            amount=expense.amount
+            expense=expense, month=month, due_date=due_date, amount=expense.amount
         )
         items.append(item)
 
@@ -90,7 +88,7 @@ def create_expense_items_for_month(expense: Expense, month: Month) -> List[Expen
         if expense.end_date is not None:
             target_date = date(month.year, month.month, 1)
             end_month_date = date(expense.end_date.year, expense.end_date.month, 1)
-            
+
             if target_date <= end_month_date:
                 due_date = expense.get_due_date_for_month(month.year, month.month)
 
@@ -98,7 +96,7 @@ def create_expense_items_for_month(expense: Expense, month: Month) -> List[Expen
                     expense=expense,
                     month=month,
                     due_date=due_date,
-                    amount=expense.amount
+                    amount=expense.amount,
                 )
                 items.append(item)
 
@@ -111,10 +109,7 @@ def create_expense_items_for_month(expense: Expense, month: Month) -> List[Expen
             due_date = expense.get_due_date_for_month(month.year, month.month)
 
             item = ExpenseItem.objects.create(
-                expense=expense,
-                month=month,
-                due_date=due_date,
-                amount=expense.amount
+                expense=expense, month=month, due_date=due_date, amount=expense.amount
             )
             items.append(item)
 
@@ -123,17 +118,13 @@ def create_expense_items_for_month(expense: Expense, month: Month) -> List[Expen
         # The month being processed determines the due_date
         if not ExpenseItem.objects.filter(expense=expense).exists():
             due_date = expense.get_due_date_for_month(month.year, month.month)
-            
+
             item = ExpenseItem.objects.create(
-                expense=expense,
-                month=month,
-                due_date=due_date,
-                amount=expense.amount
+                expense=expense, month=month, due_date=due_date, amount=expense.amount
             )
             items.append(item)
 
     return items
-
 
 
 def check_expense_completion(expense: Expense) -> bool:
@@ -151,7 +142,7 @@ def check_expense_completion(expense: Expense) -> bool:
 
     if expense.expense_type == expense.TYPE_ONE_TIME:
         # Complete when the single item is paid
-        paid_items = ExpenseItem.objects.filter(expense=expense, status='paid').count()
+        paid_items = ExpenseItem.objects.filter(expense=expense, status="paid").count()
         if paid_items > 0:
             expense.closed_at = timezone.now()
             expense.save()
@@ -159,7 +150,7 @@ def check_expense_completion(expense: Expense) -> bool:
 
     elif expense.expense_type == expense.TYPE_SPLIT_PAYMENT:
         # Complete when all remaining installments are paid
-        paid_items = ExpenseItem.objects.filter(expense=expense, status='paid').count()
+        paid_items = ExpenseItem.objects.filter(expense=expense, status="paid").count()
         remaining_installments = expense.total_parts - expense.skip_parts
         if paid_items >= remaining_installments:
             expense.closed_at = timezone.now()
@@ -173,28 +164,35 @@ def check_expense_completion(expense: Expense) -> bool:
 def handle_new_expense(expense: Expense, budget: Budget) -> None:
     """
     Handle newly created expense - create expense items if it starts/is due in current month.
-    
+
     Args:
         expense: The newly created expense
         budget: The budget to use for finding the most recent month (should match expense.budget)
     """
-    most_recent_month = Month.objects.filter(budget=expense.budget).order_by('-year', '-month').first()
+    most_recent_month = (
+        Month.objects.filter(budget=expense.budget).order_by("-year", "-month").first()
+    )
     if not most_recent_month:
         return  # No months exist yet in this budget
-    
+
     # For one-time expenses, always try to create in the current month
     # For other expense types, check if start date falls in current month
     if expense.expense_type == expense.TYPE_ONE_TIME:
         create_expense_items_for_month(expense, most_recent_month)
     else:
         check_date = expense.start_date
-        
+
         current_month_start = date(most_recent_month.year, most_recent_month.month, 1)
-        
+
         import calendar
-        last_day = calendar.monthrange(most_recent_month.year, most_recent_month.month)[1]
-        current_month_end = date(most_recent_month.year, most_recent_month.month, last_day)
-        
+
+        last_day = calendar.monthrange(most_recent_month.year, most_recent_month.month)[
+            1
+        ]
+        current_month_end = date(
+            most_recent_month.year, most_recent_month.month, last_day
+        )
+
         # If expense starts within the current month, create expense items immediately
         if current_month_start <= check_date <= current_month_end:
             create_expense_items_for_month(expense, most_recent_month)
@@ -202,10 +200,10 @@ def handle_new_expense(expense: Expense, budget: Budget) -> None:
 
 class SettingsService:
     """Service for managing application settings and currency formatting."""
-    
-    CACHE_KEY = 'app_settings'
+
+    CACHE_KEY = "app_settings"
     CACHE_TIMEOUT = 3600  # 1 hour
-    
+
     @classmethod
     def get_settings(cls) -> Settings:
         """Get cached settings or load from database."""
@@ -214,51 +212,53 @@ class SettingsService:
             settings = Settings.load()
             cache.set(cls.CACHE_KEY, settings, cls.CACHE_TIMEOUT)
         return settings  # type: ignore[no-any-return]
-    
+
     @classmethod
     def get_currency(cls) -> str:
         """Get current currency code."""
         return cls.get_settings().currency
-    
+
     @classmethod
     def get_locale(cls) -> str:
         """Get current locale."""
         return cls.get_settings().locale
-    
+
     @classmethod
-    def format_currency(cls, amount: Optional[Union[Decimal, float, int]], include_symbol: bool = True) -> str:
+    def format_currency(
+        cls, amount: Optional[Union[Decimal, float, int]], include_symbol: bool = True
+    ) -> str:
         """
         Format amount as currency using current settings.
-        
+
         Args:
             amount: Decimal or float amount to format
             include_symbol: Whether to include currency symbol
-            
+
         Returns:
             Formatted currency string
         """
         if amount is None:
-            return ''
-        
+            return ""
+
         settings = cls.get_settings()
-        
+
         # Ensure amount is Decimal
         if not isinstance(amount, Decimal):
             amount = Decimal(str(amount))
-        
+
         # Format using babel
         try:
             formatted = babel_format_currency(
                 amount,
                 settings.currency,
                 locale=settings.locale,
-                format_type='standard' if include_symbol else 'accounting'
+                format_type="standard" if include_symbol else "accounting",
             )
             return formatted
         except Exception as e:
             # Fallback to basic formatting if babel fails
             return f"{settings.currency} {amount:.2f}"
-    
+
     @classmethod
     def clear_cache(cls) -> None:
         """Clear settings cache."""

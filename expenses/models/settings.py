@@ -7,15 +7,13 @@ class Settings(models.Model):
     """Application-wide settings singleton model."""
 
     currency = models.CharField(
-        max_length=3,
-        default='USD',
-        help_text='ISO 4217 currency code'
+        max_length=3, default="USD", help_text="ISO 4217 currency code"
     )
 
     locale = models.CharField(
         max_length=10,
-        default='en_US',
-        help_text='Locale identifier (e.g., en_US, fr_FR)'
+        default="en_US",
+        help_text="Locale identifier (e.g., en_US, fr_FR)",
     )
 
     created_at = models.DateTimeField(auto_now_add=True)
@@ -30,14 +28,14 @@ class Settings(models.Model):
         self.pk = 1
         super().save(*args, **kwargs)
         # Clear cache when settings are saved
-        cache.delete('app_settings')
+        cache.delete("app_settings")
 
     def delete(self, *args: Any, **kwargs: Any) -> Tuple[int, Dict[str, int]]:
         """Prevent deletion of settings."""
         return (0, {})
 
     @classmethod
-    def load(cls) -> 'Settings':
+    def load(cls) -> "Settings":
         """Load or create settings instance."""
         obj, created = cls.objects.get_or_create(pk=1)
         return obj

@@ -6,13 +6,16 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('expenses', '0014_remove_default_budget_creation'),
+        ("expenses", "0014_remove_default_budget_creation"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='expense',
-            name='initial_installment',
-            field=models.PositiveIntegerField(default=0, help_text='Starting installment number (0-based). Only used for split payments.'),
+            model_name="expense",
+            name="initial_installment",
+            field=models.PositiveIntegerField(
+                default=0,
+                help_text="Starting installment number (0-based). Only used for split payments.",
+            ),
         ),
     ]

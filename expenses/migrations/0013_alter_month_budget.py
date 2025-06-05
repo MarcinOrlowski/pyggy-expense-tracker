@@ -7,13 +7,15 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('expenses', '0012_make_budget_required'),
+        ("expenses", "0012_make_budget_required"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='month',
-            name='budget',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='expenses.budget'),
+            model_name="month",
+            name="budget",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, to="expenses.budget"
+            ),
         ),
     ]

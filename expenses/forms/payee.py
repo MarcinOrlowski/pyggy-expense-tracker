@@ -5,10 +5,9 @@ from ..models import Payee
 class PayeeForm(forms.ModelForm):
     class Meta:
         model = Payee
-        fields = ['name']
+        fields = ["name"]
         widgets = {
-            'name': forms.TextInput(attrs={
-                'placeholder': 'Enter payee name',
-                'class': 'form-control'
-            })
+            "name": forms.TextInput(
+                attrs={"placeholder": "Enter payee name", "class": "form-control"}
+            )
         }
