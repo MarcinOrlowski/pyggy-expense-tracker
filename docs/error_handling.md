@@ -14,14 +14,16 @@ The application provides user-friendly error handling for:
 
 ### During Development (DEBUG = True)
 
-By default, Django shows detailed debug pages when `DEBUG = True`. To test user-friendly error pages:
+By default, Django shows detailed debug pages when `DEBUG = True`. To test user-friendly error
+pages:
 
 1. **Temporarily set DEBUG = False** in `pyggy/settings.py`
 2. **Run `python manage.py collectstatic --noinput`** to collect static files
 3. **Test error pages** in your browser or with curl
 4. **Set DEBUG = True** when done testing
 
-**Note**: The application is configured to serve static files correctly even when `DEBUG = False`, so styling will work properly on error pages.
+**Note**: The application is configured to serve static files correctly even when `DEBUG = False`,
+so styling will work properly on error pages.
 
 ### Error Page Types
 
@@ -86,4 +88,5 @@ To customize error pages:
 2. **Modify error handlers** in `expenses/views/error_handlers.py`
 3. **Update styling** using existing CSS variables for consistency
 
-The error handling system is designed to be user-friendly while maintaining security and providing helpful navigation options.
+The error handling system is designed to be user-friendly while maintaining security and providing
+helpful navigation options.

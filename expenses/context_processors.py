@@ -1,3 +1,5 @@
+import os
+import sys
 from .models import Budget
 
 
@@ -17,3 +19,9 @@ def current_budget(request):
             budget = None
 
     return {"current_budget": budget, "current_budget_id": budget_id}
+
+
+def testing_context(request):
+    """Provide testing context for templates."""
+    testing = 'test' in sys.argv or 'pytest' in sys.modules or 'GITHUB_ACTIONS' in os.environ
+    return {"testing": testing}

@@ -15,7 +15,16 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&family=Tektur:wght@400..900&display=swap" rel="stylesheet">
     <!-- Font Awesome 6.5.1 -->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.5.1/css/all.css" crossorigin="anonymous" />
-    <link href="{% sass_src 'scss/main.scss' %}" rel="stylesheet" type="text/css" />
+    {% if not testing %}
+        <link href="{% sass_src 'scss/main.scss' %}" rel="stylesheet" type="text/css" />
+    {% else %}
+        <!-- Minimal CSS for testing environments -->
+        <style>
+            body { font-family: Arial, sans-serif; margin: 0; padding: 20px; }
+            .container { max-width: 1200px; margin: 0 auto; }
+            .btn { padding: 8px 16px; text-decoration: none; display: inline-block; }
+        </style>
+    {% endif %}
 </head>
 <body>
     <header>

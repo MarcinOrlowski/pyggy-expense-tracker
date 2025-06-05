@@ -190,11 +190,19 @@ class CalendarHighlightingTest(TestCase):
 
     def test_calendar_grid_template_include(self):
         """Test the actual calendar_grid.html template include."""
-        # Read the actual template file
-        with open(
-            "/home/carlos/dev/projects/python-pyggy-expense-tracker/expenses/templates/expenses/includes/calendar_grid.html",
-            "r",
-        ) as f:
+        # Read the actual template file using Django template loading
+        import os
+        from django.conf import settings
+        
+        template_path = os.path.join(
+            settings.BASE_DIR, 
+            "expenses", 
+            "templates", 
+            "expenses", 
+            "includes", 
+            "calendar_grid.html"
+        )
+        with open(template_path, "r") as f:
             template_content = f.read()
 
         template = Template(template_content)
