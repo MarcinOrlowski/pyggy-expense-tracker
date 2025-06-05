@@ -2,6 +2,7 @@
 
 ## @dev
 
+- Fixed test failures in ExpenseItemEditForm validation and view context to ensure consistent form behavior
 - [#0105] Allow negative initial values for budget creation and editing to support deficit tracking
 - [#0104] Added balance column to month list view showing total amount for each month
 - [#0096] Fixed calendar weekday highlighting to only appear when viewing current month

@@ -708,6 +708,6 @@ def expense_item_edit(request, budget_id, pk):
         'budget': budget,
         'form': form,
         'expense_item': expense_item,
-        'title': f'Edit Expense Item: {expense_item.expense.title}'
+        'title': f'Edit Due Date: {expense_item.expense.title}'
     }
     return render(request, 'expenses/expense_item_edit.html', context)

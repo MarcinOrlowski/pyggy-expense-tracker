@@ -328,18 +328,18 @@ class ExpenseItemEditForm(forms.ModelForm):
         
         # Set helpful information about month restriction for due date
         if self.instance and self.instance.pk:
+            start_date, end_date = self.instance.get_allowed_month_range()
             month_name = date(self.instance.month.year, self.instance.month.month, 1).strftime("%B %Y")
-            self.fields['due_date'].help_text = f'Date must be within {month_name}'
+            self.fields['due_date'].help_text = f'Date must be within {month_name} ({start_date} to {end_date})'
     
     def clean_due_date(self):
         due_date = self.cleaned_data.get('due_date')
         
         if due_date and self.instance and self.instance.pk:
-            # Restrict due date to the same month as the expense item
-            month_year = (self.instance.month.year, self.instance.month.month)
-            due_year_month = (due_date.year, due_date.month)
+            # Use the same validation logic as ExpenseItem.get_allowed_month_range()
+            start_date, end_date = self.instance.get_allowed_month_range()
             
-            if month_year != due_year_month:
+            if not (start_date <= due_date <= end_date):
                 month_name = date(self.instance.month.year, self.instance.month.month, 1).strftime("%B %Y")
                 raise ValidationError(f'Due date must be within {month_name}')
         

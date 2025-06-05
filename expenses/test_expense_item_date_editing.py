@@ -135,7 +135,8 @@ class ExpenseItemDateEditingTest(TestCase):
     def test_expense_item_edit_form_valid_date(self):
         """Test that form accepts valid dates within the month"""
         form_data = {
-            'due_date': '2024-01-28'
+            'due_date': '2024-01-28',
+            'amount': '100.00'
         }
         form = ExpenseItemEditForm(data=form_data, instance=self.expense_item)
         
@@ -144,7 +145,8 @@ class ExpenseItemDateEditingTest(TestCase):
     def test_expense_item_edit_form_invalid_date_earlier_month(self):
         """Test that form rejects dates in earlier months"""
         form_data = {
-            'due_date': '2023-12-28'
+            'due_date': '2023-12-28',
+            'amount': '100.00'
         }
         form = ExpenseItemEditForm(data=form_data, instance=self.expense_item)
         
@@ -154,7 +156,8 @@ class ExpenseItemDateEditingTest(TestCase):
     def test_expense_item_edit_form_invalid_date_later_month(self):
         """Test that form rejects dates in later months"""
         form_data = {
-            'due_date': '2024-02-15'
+            'due_date': '2024-02-15',
+            'amount': '100.00'
         }
         form = ExpenseItemEditForm(data=form_data, instance=self.expense_item)
         
@@ -183,7 +186,8 @@ class ExpenseItemDateEditingTest(TestCase):
         })
         
         form_data = {
-            'due_date': '2024-01-25'
+            'due_date': '2024-01-25',
+            'amount': '100.00'
         }
         response = self.client.post(url, form_data)
         
@@ -207,7 +211,8 @@ class ExpenseItemDateEditingTest(TestCase):
         })
         
         form_data = {
-            'due_date': '2024-02-25'  # Invalid - outside expense month
+            'due_date': '2024-02-25',  # Invalid - outside expense month
+            'amount': '100.00'
         }
         response = self.client.post(url, form_data)
         
