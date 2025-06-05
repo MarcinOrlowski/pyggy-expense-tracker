@@ -23,9 +23,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-^@fe0-h81tzh3w#-mh$9$lgz74f240=2y_&0erqlb84q@%1tx3'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# Set to False to test user-friendly error pages (custom 404, help system errors, etc.)
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'testserver', '*']
 
 
 # Application definition
@@ -56,7 +57,7 @@ ROOT_URLCONF = 'pyggy.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'expenses' / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
