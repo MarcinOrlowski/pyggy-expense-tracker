@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 import os
+import sys
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -151,7 +152,6 @@ SASS_PROCESSOR_INCLUDE_DIRS = [
 ]
 
 # Detect if we're in a test environment (GitHub Actions or local testing)
-import sys
 TESTING = 'test' in sys.argv or 'pytest' in sys.modules or 'GITHUB_ACTIONS' in os.environ
 
 # Configure SASS processor for different environments
