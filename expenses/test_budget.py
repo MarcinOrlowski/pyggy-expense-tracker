@@ -76,6 +76,22 @@ class BudgetModelTest(TestCase):
         
         budget = form.save()
         self.assertEqual(budget.initial_amount, Decimal('-250.50'))
+    
+    def test_budget_form_default_initial_amount(self):
+        """Test that BudgetForm works with 0 initial_amount."""
+        from expenses.forms import BudgetForm
+        
+        form_data = {
+            'name': 'Test Default Budget',
+            'start_date': '2024-06-01',
+            'initial_amount': '0'
+        }
+        
+        form = BudgetForm(data=form_data)
+        self.assertTrue(form.is_valid(), f"Form should be valid but got errors: {form.errors}")
+        
+        budget = form.save()
+        self.assertEqual(budget.initial_amount, Decimal('0'))
 
 
 class BudgetMonthRelationshipTest(TestCase):

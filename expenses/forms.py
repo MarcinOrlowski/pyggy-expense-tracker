@@ -265,10 +265,11 @@ class BudgetForm(forms.ModelForm):
         max_digits=10,
         decimal_places=2,
         widget=forms.TextInput(attrs={
-            'placeholder': '100.00, 100,00, $100.00, €100,00',
-            'class': 'form-control'
+            'placeholder': '100, -200.03, €50',
+            'class': 'form-control',
+            'value': '0'
         }),
-        help_text="Supports international formats: 100.00, 100,00, $100.00, €100,00"
+        help_text="Supports international formats including negative values: 100, -200.03, €50"
     )
     
     class Meta:
