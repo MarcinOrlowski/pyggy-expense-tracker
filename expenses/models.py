@@ -84,6 +84,10 @@ class PaymentMethod(models.Model):
     def __str__(self):
         return self.name
 
+    def can_be_deleted(self):
+        """Check if this payment method can be deleted (not used in any expense items)"""
+        return not self.expenseitem_set.exists()
+
     class Meta:
         ordering = ['name']
 
