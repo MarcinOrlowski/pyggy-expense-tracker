@@ -74,3 +74,11 @@ repos:
       # Runs PHPStan analyser
       - id: php-stan
         files: \.(php)$
+
+  - repo: https://github.com/psf/black
+    rev: 25.1.0
+    hooks:
+      - id: black
+        args: [--line-length=88]
+        language_version: python3.12
+
