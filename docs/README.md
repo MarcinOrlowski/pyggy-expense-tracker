@@ -1,37 +1,68 @@
-# PyGGy Documentation
+# PyGGy Usage Documentation
 
-Welcome to the PyGGy Monthly Expense Tracker documentation! This application helps you manage and track your monthly expenses with ease.
+Welcome to PyGGy, a Django-based monthly expense tracker designed to help you manage your finances
+with precision and clarity. This documentation will guide you through understanding and using all
+aspects of the application.
 
-## Quick Navigation
+## Table of Contents
 
-- [Getting Started](GETTING_STARTED) - Learn the basics of using PyGGy
-- [Docker Setup](DOCKER) - How to run PyGGy using Docker
+- [Getting Started](getting_started) - Quick setup and first steps
+- [Understanding Expense Types](expense_types) - The four types of expenses and when to use them
+- [Budget Management](budgets) - Creating and managing budgets effectively
+- [Monthly Workflow](monthly_workflow) - How to work with monthly processing and payment tracking
+- [Managing Payees & Payment Methods](payees_and_payments) - Setting up vendors and payment options
+- [Docker Setup](docker) - Running PyGGy with Docker (technical)
+- [Error Handling](error_handling) - Understanding application errors (technical)
 
-## Overview
+## What is PyGGy?
 
-PyGGy is a Django-based web application designed to help you track your monthly expenses efficiently. It provides a clean interface for managing budgets, expenses, payees, and payment methods.
+PyGGy is a comprehensive expense tracking system that helps you manage recurring bills, one-time
+payments, and installment plans. Unlike simple expense trackers, PyGGy understands the complexities
+of real-world financial management:
 
-### Key Features
+- **Multiple Budget Support**: Track different financial streams separately
+- **Intelligent Expense Types**: Four distinct expense types for different payment scenarios
+- **Monthly Processing**: Sequential month-by-month workflow that mirrors real-life budgeting
+- **Payment Tracking**: Record when and how expenses are actually paid
+- **Vendor Management**: Organize who you pay and how you pay them
 
-- **Budget Management**: Create and manage multiple budgets
-- **Expense Tracking**: Add recurring and one-time expenses
-- **Payment Tracking**: Track payments for individual expense items
-- **Monthly Processing**: Generate monthly summaries and reports
-- **Payee Management**: Organize who you pay money to
-- **Payment Methods**: Track different payment methods (cash, card, etc.)
+## Core Concepts
 
-### Getting Started
+### Budgets
 
-1. **Create Your First Budget**: Start by setting up a budget to organize your expenses
-2. **Add Expenses**: Create recurring expenses like rent, utilities, and subscriptions
-3. **Track Payments**: Mark expense items as paid when you make payments
-4. **Review Monthly**: Process months to analyze your spending patterns
+Budgets are containers that organize related expenses. You might have separate budgets for personal
+expenses, business costs, or different family members.
 
-### Support
+### Expenses
 
-- [Report Issues](https://github.com/MarcinOrlowski/pyggy-expense-tracker/issues) - Found a bug? Let us know!
-- [GitHub Repository](https://github.com/MarcinOrlowski/pyggy-expense-tracker/) - View the source code
+Expenses are recurring or one-time financial obligations. They define *what* you need to pay, *when*
+it's due, and *how much* it costs.
+
+### Expense Items
+
+Expense items are the actual monthly instances of expenses. When you create a recurring expense,
+PyGGy automatically generates expense items for each month.
+
+### Payments
+
+Payments record when expense items are actually paid, including the payment date and method used.
+
+## Quick Start
+
+1. **[Set up your environment](getting_started)** - Get PyGGy running
+2. **[Create your first budget](budgets)** - Organize your expenses
+3. **[Add some expenses](expense_types)** - Define what you need to pay
+4. **[Start tracking payments](monthly_workflow)** - Record when you pay bills
+
+## Getting Help
+
+- **In-App Help**: This documentation is available within PyGGy through the Help menu
+- **GitHub Issues
+  **: [Report bugs or request features](https://github.com/MarcinOrlowski/pyggy-expense-tracker/issues)
+- **Source Code
+  **: [View the project on GitHub](https://github.com/MarcinOrlowski/pyggy-expense-tracker)
 
 ---
 
-*For detailed information about specific features, explore the other documentation files available in this help system.*
+*Choose a topic from the Table of Contents above to dive deeper into PyGGy's features and
+capabilities.*

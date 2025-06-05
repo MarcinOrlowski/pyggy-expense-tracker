@@ -16,8 +16,8 @@ class HelpViewsTest(TestCase):
 
     def test_help_page_view_existing_file(self):
         """Test that help page view loads for existing documentation."""
-        # Test with DOCKER.md which should exist
-        response = self.client.get(reverse("help_page", kwargs={"page_name": "DOCKER"}))
+        # Test with docker.md which should exist
+        response = self.client.get(reverse("help_page", kwargs={"page_name": "docker"}))
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Docker Setup Guide")
 
@@ -54,7 +54,7 @@ class HelpViewsTest(TestCase):
         response = self.client.get(reverse("help_index"))
         self.assertEqual(response.status_code, 200)
         # Should show the README content, not the file listing
-        self.assertContains(response, "PyGGy Documentation")
+        self.assertContains(response, "PyGGy Usage Documentation")
         self.assertNotContains(response, "help-grid")
 
     def test_help_error_display(self):
