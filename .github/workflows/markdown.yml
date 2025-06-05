@@ -29,6 +29,7 @@ jobs:
             docs:
               - 'README.md'
               - 'docs/*.md'
+              - 'project/*.md'
 
       # https://github.com/marketplace/actions/my-markdown-linter
       - name: "Running markdown linter..."
