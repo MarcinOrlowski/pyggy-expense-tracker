@@ -1,6 +1,7 @@
 from django import template
 from decimal import Decimal, InvalidOperation
 from babel.numbers import get_currency_symbol
+from datetime import date
 from ..services import SettingsService
 
 register = template.Library()
@@ -60,3 +61,12 @@ def amount_with_class(value):
         return mark_safe(f'<span class="{css_class}">{formatted_currency}</span>')
     except (ValueError, TypeError, InvalidOperation):
         return value
+
+
+@register.simple_tag
+def create_date(year, month, day):
+    """Create a date object from year, month, day integers."""
+    try:
+        return date(int(year), int(month), int(day))
+    except (ValueError, TypeError):
+        return None
