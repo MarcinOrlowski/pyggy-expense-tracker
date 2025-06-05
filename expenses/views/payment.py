@@ -65,7 +65,7 @@ def expense_item_edit(request, budget_id, pk):
         if form.is_valid():
             item = form.save()
             messages.success(request, f'Due date for "{item.expense.title}" updated successfully.')
-            return redirect('expense_detail', budget_id=budget_id, pk=expense_item.expense.pk)
+            return redirect('dashboard', budget_id=budget_id)
     else:
         form = ExpenseItemEditForm(instance=expense_item)
     

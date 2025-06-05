@@ -191,11 +191,10 @@ class ExpenseItemDateEditingTest(TestCase):
         }
         response = self.client.post(url, form_data)
         
-        # Should redirect to expense detail
+        # Should redirect to budget dashboard
         self.assertEqual(response.status_code, 302)
-        expected_url = reverse('expense_detail', kwargs={
-            'budget_id': self.budget.id,
-            'pk': self.expense.pk
+        expected_url = reverse('dashboard', kwargs={
+            'budget_id': self.budget.id
         })
         self.assertRedirects(response, expected_url)
         

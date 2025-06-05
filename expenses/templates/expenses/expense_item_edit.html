@@ -53,7 +53,7 @@
 
             <div class="form-actions">
                 <button type="submit" class="btn"><i class="fas fa-floppy-disk icon-left"></i>Save Changes</button>
-                <a href="{% url 'expense_detail' budget.id expense_item.expense.pk %}" class="btn btn-secondary"><i class="fas fa-xmark icon-left"></i>Cancel</a>
+                <a href="{% url 'dashboard' budget.id %}" class="btn btn-secondary"><i class="fas fa-xmark icon-left"></i>Cancel</a>
             </div>
         </form>
     </div>
