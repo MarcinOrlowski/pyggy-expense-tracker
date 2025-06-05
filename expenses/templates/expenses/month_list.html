@@ -1,4 +1,5 @@
 {% extends 'expenses/base.html' %}
+{% load currency_tags %}
 
 {% block title %}Months{% endblock %}
 
@@ -20,6 +21,7 @@
                 <thead>
                     <tr>
                         <th>Month</th>
+                        <th class="text-right">Balance</th>
                         <th class="actions-column">Actions</th>
                     </tr>
                 </thead>
@@ -27,6 +29,7 @@
                     {% for month in months %}
                     <tr>
                         <td>{{ month.year }}-{{ month.month|stringformat:"02d" }}</td>
+                        <td class="text-right">{{ month.balance|amount_with_class }}</td>
                         <td class="actions-column">
                             <a href="{% url 'month_detail' budget.id month.year month.month %}" class="btn btn-sm" title="View Details" aria-label="View Details"><i class="fas fa-eye"></i></a>
                             {% if month.can_be_deleted %}
