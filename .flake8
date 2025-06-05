@@ -4,14 +4,14 @@
 #
 # in venv
 # pip install wemake-python-styleguide
-# flake8 transtool/ tests/
+# flake8 expenses/ tests/
 #
 # Refactoring hints:
 # https://flake8.codes/wemake-python-styleguide/0.15.3/index.html
 
 # https://pypi.org/project/flake8-noqa/
 noqa-require-code
-max-line-length = 132
+max-line-length = 250
 
 exclude =
     .git,
@@ -38,6 +38,7 @@ ignore =
     DAR401, # DAR401 Missing exception(s) in Raises section: -r TypeError
     E241, # E241 multiple spaces after ':'
     E251, # E251 unexpected spaces around keyword / parameter equals
+    E501, # E501 line too long (89 > 79 characters)
     F821, # F821 undefined name 'PropFile'
     I001, # I001 isort found an import in the wrong position
     I003, # I003 isort expected 1 blank line in imports,
@@ -83,57 +84,6 @@ ignore =
     WPS615, # WPS615 Found unpythonic getter or setter
 
 per-file-ignores =
-    # WPS420 Found wrong keyword: pass
-    # WPS604 Found incorrect node inside `class` body
-    transtool/report/error.py: WPS420, WPS604,
-    transtool/report/warn.py: WPS420, WPS604,
-
-	# WPS437 Found protected attribute usage
-	transtool/report/group.py: WPS437,
-
-    # WPS230 Found too many public instance attributes
-    transtool/config/config.py: WPS230,
-
-    # WPS204 Found overused expression: config['opening']; used 5 > 4
-    # WPS213 Found too many expressions
-    # WPS301 Found dotted raw import: transtool.checks
-    # WPS421 Found wrong function call: dir, print
-    # WPS437 Found protected attribute usage
-    # WPS529 Found implicit `.get()` dict usage
-    # WPS609 Found direct magic attribute usage: __setattr__, __getattr__, ...
-    # WPS433 Found nested import
-    # WPS425 Found boolean non-keyword argument: True, False
-    transtool/config/reader.py: WPS609, WPS421, WPS204, WPS529, WPS433,
-    transtool/config/builder.py: WPS609, WPS301, WPS437, WPS213, WPS425,
-
-    # WPS111 Found too short name
-    # WPS214 Found too many methods
-    # WPS317 Found incorrect multi-line parameters
-    # WPS323 Found `%` string formatting
-    # WPS421 Found wrong function call: print
-    # WPS437 Found protected attribute usage
-    # WPS518 Found implicit `enumerate()` call
-    transtool/log.py: WPS214, WPS437, WPS111, WPS317, WPS421, WPS518, WPS323,
-
-    # WPS201 Found module with too many imports: 13 > 12
-    # WPS213 Found too many expressions: 13 > 9
-    # WPS317 Found incorrect multi-line parameters
-    # WPS323 Found `%` string formatting
-    transtool/main.py: WPS201, WPS213, WPS317, WPS323,
-
-    # S101 Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.
-    # WPS421 Found wrong function call: dir
-    # WPS430 Found nested function: overrider
-    transtool/decorators/overrides.py: WPS430, S101, WPS421,
-
-    # WPS201 Found module with too many imports: 21 > 12
-    # WPS230 Found too many public instance attributes
-    transtool/prop/file.py: WPS201, WPS230,
-
-    # WPS100 Found wrong module name
-    # WPS421 Found wrong function call: print
-    transtool/utils.py: WPS421, WPS100,
-
     # S311 Standard pseudo-random generators are not suitable for security/cryptographic purposes.
     # WPS118 Found too long name
     # WPS214 Found too many methods
@@ -141,21 +91,4 @@ per-file-ignores =
     # WPS432 Found magic number
     # WPS437 Found protected attribute usage
     # WPS609 Found direct magic attribute usage: __abstractmethods__
-    tests/*: S311, WPS323, WPS214, WPS432, WPS609, WPS118, WPS437,
-
-    # WPS431 Found nested class: FakeArgs
-    tests/report/test_config_builder.py: WPS431,
-
-    # WPS430 Found nested function: log_abort_side_effect
-    # S311 Standard pseudo-random generators are not suitable for security/cryptographic purposes.
-    # N802 function name 'assertTranslation' should be lowercase
-    tests/prop/test_file.py: WPS430, S311, N802
-
-    # WPS230 Found too many public instance attributes: 8 > 6
-    # WPS414 Found incorrect unpacking target
-    # WPS425 Found boolean non-keyword argument: True, False
-    # WPS431 Found nested class: FakeArgs
-    # WPS437 Found protected attribute usage: _validate
-    # WPS609 Found direct magic attribute usage: __setattr__
-    # S311 Standard pseudo-random generators are not suitable for security/cryptographic purposes.
-    tests/config/test_config_builder.py: WPS437, WPS425, WPS431, WPS230, WPS414, WPS609, S311,
+#    tests/*: S311, WPS323, WPS214, WPS432, WPS609, WPS118, WPS437,
