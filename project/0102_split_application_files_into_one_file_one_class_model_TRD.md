@@ -14,6 +14,7 @@ this is purely a file organization refactoring.
 ## File Structure Changes
 
 ### Phase 1: Models Refactoring
+
 ```text
 expenses/models/
 ├── __init__.py          # Django model discovery: from .budget import Budget, etc.
@@ -27,6 +28,7 @@ expenses/models/
 ```
 
 ### Phase 2: Views Refactoring
+
 ```text
 expenses/views/
 ├── __init__.py          # Empty
@@ -40,6 +42,7 @@ expenses/views/
 ```
 
 ### Phase 3: Forms Refactoring
+
 ```text
 expenses/forms/
 ├── __init__.py          # Empty
@@ -53,6 +56,7 @@ expenses/forms/
 ## Import Statement Updates
 
 ### Phase 1 Model Import Changes
+
 ```python
 # Before
 from .models import Budget, Expense, ExpenseItem, Month, Payee, PaymentMethod
@@ -67,6 +71,7 @@ from .models.payment_method import PaymentMethod
 ```
 
 ### Phase 2 URL Pattern Changes
+
 ```python
 # Before
 from . import views
@@ -78,6 +83,7 @@ path('budgets/<int:budget_id>/dashboard/', dashboard.dashboard, name='dashboard'
 ```
 
 ### Phase 3 View Import Changes
+
 ```python
 # Before
 from .forms import ExpenseForm, PaymentForm, PayeeForm
