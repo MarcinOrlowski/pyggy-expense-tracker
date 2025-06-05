@@ -651,3 +651,19 @@ footer {
     box-shadow: 0 0 10px var(--color-purple-muted);
 }
 
+// Amount styling classes
+.amount-positive {
+    color: var(--color-green);
+    font-weight: 500;
+}
+
+.amount-negative {
+    color: var(--color-red);
+    font-weight: 500;
+}
+
+.amount-zero {
+    color: var(--color-green);
+    font-weight: 500;
+}
+

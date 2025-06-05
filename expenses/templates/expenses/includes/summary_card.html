@@ -4,7 +4,7 @@
         {{ title }}
     </div>
     <div class="card-body">
-        <div class="month-summary-amount">{{ amount|currency }}</div>
+        <div class="month-summary-amount">{{ amount|amount_with_class }}</div>
         {% if meta %}<div class="month-summary-meta">({{ meta }} items)</div>{% endif %}
     </div>
 </div>

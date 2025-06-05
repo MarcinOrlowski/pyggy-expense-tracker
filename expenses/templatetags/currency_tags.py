@@ -34,3 +34,29 @@ def currency_symbol():
 def format_amount(amount, show_symbol=True):
     """Format amount with optional symbol control."""
     return SettingsService.format_currency(amount, include_symbol=show_symbol)
+
+
+@register.filter
+def amount_with_class(value):
+    """Format value as currency with appropriate CSS class for positive/negative/zero amounts."""
+    from django.utils.safestring import mark_safe
+    
+    if value is None or value == '':
+        return ''
+    
+    try:
+        from decimal import Decimal
+        amount = Decimal(str(value))
+        formatted_currency = SettingsService.format_currency(amount)
+        
+        # Determine the appropriate CSS class
+        if amount < 0:
+            css_class = 'amount-negative'
+        elif amount > 0:
+            css_class = 'amount-positive'
+        else:
+            css_class = 'amount-zero'
+        
+        return mark_safe(f'<span class="{css_class}">{formatted_currency}</span>')
+    except (ValueError, TypeError, InvalidOperation):
+        return value

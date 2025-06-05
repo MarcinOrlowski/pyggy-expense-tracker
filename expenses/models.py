@@ -28,6 +28,26 @@ class Budget(models.Model):
         """Check if this budget can be deleted (no associated months)"""
         return not self.month_set.exists()
 
+    def get_current_balance(self):
+        """
+        Calculate current balance: initial_amount - total_committed
+        
+        Returns:
+            Decimal: Current balance (positive = remaining, negative = overcommitted)
+        """
+        from decimal import Decimal
+        from django.db.models import Sum
+        
+        # Calculate total committed from all expense items (paid + pending) in this budget
+        total_committed = ExpenseItem.objects.filter(
+            expense__budget=self
+        ).aggregate(
+            total=Sum('amount')
+        )['total'] or Decimal('0.00')
+        
+        # Return initial amount minus total committed
+        return self.initial_amount - total_committed
+
     def __str__(self):
         return self.name
 

@@ -25,16 +25,12 @@
             <div>
                 <p><strong>Payee:</strong> {% if expense.payee %}{{ expense.payee.name }}{% else %}-{% endif %}</p>
                 <p><strong>Type:</strong> <i class="fas {{ expense.get_expense_type_icon }}" aria-label="{{ expense.get_expense_type_display }}"></i> {{ expense.get_expense_type_display }}</p>
-                <p><strong>Amount:</strong> {{ expense.total_amount|currency }}</p>
+                <p><strong>Amount:</strong> {{ expense.amount|amount_with_class }}</p>
             </div>
             <div>
-                <p><strong>Started:</strong> {{ expense.started_at|date:"Y-m-d" }}</p>
+                <p><strong>Started:</strong> {{ expense.start_date|date:"Y-m-d" }}</p>
                 {% if expense.expense_type == 'split_payment' %}
-                    <p><strong>Installments:</strong> {{ expense.installments_count }}</p>
-                    <p><strong>Total Amount:</strong>
-                        {% widthratio expense.total_amount expense.installments_count 1 as calculated_total %}
-                        {{ calculated_total|currency }}
-                    </p>
+                    <p><strong>Installments:</strong> {{ expense.total_parts }}</p>
                 {% endif %}
                 {% if expense.expense_type == 'recurring_with_end' and expense.end_date %}
                     <p><strong>End Date:</strong> {{ expense.end_date|date:"Y-m-d" }}</p>
@@ -77,7 +73,7 @@
                     <tr class="{% if item.status == 'paid' %}expense-item-paid{% else %}expense-item-pending{% endif %}">
                         <td>{{ item.month }}</td>
                         <td>{{ item.due_date|date:"Y-m-d" }}</td>
-                        <td class="amount-column">{{ item.amount|currency }}</td>
+                        <td class="amount-column">{{ item.amount|amount_with_class }}</td>
                         <td>
                             {% if item.payment_date %}
                                 {{ item.payment_date|date:"Y-m-d" }}
@@ -100,12 +96,6 @@
         {% else %}
             <p>No expense items found. This expense may need a month to be added to the budget.</p>
         {% endif %}
-    </div>
-</div>
-
-<div class="card">
-    <div class="card-body">
-        <a href="{% url 'expense_list' budget.id %}" class="btn btn-secondary"><i class="fas fa-arrow-left icon-left"></i>Back to Expenses</a>
     </div>
 </div>
 {% endblock %}

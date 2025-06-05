@@ -266,3 +266,388 @@ class BudgetOrderingTest(TestCase):
         
         budgets = list(Budget.objects.all().values_list('name', flat=True))
         self.assertEqual(budgets, ['Alpha Budget', 'Middle Budget', 'Zebra Budget'])
+
+
+class BudgetBalanceTest(TestCase):
+    """Test cases for Budget balance calculation functionality."""
+    
+    def setUp(self):
+        """Set up test data."""
+        self.budget = Budget.objects.create(
+            name='Test Budget',
+            start_date=date(2024, 1, 1),
+            initial_amount=Decimal('1000.00')
+        )
+        self.month = Month.objects.create(
+            year=2024,
+            month=1,
+            budget=self.budget
+        )
+        self.payee = Payee.objects.create(name='Test Payee')
+        
+    def test_get_current_balance_no_expenses(self):
+        """Test balance calculation when no expenses exist."""
+        balance = self.budget.get_current_balance()
+        self.assertEqual(balance, Decimal('1000.00'))
+    
+    def test_get_current_balance_with_pending_expenses(self):
+        """Test balance calculation with only pending expenses."""
+        # Create expense
+        expense = Expense.objects.create(
+            title='Test Expense',
+            amount=Decimal('200.00'),
+            expense_type='one_time',
+            start_date=date(2024, 1, 15),
+            day_of_month=15,
+            budget=self.budget,
+            payee=self.payee
+        )
+        
+        # Create pending expense item
+        ExpenseItem.objects.create(
+            expense=expense,
+            month=self.month,
+            due_date=date(2024, 1, 15),
+            amount=Decimal('200.00'),
+            status='pending'
+        )
+        
+        # Balance should be affected by pending expenses (committed funds)
+        balance = self.budget.get_current_balance()
+        self.assertEqual(balance, Decimal('800.00'))
+    
+    def test_get_current_balance_with_paid_expenses(self):
+        """Test balance calculation with paid expenses."""
+        # Create expense
+        expense = Expense.objects.create(
+            title='Test Expense',
+            amount=Decimal('200.00'),
+            expense_type='one_time',
+            start_date=date(2024, 1, 15),
+            day_of_month=15,
+            budget=self.budget,
+            payee=self.payee
+        )
+        
+        # Create paid expense item
+        ExpenseItem.objects.create(
+            expense=expense,
+            month=self.month,
+            due_date=date(2024, 1, 15),
+            amount=Decimal('200.00'),
+            status='paid'
+        )
+        
+        # Balance should be reduced by paid expenses
+        balance = self.budget.get_current_balance()
+        self.assertEqual(balance, Decimal('800.00'))
+    
+    def test_get_current_balance_with_mixed_expenses(self):
+        """Test balance calculation with mix of paid and pending expenses."""
+        # Create expenses
+        expense1 = Expense.objects.create(
+            title='Paid Expense',
+            amount=Decimal('150.00'),
+            expense_type='one_time',
+            start_date=date(2024, 1, 10),
+            day_of_month=10,
+            budget=self.budget,
+            payee=self.payee
+        )
+        
+        expense2 = Expense.objects.create(
+            title='Pending Expense',
+            amount=Decimal('300.00'),
+            expense_type='one_time',
+            start_date=date(2024, 1, 20),
+            day_of_month=20,
+            budget=self.budget,
+            payee=self.payee
+        )
+        
+        # Create expense items
+        ExpenseItem.objects.create(
+            expense=expense1,
+            month=self.month,
+            due_date=date(2024, 1, 10),
+            amount=Decimal('150.00'),
+            status='paid'
+        )
+        
+        ExpenseItem.objects.create(
+            expense=expense2,
+            month=self.month,
+            due_date=date(2024, 1, 20),
+            amount=Decimal('300.00'),
+            status='pending'
+        )
+        
+        # Balance should be reduced by all committed expenses (paid + pending)
+        balance = self.budget.get_current_balance()
+        self.assertEqual(balance, Decimal('550.00'))
+    
+    def test_get_current_balance_overspent(self):
+        """Test balance calculation when overspent (negative balance)."""
+        # Create expense that exceeds budget
+        expense = Expense.objects.create(
+            title='Large Expense',
+            amount=Decimal('1200.00'),
+            expense_type='one_time',
+            start_date=date(2024, 1, 15),
+            day_of_month=15,
+            budget=self.budget,
+            payee=self.payee
+        )
+        
+        # Create paid expense item
+        ExpenseItem.objects.create(
+            expense=expense,
+            month=self.month,
+            due_date=date(2024, 1, 15),
+            amount=Decimal('1200.00'),
+            status='paid'
+        )
+        
+        # Balance should be negative
+        balance = self.budget.get_current_balance()
+        self.assertEqual(balance, Decimal('-200.00'))
+    
+    def test_get_current_balance_multiple_paid_expenses(self):
+        """Test balance calculation with multiple paid expenses."""
+        # Create multiple expenses
+        for i, amount in enumerate([Decimal('100.00'), Decimal('250.00'), Decimal('75.50')]):
+            expense = Expense.objects.create(
+                title=f'Expense {i+1}',
+                amount=amount,
+                expense_type='one_time',
+                start_date=date(2024, 1, 10 + i),
+                day_of_month=10 + i,
+                budget=self.budget,
+                payee=self.payee
+            )
+            
+            ExpenseItem.objects.create(
+                expense=expense,
+                month=self.month,
+                due_date=date(2024, 1, 10 + i),
+                amount=amount,
+                status='paid'
+            )
+        
+        # Balance should be 1000 - (100 + 250 + 75.50) = 574.50
+        balance = self.budget.get_current_balance()
+        self.assertEqual(balance, Decimal('574.50'))
+    
+    def test_get_current_balance_zero_initial_amount(self):
+        """Test balance calculation with zero initial amount."""
+        zero_budget = Budget.objects.create(
+            name='Zero Budget',
+            start_date=date(2024, 2, 1),
+            initial_amount=Decimal('0.00')
+        )
+        
+        # Balance should be zero with no expenses
+        balance = zero_budget.get_current_balance()
+        self.assertEqual(balance, Decimal('0.00'))
+        
+        # Create month and expense for zero budget
+        zero_month = Month.objects.create(
+            year=2024,
+            month=2,
+            budget=zero_budget
+        )
+        
+        expense = Expense.objects.create(
+            title='Test Expense',
+            amount=Decimal('50.00'),
+            expense_type='one_time',
+            start_date=date(2024, 2, 15),
+            day_of_month=15,
+            budget=zero_budget,
+            payee=self.payee
+        )
+        
+        ExpenseItem.objects.create(
+            expense=expense,
+            month=zero_month,
+            due_date=date(2024, 2, 15),
+            amount=Decimal('50.00'),
+            status='paid'
+        )
+        
+        # Balance should be negative (overspent from zero)
+        balance = zero_budget.get_current_balance()
+        self.assertEqual(balance, Decimal('-50.00'))
+    
+    def test_get_current_balance_only_affects_same_budget(self):
+        """Test that balance calculation only includes expenses from the same budget."""
+        # Create another budget
+        other_budget = Budget.objects.create(
+            name='Other Budget',
+            start_date=date(2024, 2, 1),
+            initial_amount=Decimal('500.00')
+        )
+        
+        other_month = Month.objects.create(
+            year=2024,
+            month=2,
+            budget=other_budget
+        )
+        
+        # Create expense in original budget
+        expense1 = Expense.objects.create(
+            title='Budget 1 Expense',
+            amount=Decimal('100.00'),
+            expense_type='one_time',
+            start_date=date(2024, 1, 15),
+            day_of_month=15,
+            budget=self.budget,
+            payee=self.payee
+        )
+        
+        ExpenseItem.objects.create(
+            expense=expense1,
+            month=self.month,
+            due_date=date(2024, 1, 15),
+            amount=Decimal('100.00'),
+            status='paid'
+        )
+        
+        # Create expense in other budget
+        expense2 = Expense.objects.create(
+            title='Budget 2 Expense',
+            amount=Decimal('200.00'),
+            expense_type='one_time',
+            start_date=date(2024, 2, 15),
+            day_of_month=15,
+            budget=other_budget,
+            payee=self.payee
+        )
+        
+        ExpenseItem.objects.create(
+            expense=expense2,
+            month=other_month,
+            due_date=date(2024, 2, 15),
+            amount=Decimal('200.00'),
+            status='paid'
+        )
+        
+        # Each budget should only reflect its own expenses
+        balance1 = self.budget.get_current_balance()
+        balance2 = other_budget.get_current_balance()
+        
+        self.assertEqual(balance1, Decimal('900.00'))  # 1000 - 100
+        self.assertEqual(balance2, Decimal('300.00'))  # 500 - 200
+
+
+class BudgetListViewTest(TestCase):
+    """Test cases for budget list view with balance calculations."""
+    
+    def setUp(self):
+        """Set up test data."""
+        self.budget = Budget.objects.create(
+            name='Test Budget',
+            start_date=date(2024, 1, 1),
+            initial_amount=Decimal('1000.00')
+        )
+    
+    def test_budget_list_view_balance_calculation_logic(self):
+        """Test that budget list view logic correctly calculates balances."""
+        # Test the view logic directly (as fixed in the view)
+        budgets = list(Budget.objects.all())
+        
+        # Simulate what the view does
+        for budget in budgets:
+            budget.current_balance = budget.get_current_balance()
+        
+        # Check that balance attribute was added
+        for budget in budgets:
+            self.assertTrue(hasattr(budget, 'current_balance'))
+            self.assertIsInstance(budget.current_balance, Decimal)
+            self.assertEqual(budget.current_balance, Decimal('1000.00'))
+    
+    def test_budget_list_view_with_expenses(self):
+        """Test that budget list view calculates balance correctly with expenses."""
+        # Create some test data
+        month = Month.objects.create(year=2024, month=1, budget=self.budget)
+        payee = Payee.objects.create(name='Test Payee')
+        
+        expense = Expense.objects.create(
+            title='Test Expense',
+            amount=Decimal('300.00'),
+            expense_type='one_time',
+            start_date=date(2024, 1, 15),
+            day_of_month=15,
+            budget=self.budget,
+            payee=payee
+        )
+        
+        ExpenseItem.objects.create(
+            expense=expense,
+            month=month,
+            due_date=date(2024, 1, 15),
+            amount=Decimal('300.00'),
+            status='paid'
+        )
+        
+        # Test the view logic (as fixed in the view)
+        budgets = list(Budget.objects.all())
+        for budget in budgets:
+            budget.current_balance = budget.get_current_balance()
+        
+        budget = budgets[0]  # Should be our test budget
+        
+        # Check balance calculation
+        expected_balance = Decimal('700.00')  # 1000 - 300
+        self.assertEqual(budget.current_balance, expected_balance)
+    
+    def test_budget_list_template_rendering(self):
+        """Test that budget list template can render with balance data."""
+        from django.test import RequestFactory
+        from django.template import Context, Template
+        
+        # Add balance to budget (simulating what the view does)
+        self.budget.current_balance = self.budget.get_current_balance()
+        
+        # Test template rendering with new amount_with_class filter
+        template_content = '''
+        {% load currency_tags %}
+        <td class="text-right">
+            {{ budget.current_balance|amount_with_class }}
+        </td>
+        '''
+        
+        template = Template(template_content)
+        context = Context({'budget': self.budget})
+        rendered = template.render(context)
+        
+        # Should contain the formatted currency with appropriate class
+        self.assertIn('$1,000.00', rendered)
+        self.assertIn('text-right', rendered)
+        self.assertIn('amount-positive', rendered)
+        # Should not have negative styling for positive balance
+        self.assertNotIn('amount-negative', rendered)
+    
+    def test_budget_list_template_negative_balance_styling(self):
+        """Test that negative balances get proper CSS styling."""
+        from django.template import Context, Template
+        
+        # Set negative balance
+        self.budget.current_balance = Decimal('-100.00')
+        
+        template_content = '''
+        {% load currency_tags %}
+        <td class="text-right">
+            {{ budget.current_balance|amount_with_class }}
+        </td>
+        '''
+        
+        template = Template(template_content)
+        context = Context({'budget': self.budget})
+        rendered = template.render(context)
+        
+        # Should contain the formatted currency with negative styling
+        self.assertIn('-$100.00', rendered)
+        self.assertIn('amount-negative', rendered)
+        # Should not have positive styling for negative balance
+        self.assertNotIn('amount-positive', rendered)
