@@ -2,6 +2,7 @@
 
 ## @dev
 
+- [#0102] Split application files into one-file-one-class model for improved code organization and maintainability
 - Fixed test failures in ExpenseItemEditForm validation and view context to ensure consistent form behavior
 - [#0105] Allow negative initial values for budget creation and editing to support deficit tracking
 - [#0104] Added balance column to month list view showing total amount for each month
