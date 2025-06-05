@@ -264,6 +264,18 @@ def month_list(request, budget_id):
     budget = get_object_or_404(Budget, id=budget_id)
     months = Month.objects.filter(budget=budget)
     
+    # Calculate balance for each month (expenses as negative impact)
+    from django.db.models import Sum
+    from decimal import Decimal
+    for month in months:
+        # Sum all expense items for this month
+        total_expenses = month.expenseitem_set.aggregate(
+            total=Sum('amount')
+        )['total'] or Decimal('0.00')
+        
+        # Balance shows financial impact (negative for expenses)
+        month.balance = -total_expenses
+    
     # Get next allowed month for this budget
     next_allowed = Month.get_next_allowed_month(budget=budget)
     
