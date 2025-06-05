@@ -1,7 +1,7 @@
 {% extends 'expenses/base.html' %}
 {% load currency_tags %}
 
-{% block title %}{{ expense.title }}{% endblock %}
+{% block title %}Expense &quot;{{ expense.title }}&quot;{% endblock %}
 
 {% block content %}
 <h1><i class="fas fa-receipt"></i> {{ expense.title }}</h1>
