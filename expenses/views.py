@@ -106,6 +106,9 @@ def dashboard(request, budget_id):
         'month_name': calendar.month_name[display_month],
         'year': display_year,
         'current_weekday': current_weekday,
+        # Display month context for proper date highlighting
+        'display_month': display_month,
+        'display_year': display_year,
     }
     return render(request, 'expenses/dashboard.html', context)
 

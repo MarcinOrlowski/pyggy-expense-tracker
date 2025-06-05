@@ -1,6 +1,7 @@
 from django.test import TestCase
 from django.template import Context, Template
 from decimal import Decimal
+from datetime import date
 from unittest.mock import patch
 from expenses.models import Settings
 from expenses.templatetags.currency_tags import currency, currency_symbol, format_amount, amount_with_class
@@ -403,3 +404,40 @@ class AmountWithClassFilterTest(TestCase):
         self.assertIn('$100.50', result)
         self.assertIn('25.75', result)  # Negative formatting varies
         self.assertIn('$0.00', result)
+
+
+class CreateDateTagTest(TestCase):
+    """Test cases for the create_date template tag."""
+    
+    def test_create_date_valid_parameters(self):
+        """Test create_date with valid year, month, day."""
+        from expenses.templatetags.currency_tags import create_date
+        result = create_date(2023, 12, 25)
+        expected = date(2023, 12, 25)
+        self.assertEqual(result, expected)
+    
+    def test_create_date_string_parameters(self):
+        """Test create_date with string parameters."""
+        from expenses.templatetags.currency_tags import create_date
+        result = create_date('2023', '6', '15')
+        expected = date(2023, 6, 15)
+        self.assertEqual(result, expected)
+    
+    def test_create_date_invalid_parameters(self):
+        """Test create_date with invalid parameters."""
+        from expenses.templatetags.currency_tags import create_date
+        result = create_date('invalid', 'month', 'day')
+        self.assertIsNone(result)
+    
+    def test_create_date_invalid_date(self):
+        """Test create_date with invalid date (February 30th)."""
+        from expenses.templatetags.currency_tags import create_date
+        result = create_date(2023, 2, 30)
+        self.assertIsNone(result)
+    
+    def test_create_date_in_template(self):
+        """Test create_date tag usage in Django template."""
+        template = Template('{% load currency_tags %}{% create_date 2023 12 25 as test_date %}{{ test_date|date:"Y-m-d" }}')
+        context = Context({})
+        result = template.render(context)
+        self.assertEqual(result, '2023-12-25')
