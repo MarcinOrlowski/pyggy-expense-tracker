@@ -2,6 +2,7 @@ from django.db import models
 from django.core.validators import MinValueValidator
 from django.core.exceptions import ValidationError
 from datetime import date
+from typing import Optional, Tuple
 import calendar
 
 
@@ -30,7 +31,7 @@ class ExpenseItem(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    def clean(self):
+    def clean(self) -> None:
         # Import here to avoid circular imports
         from .month import Month
         
@@ -55,7 +56,7 @@ class ExpenseItem(models.Model):
                 else:
                     raise ValidationError(f'Due date must be within {expense_month_name}')
 
-    def get_allowed_month_range(self):
+    def get_allowed_month_range(self) -> Tuple[Optional[date], Optional[date]]:
         """Returns (start_date, end_date) tuple for allowed month range based on expense type and creation month"""
         # Import here to avoid circular imports
         from .month import Month
@@ -86,13 +87,13 @@ class ExpenseItem(models.Model):
         return start_date, end_date
 
     @property
-    def days_until_due(self):
+    def days_until_due(self) -> int:
         """Calculate days until due date from today"""
         today = date.today()
         delta = (self.due_date - today).days
         return delta
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.expense.title} - {self.month} - {self.status}"
 
     class Meta:

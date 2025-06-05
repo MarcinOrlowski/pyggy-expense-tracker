@@ -2,6 +2,7 @@
 
 ## @dev
 
+- [#0120] Added comprehensive type hints to Python codebase for improved code quality and developer experience
 - [#0118] Changed expense item edit behavior to redirect to budget dashboard after save or cancel
 - [#0114] Added in-app help system that renders markdown documentation files with README.md priority, user-friendly error handling, and responsive design
 - [#0062] Added separate colors for expense type icons to improve visual differentiation between expense types

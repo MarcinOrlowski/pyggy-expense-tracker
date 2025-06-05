@@ -1,5 +1,6 @@
 from django.db import models
 from django.core.cache import cache
+from typing import Any
 
 
 class Settings(models.Model):
@@ -24,19 +25,19 @@ class Settings(models.Model):
         verbose_name = "Settings"
         verbose_name_plural = "Settings"
 
-    def save(self, *args, **kwargs):
+    def save(self, *args: Any, **kwargs: Any) -> None:
         """Ensure only one Settings instance exists."""
         self.pk = 1
         super().save(*args, **kwargs)
         # Clear cache when settings are saved
         cache.delete('app_settings')
 
-    def delete(self, *args, **kwargs):
+    def delete(self, *args: Any, **kwargs: Any) -> None:
         """Prevent deletion of settings."""
         pass
 
     @classmethod
-    def load(cls):
+    def load(cls) -> 'Settings':
         """Load or create settings instance."""
         obj, created = cls.objects.get_or_create(pk=1)
         return obj

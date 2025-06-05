@@ -3,6 +3,8 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from django.core.exceptions import ValidationError
 from django.utils import timezone
 from datetime import date
+from decimal import Decimal
+from typing import Dict, List, Optional
 import calendar
 
 
@@ -114,7 +116,7 @@ class Expense(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    def clean(self):
+    def clean(self) -> None:
         """
         Validate expense data based on type-specific business rules.
         
@@ -167,7 +169,7 @@ class Expense(models.Model):
                 if self.start_date < current_month_start:
                     raise ValidationError(f'Start date cannot be earlier than the current month ({most_recent_month})')
 
-    def calculate_payments_count(self):
+    def calculate_payments_count(self) -> int:
         """
         Calculate total number of payments for recurring_with_end expenses.
         
@@ -185,19 +187,19 @@ class Expense(models.Model):
         total_months = (end_year - start_year) * 12 + (end_month - start_month) + 1
         return max(0, total_months)
 
-    def get_expense_type_icon(self):
+    def get_expense_type_icon(self) -> str:
         """Get Font Awesome icon class for the expense type."""
         return self.EXPENSE_TYPE_ICONS.get(self.expense_type, 'fa-question-circle')
     
-    def get_expense_type_icon_css_class(self):
+    def get_expense_type_icon_css_class(self) -> str:
         """Get CSS class for expense type icon color."""
         return f'expense-type-icon-{self.expense_type.replace("_", "-")}'
 
-    def can_be_deleted(self):
+    def can_be_deleted(self) -> bool:
         """Check if this expense can be deleted (no paid expense items)"""
         return not self.expenseitem_set.filter(status='paid').exists()
 
-    def can_be_edited(self):
+    def can_be_edited(self) -> bool:
         """Check if this expense can be edited at all"""
         # Cannot edit if expense is closed
         if self.closed_at:
@@ -210,7 +212,7 @@ class Expense(models.Model):
         # One-time and endless recurring expenses can be edited (with restrictions)
         return True
 
-    def can_edit_amount(self):
+    def can_edit_amount(self) -> bool:
         """Check if the amount field can be edited"""
         # First check if expense can be edited at all
         if not self.can_be_edited():
@@ -223,7 +225,7 @@ class Expense(models.Model):
 
         return True
 
-    def can_edit_date(self):
+    def can_edit_date(self) -> bool:
         """Check if the start date can be edited based on current date restrictions"""
         # Import here to avoid circular imports
         from .month import Month
@@ -252,7 +254,7 @@ class Expense(models.Model):
 
         return True
 
-    def get_next_month_date(self):
+    def get_next_month_date(self) -> Optional[date]:
         """Calculate next month start date for this expense's budget"""
         # Import here to avoid circular imports
         from .month import Month
@@ -270,7 +272,7 @@ class Expense(models.Model):
         else:
             return date(most_recent_month.year, most_recent_month.month + 1, 1)
 
-    def get_edit_restrictions(self):
+    def get_edit_restrictions(self) -> Dict[str, object]:
         """Get detailed information about edit restrictions"""
         restrictions = {
             'can_edit': self.can_be_edited(),
@@ -297,7 +299,7 @@ class Expense(models.Model):
 
         return restrictions
 
-    def get_due_date_for_month(self, year, month):
+    def get_due_date_for_month(self, year: int, month: int) -> date:
         """
         Calculate actual due date for a given month, handling months with fewer days.
         
@@ -319,7 +321,7 @@ class Expense(models.Model):
         actual_day = min(self.day_of_month, last_day_of_month)
         return date(year, month, actual_day)
     
-    def calculate_total_cost(self):
+    def calculate_total_cost(self) -> Decimal:
         """
         Calculate total cost based on expense type.
         
@@ -334,7 +336,7 @@ class Expense(models.Model):
             return self.amount * self.total_parts
         return self.amount
     
-    def get_remaining_parts(self):
+    def get_remaining_parts(self) -> int:
         """
         For split payments: calculate how many parts are still pending.
         
@@ -349,7 +351,7 @@ class Expense(models.Model):
             return max(0, self.total_parts - self.skip_parts)
         return 0
 
-    def __str__(self):
+    def __str__(self) -> str:
         if self.payee:
             return f"{self.title} - {self.payee.name}"
         return self.title
