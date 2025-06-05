@@ -41,4 +41,8 @@ urlpatterns = [
     path('payment-methods/create/', views.payment_method_create, name='payment_method_create'),
     path('payment-methods/<int:pk>/edit/', views.payment_method_edit, name='payment_method_edit'),
     path('payment-methods/<int:pk>/delete/', views.payment_method_delete, name='payment_method_delete'),
+    
+    # Help System
+    path('help/', views.help_index, name='help_index'),
+    path('help/<str:page_name>/', views.help_page, name='help_page'),
 ]
