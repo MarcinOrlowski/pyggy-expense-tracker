@@ -41,7 +41,8 @@
                 </tbody>
             </table>
         {% else %}
-            <p>No months have been added yet. <a href="{% url 'month_process' budget.id %}"><i class="fas fa-calendar-plus icon-left"></i>Add the first month</a>.</p>
+            <p>No months have been added yet.</p>
+            <a href="{% url 'month_process' budget.id %}" class="btn btn-primary"><i class="fas fa-calendar-plus icon-left"></i>Add First Month</a>
         {% endif %}
     </div>
 </div>

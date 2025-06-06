@@ -29,7 +29,7 @@
     </div>
     <div class="card-body">
         <p>No months have been created yet. Start by adding your first month to begin tracking expenses.</p>
-        <p>Go to <strong>Months → Add initial month</strong> to choose your starting month.</p>
+        <a href="{% url 'month_process' budget.id %}" class="btn btn-primary"><i class="fas fa-calendar-plus icon-left"></i>Add First Month</a>
     </div>
 </div>
 {% elif not_current_month %}
