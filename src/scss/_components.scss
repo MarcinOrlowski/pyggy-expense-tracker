@@ -104,12 +104,12 @@ footer {
     }
 }
 
-// Messages
-.messages {
+// Flash Messages
+.flash-messages {
     margin-bottom: 1rem;
 }
 
-.message {
+.flash-message {
     padding: 0.75rem 1rem;
     margin-bottom: 0.5rem;
     border-radius: 4px;
@@ -120,11 +120,11 @@ footer {
     transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
-.message-text {
+.flash-message-text {
     flex: 1;
 }
 
-.message-close {
+.flash-message-close {
     background: none;
     border: none;
     color: inherit;
@@ -141,30 +141,30 @@ footer {
     transition: opacity 0.2s ease, background-color 0.2s ease;
 }
 
-.message-close:hover,
-.message-close:focus {
+.flash-message-close:hover,
+.flash-message-close:focus {
     opacity: 1;
     background-color: rgba(0, 0, 0, 0.1);
     outline: none;
 }
 
-.message-close i {
+.flash-message-close i {
     font-size: 0.75rem;
 }
 
-.message.success {
+.flash-message-success {
     background-color: var(--color-green-muted);
     border-color: var(--color-green);
     color: var(--color-green);
 }
 
-.message.error {
+.flash-message-error {
     background-color: var(--color-red-muted);
     border-color: var(--color-red);
     color: var(--color-red);
 }
 
-.message.warning {
+.flash-message-warning {
     background-color: var(--color-yellow-muted);
     border-color: var(--color-yellow);
     color: var(--color-yellow);

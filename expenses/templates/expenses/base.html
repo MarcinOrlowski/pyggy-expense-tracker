@@ -43,11 +43,11 @@
     <main>
         <div class="container">
             {% if messages %}
-                <div class="messages">
+                <div class="flash-messages">
                     {% for message in messages %}
-                        <div class="message {{ message.tags }}">
-                            <span class="message-text">{{ message }}</span>
-                            <button type="button" class="message-close" aria-label="Close message">
+                        <div class="flash-message flash-message-{{ message.tags }}">
+                            <span class="flash-message-text">{{ message }}</span>
+                            <button type="button" class="flash-message-close" aria-label="Close message">
                                 <i class="fas fa-times"></i>
                             </button>
                         </div>

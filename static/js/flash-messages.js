@@ -3,12 +3,12 @@
  * Handles close button functionality for Django messages
  */
 document.addEventListener('DOMContentLoaded', function() {
-    // Add click event listeners to all message close buttons
-    const closeButtons = document.querySelectorAll('.message-close');
+    // Add click event listeners to all flash message close buttons
+    const closeButtons = document.querySelectorAll('.flash-message-close');
     
     closeButtons.forEach(function(button) {
         button.addEventListener('click', function() {
-            const messageElement = this.closest('.message');
+            const messageElement = this.closest('.flash-message');
             if (messageElement) {
                 // Add fade-out animation
                 messageElement.style.opacity = '0';
@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     messageElement.remove();
                     
                     // If this was the last message, remove the messages container
-                    const messagesContainer = document.querySelector('.messages');
+                    const messagesContainer = document.querySelector('.flash-messages');
                     if (messagesContainer && messagesContainer.children.length === 0) {
                         messagesContainer.remove();
                     }
