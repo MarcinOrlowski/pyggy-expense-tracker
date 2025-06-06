@@ -735,3 +735,12 @@ footer {
     color: var(--color-purple) !important;
 }
 
+// Dashboard Relative Time Indicator
+.relative-time-indicator {
+    font-size: 0.6em;
+    font-weight: 400;
+    color: var(--text-secondary);
+    opacity: 0.8;
+    margin-left: 0.5rem;
+}
+
