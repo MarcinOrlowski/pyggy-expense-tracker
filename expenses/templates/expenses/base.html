@@ -46,7 +46,10 @@
                 <div class="messages">
                     {% for message in messages %}
                         <div class="message {{ message.tags }}">
-                            {{ message }}
+                            <span class="message-text">{{ message }}</span>
+                            <button type="button" class="message-close" aria-label="Close message">
+                                <i class="fas fa-times"></i>
+                            </button>
                         </div>
                     {% endfor %}
                 </div>
@@ -73,5 +76,7 @@
             </div>
         </div>
     </footer>
+    
+    <script src="{% static 'js/flash-messages.js' %}"></script>
 </body>
 </html>
