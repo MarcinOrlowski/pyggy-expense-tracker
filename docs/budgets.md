@@ -169,7 +169,7 @@ Use clear, consistent naming:
 
 ### Starting Fresh
 
-1. Begin with one "General" budget (initial amount: 0.00)
+1. Begin with one "General" budget (initial amount: `0.00`)
 2. Add expenses and track for a month
 3. Identify natural expense categories
 4. Create additional budgets as needed

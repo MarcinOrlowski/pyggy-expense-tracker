@@ -46,7 +46,7 @@
 
 <!-- Current Month Expenses List -->
 {% if has_any_months and current_month %}
-{% include "expenses/includes/expense_items_table.html" with table_title="Current Month Expenses" month=current_month items=all_expense_items layout="dashboard" empty_message="No expense items this month." %}
+{% include "expenses/includes/expense_items_table.html" with table_title="Expenses" month=current_month items=all_expense_items layout="dashboard" empty_message="No expense items this month." %}
 {% endif %}
 
 {% endblock %}

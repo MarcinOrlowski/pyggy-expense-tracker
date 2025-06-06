@@ -1,33 +1,4 @@
-![PyGGy Logo](docs/img/logo.png)
-
 # PyGGy - Python (Monthly) Expense Tracker
-
-A Django-based expense tracking application designed to manage different types of
-expenses with monthly processing workflows. This proof-of-concept demonstrates core
-expense management functionality as a foundation for a comprehensive budget
-management system.
-
-## Features
-
-### Core Functionality
-
-- **Four Expense Types**:
-  - **Endless Recurring**: Monthly expenses without end date (utilities, subscriptions)
-  - **Split Payments**: Fixed installments (loans, payment plans)
-  - **One-time Payments**: Single payment expenses
-  - **Recurring with End Date**: Monthly expense expenses until time comes
-- **Monthly Processing**: Sequential month creation with automatic expense generation
-- **Payment Tracking**: Record actual payment dates and methods
-- **Multiple Budgets**: Let's you track multiple money pipelines at once
-- **Business Rules Enforcement**: Start date validation, automatic expense completion
-
-### Technical Highlights
-
-- Built with Django 5.2 LTS
-- SQLite database (PostgreSQL-ready)
-- Responsive HTML5/CSS3 interface with SASS styling
-- Function-based views for simplicity
-- Comprehensive model validation
 
 ## Requirements
 
@@ -58,7 +29,7 @@ management system.
    docker compose exec web python manage.py createsuperuser
    ```
 
-See [DOCKER.md](DOCKER.md) for detailed Docker usage, including building and publishing images.
+See [docker.md](docker.md) for detailed Docker usage, including building and publishing images.
 
 ### Manual Installation
 
@@ -111,7 +82,7 @@ python manage.py runserver
 Access the application:
 
 - Main application: <http://127.0.0.1:8000/>
-- Django Admin interface: <http://127.0.0.1:8000/admin/>
+- Django Admin interface: <http://127.0.0.1:8000/admin/> (but you do not need it really)
 
 ## Quick Start Scripts
 
@@ -120,14 +91,12 @@ The project includes convenience scripts:
 - **init.sh**: Run migrations and load initial data
 
   ```bash
-  chmod +x init.sh
   ./init.sh
   ```
 
 - **run.sh**: Start the development server
 
   ```bash
-  chmod +x run.sh
   ./run.sh
   ```
 
@@ -174,13 +143,13 @@ The project uses SASS for styling with django-sass-processor for automatic compi
 
 ### Management Commands
 
-- `python manage.py setup_initial_data`: Load all initial fixtures
-- `python manage.py seed_initial_month`: Create the initial month (required once)
+- `./manage.py setup_initial_data`: Load all initial fixtures
+- `./manage.py seed_initial_month`: Create the initial month (required once)
 
 ### Testing
 
 Run Django tests:
 
 ```bash
-python manage.py test
+./manage.py test
 ```

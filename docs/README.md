@@ -1,3 +1,5 @@
+![PyGGy Logo](img/logo.png)
+
 # PyGGy Usage Documentation
 
 Welcome to PyGGy, a Django-based monthly expense tracker designed to help you manage your finances
@@ -57,7 +59,5 @@ Payments record when expense items are actually paid, including the payment date
 ## Getting Help
 
 - **In-App Help**: This documentation is available within PyGGy through the Help menu
-- **GitHub Issues
-  **: [Report bugs or request features](https://github.com/MarcinOrlowski/pyggy-expense-tracker/issues)
-- **Source Code
-  **: [View the project on GitHub](https://github.com/MarcinOrlowski/pyggy-expense-tracker)
+- **GitHub Issues**: [Report bugs or request features](https://github.com/MarcinOrlowski/pyggy-expense-tracker/issues)
+- **Source Code**: [View the project on GitHub](https://github.com/MarcinOrlowski/pyggy-expense-tracker)
