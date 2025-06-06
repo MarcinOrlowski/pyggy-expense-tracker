@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from datetime import date
 from collections import OrderedDict
+from typing import List
 from ..models import Expense, ExpenseItem, Month, Payee, Budget
 from ..forms import ExpenseForm
 
@@ -25,7 +26,7 @@ def expense_list(request, budget_id):
         expenses = expenses.filter(payee_id=payee_id)
 
     # Group expenses by year-month
-    grouped_expenses = OrderedDict()
+    grouped_expenses: OrderedDict[str, List[Expense]] = OrderedDict()
     for expense in expenses:
         year_month = expense.start_date.strftime("%Y-%m")
         if year_month not in grouped_expenses:
