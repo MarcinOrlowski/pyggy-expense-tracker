@@ -1,0 +1,35 @@
+{% load currency_tags %}
+<div class="card">
+    <div class="card-header">
+        {{ header_title|default:"Month Summary" }}
+        {% if month %}
+            - {{ month.year }}-{{ month.month|stringformat:"02d" }}
+        {% elif current_date and not_processed %}
+            - {{ current_date.year }}-{{ current_date.month|stringformat:"02d" }} (Not added yet)
+        {% endif %}
+    </div>
+    <div class="card-body">
+        {% if show_welcome %}
+            <p>No months have been created yet. Start by adding your first month to begin tracking expenses.</p>
+            <p>Go to <strong>Months → Add initial month</strong> to choose your starting month.</p>
+        {% elif not_processed %}
+            <p>The current month hasn't been added yet.</p>
+        {% else %}
+            <div class="grid-3-cols">
+                <div>
+                    <div class="month-summary-amount">{{ summary.total|amount_with_class }}</div>
+                    <div class="month-summary-label">Total {{ period_label|default:"Amount" }}</div>
+                </div>
+                <div>
+                    <div class="month-summary-amount">{{ summary.paid|amount_with_class }}</div>
+                    <div class="month-summary-label">Paid</div>
+                    {% if summary.paid_count %}<div class="month-summary-meta">({{ summary.paid_count }} items)</div>{% endif %}
+                </div>
+                <div>
+                    <div class="month-summary-amount">{{ summary.pending|amount_with_class }}</div>
+                    <div class="month-summary-label">Pending</div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>

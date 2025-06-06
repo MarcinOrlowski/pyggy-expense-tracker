@@ -1,0 +1,23 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    image: pyggy-expense-tracker:dev
+    ports:
+      - "8000:8000"
+    volumes:
+      # Mount source code for hot-reloading
+      - .:/app
+      # Persist database
+      - ./db.sqlite3:/app/db.sqlite3
+      # Persist static files
+      - ./staticfiles:/app/staticfiles
+      - ./static:/app/static
+    environment:
+      - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY:-django-insecure-^@fe0-h81tzh3w#-mh$9$lgz74f240=2y_&0erqlb84q@%1tx3}
+      - DJANGO_DEBUG=${DJANGO_DEBUG:-True}
+      - DJANGO_ALLOWED_HOSTS=${DJANGO_ALLOWED_HOSTS:-localhost,127.0.0.1,0.0.0.0}
+      - PYTHONUNBUFFERED=1
+    # Restart policy for development
+    restart: unless-stopped

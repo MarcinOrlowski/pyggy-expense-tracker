@@ -1,0 +1,98 @@
+{% extends 'expenses/base.html' %}
+
+{% block title %}Page Not Found{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1><i class="fas fa-exclamation-triangle"></i> Page Not Found</h1>
+</div>
+
+<div class="error-content">
+    <div class="error-message">
+        <div class="error-icon">
+            <i class="fas fa-map-signs fa-4x"></i>
+        </div>
+        <h2>Oops! The page you're looking for doesn't exist.</h2>
+        <p>The page you requested could not be found. This might happen when:</p>
+        <ul>
+            <li>The URL was typed incorrectly</li>
+            <li>A bookmark is outdated</li>
+            <li>The page has been moved or deleted</li>
+            <li>You don't have permission to access this resource</li>
+        </ul>
+        
+        <div class="error-actions">
+            <a href="{% url 'budget_list' %}" class="btn btn-primary">
+                <i class="fas fa-home"></i> Go to Budget List
+            </a>
+            <a href="{% url 'help_index' %}" class="btn btn-secondary">
+                <i class="fas fa-question-circle"></i> Get Help
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+.error-content {
+    max-width: 600px;
+    margin: 2rem auto;
+    text-align: center;
+}
+
+.error-icon {
+    color: #ffc107;
+    margin-bottom: 2rem;
+}
+
+.error-message h2 {
+    color: var(--text-color);
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+}
+
+.error-message p {
+    color: var(--text-muted);
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+}
+
+.error-message ul {
+    text-align: left;
+    max-width: 400px;
+    margin: 1.5rem auto;
+    color: var(--text-muted);
+}
+
+.error-message li {
+    margin-bottom: 0.5rem;
+}
+
+.error-actions {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-top: 2rem;
+}
+
+.error-actions .btn {
+    min-width: 150px;
+}
+
+@media (max-width: 768px) {
+    .error-content {
+        padding: 1rem;
+    }
+    
+    .error-actions {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .error-actions .btn {
+        width: 100%;
+        max-width: 250px;
+    }
+}
+</style>
+{% endblock %}

@@ -1,46 +1,42 @@
 {% extends 'expenses/base.html' %}
+{% load currency_tags %}
 
-{% block title %}Expenses - Expense Tracker{% endblock %}
+{% block title %}Expenses{% endblock %}
 
 {% block content %}
-<h1>Active Expenses</h1>
+<h1><i class="fas fa-receipt"></i> Expenses</h1>
 
-<div class="card">
-    <div class="card-header">Filter Expenses</div>
-    <div class="card-body">
-        <form method="get">
-            <div class="flex-row">
-                <div class="form-group flex-1">
-                    <label for="type">Expense Type:</label>
-                    <select name="type" id="type">
-                        <option value="">All Types</option>
-                        {% for value, label in expense_types %}
-                            <option value="{{ value }}" {% if value == selected_type %}selected{% endif %}>{{ label }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <div class="form-group flex-1">
-                    <label for="payee">Payee:</label>
-                    <select name="payee" id="payee">
-                        <option value="">All Payees</option>
-                        {% for payee in payees %}
-                            <option value="{{ payee.pk }}" {% if payee.pk == selected_payee %}selected{% endif %}>{{ payee.name }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-            </div>
-            <div class="form-actions">
-                <button type="submit" class="btn"><i class="fas fa-filter icon-left"></i>Filter</button>
-                <a href="{% url 'expense_list' %}" class="btn btn-secondary"><i class="fas fa-eraser icon-left"></i>Clear</a>
-            </div>
-        </form>
-    </div>
+<div class="filter-bar">
+    <form method="get" class="filter-form">
+        <div class="filter-group">
+            <label for="type">Expense Type:</label>
+            <select name="type" id="type">
+                <option value="">All Types</option>
+                {% for value, label in expense_types %}
+                    <option value="{{ value }}" {% if value == selected_type %}selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="filter-group">
+            <label for="payee">Payee:</label>
+            <select name="payee" id="payee">
+                <option value="">All Payees</option>
+                {% for payee in payees %}
+                    <option value="{{ payee.pk }}" {% if payee.pk == selected_payee %}selected{% endif %}>{{ payee.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="filter-actions">
+            <a href="{% url 'expense_list' budget.id %}" class="btn btn-icon btn-secondary" title="Clear filters"><i class="fas fa-eraser"></i></a>
+            <button type="submit" class="btn btn-filter"><i class="fas fa-filter icon-left"></i>Filter</button>
+        </div>
+    </form>
 </div>
 
 <div class="card">
     <div class="card-header">
         Expenses ({{ expenses|length }} found)
-        <a href="{% url 'expense_create' %}" class="btn card-header-action"><i class="fas fa-circle-plus icon-left"></i>Add New Expense</a>
+        <a href="{% url 'expense_create' budget.id %}" class="btn card-header-action"><i class="fas fa-circle-plus icon-left"></i>Add New Expense</a>
     </div>
     <div class="card-body">
         {% if expenses %}
@@ -50,7 +46,7 @@
                         <th>Title</th>
                         <th>Payee</th>
                         <th>Type</th>
-                        <th class="amount-column">Total Amount</th>
+                        <th class="amount-column">Amount</th>
                         <th>Started</th>
                         <th>Installments</th>
                         <th class="actions-column">Actions</th>
@@ -59,29 +55,42 @@
                 <tbody>
                     {% for expense in expenses %}
                     <tr>
-                        <td>{{ expense.title }}</td>
+                        <td>
+                            {{ expense.title }}
+                            {% if expense.notes %}
+                                <i class="fas fa-sticky-note" title="Has notes"></i>
+                            {% endif %}
+                        </td>
                         <td>{% if expense.payee %}{{ expense.payee.name }}{% else %}-{% endif %}</td>
-                        <td>{{ expense.get_expense_type_display }}</td>
-                        <td class="amount-column">${{ expense.total_amount|floatformat:2 }}</td>
-                        <td>{{ expense.started_at|date:"Y-m-d" }}</td>
+                        <td><i class="fas {{ expense.get_expense_type_icon }} {{ expense.get_expense_type_icon_css_class }}" aria-label="{{ expense.get_expense_type_display }}" title="{{ expense.get_expense_type_display }}"></i> {{ expense.get_expense_type_display }}</td>
+                        <td class="amount-column">
+                            {% if expense.expense_type == 'split_payment' %}
+                                {{ expense.amount|amount_with_class }} <small>/ month</small>
+                            {% else %}
+                                {{ expense.amount|amount_with_class }}
+                            {% endif %}
+                        </td>
+                        <td>{{ expense.start_date|date:"Y-m-d" }}</td>
                         <td>
                             {% if expense.expense_type == 'split_payment' %}
-                                {{ expense.installments_count }}
+                                {{ expense.total_parts }}
                             {% else %}
                                 -
                             {% endif %}
                         </td>
                         <td class="actions-column">
-                            <a href="{% url 'expense_detail' expense.pk %}" class="btn btn-secondary btn-sm" title="View Details" aria-label="View Details"><i class="fas fa-eye"></i></a>
-                            <a href="{% url 'expense_edit' expense.pk %}" class="btn btn-sm" title="Edit Expense" aria-label="Edit Expense"><i class="fas fa-pen-to-square"></i></a>
-                            <a href="{% url 'expense_delete' expense.pk %}" class="btn btn-danger btn-sm" title="Delete Expense" aria-label="Delete Expense"><i class="fas fa-trash-can"></i></a>
+                            <a href="{% url 'expense_detail' budget.id expense.pk %}" class="btn btn-sm" title="View Details" aria-label="View Details"><i class="fas fa-eye"></i></a>
+                            <a href="{% url 'expense_edit' budget.id expense.pk %}" class="btn btn-sm" title="Edit Expense" aria-label="Edit Expense"><i class="fas fa-pen-to-square"></i></a>
+                            {% if expense.can_be_deleted %}
+                            <a href="{% url 'expense_delete' budget.id expense.pk %}" class="btn btn-danger btn-sm" title="Delete Expense" aria-label="Delete Expense"><i class="fas fa-trash-can"></i></a>
+                            {% endif %}
                         </td>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
         {% else %}
-            <p>No expenses found. <a href="{% url 'expense_create' %}"><i class="fas fa-circle-plus icon-left"></i>Create your first expense</a>.</p>
+            <p>No expenses found. <a href="{% url 'expense_create' budget.id %}"><i class="fas fa-circle-plus icon-left"></i>Create your first expense</a>.</p>
         {% endif %}
     </div>
 </div>

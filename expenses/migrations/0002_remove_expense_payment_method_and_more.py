@@ -7,22 +7,29 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('expenses', '0001_initial'),
+        ("expenses", "0001_initial"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='expense',
-            name='payment_method',
+            model_name="expense",
+            name="payment_method",
         ),
         migrations.AddField(
-            model_name='expenseitem',
-            name='payment_method',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='expenses.paymentmethod'),
+            model_name="expenseitem",
+            name="payment_method",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                to="expenses.paymentmethod",
+            ),
         ),
         migrations.AlterField(
-            model_name='expense',
-            name='payee',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='expenses.payee'),
+            model_name="expense",
+            name="payee",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.PROTECT, to="expenses.payee"
+            ),
         ),
     ]

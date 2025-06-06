@@ -1,0 +1,32 @@
+<div class="calendar-grid">
+    <!-- Weekday headers -->
+    <div class="calendar-weekday {% if current_weekday == 0 and display_month == today.month and display_year == today.year %}calendar-weekday--today{% endif %}">Mon</div>
+    <div class="calendar-weekday {% if current_weekday == 1 and display_month == today.month and display_year == today.year %}calendar-weekday--today{% endif %}">Tue</div>
+    <div class="calendar-weekday {% if current_weekday == 2 and display_month == today.month and display_year == today.year %}calendar-weekday--today{% endif %}">Wed</div>
+    <div class="calendar-weekday {% if current_weekday == 3 and display_month == today.month and display_year == today.year %}calendar-weekday--today{% endif %}">Thu</div>
+    <div class="calendar-weekday {% if current_weekday == 4 and display_month == today.month and display_year == today.year %}calendar-weekday--today{% endif %}">Fri</div>
+    <div class="calendar-weekday calendar-weekday--weekend {% if current_weekday == 5 and display_month == today.month and display_year == today.year %}calendar-weekday--today{% endif %}">Sat</div>
+    <div class="calendar-weekday calendar-weekday--weekend {% if current_weekday == 6 and display_month == today.month and display_year == today.year %}calendar-weekday--today{% endif %}">Sun</div>
+    
+    <!-- Calendar days -->
+    {% for week in calendar_weeks %}
+        {% for day in week %}
+            {% if day == 0 %}
+                <div class="calendar-day calendar-day--empty"></div>
+            {% else %}
+                {% with day_index=forloop.counter0 %}
+                {% load currency_tags %}
+                {% create_date display_year display_month day as current_calendar_date %}
+                <div class="calendar-day 
+                    {% if current_calendar_date == today %}calendar-day--today{% endif %}
+                    {% if current_calendar_date < today %}calendar-day--past{% endif %}
+                    {% if current_calendar_date > today %}calendar-day--future{% endif %}
+                    {% if day_index == 5 or day_index == 6 %}calendar-day--weekend{% endif %}
+                    {% if day in due_days %}calendar-day--has-due{% endif %}">
+                    {{ day }}
+                </div>
+                {% endwith %}
+            {% endif %}
+        {% endfor %}
+    {% endfor %}
+</div>

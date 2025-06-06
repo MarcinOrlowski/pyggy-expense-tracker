@@ -1,31 +1,41 @@
 {% extends 'expenses/base.html' %}
+{% load currency_tags %}
 
-{% block title %}{{ expense.title }} - Expense Tracker{% endblock %}
+{% block title %}Expense &quot;{{ expense.title }}&quot;{% endblock %}
 
 {% block content %}
-<h1>{{ expense.title }}</h1>
+<h1><i class="fas fa-receipt"></i> {{ expense.title }}</h1>
 
 <div class="card">
     <div class="card-header">
         Expense Details
         <span class="card-header-action">
-            <a href="{% url 'expense_edit' expense.pk %}" class="btn btn-sm" title="Edit Expense" aria-label="Edit Expense"><i class="fas fa-pen-to-square"></i></a>
-            <a href="{% url 'expense_delete' expense.pk %}" class="btn btn-danger btn-sm" title="Delete Expense" aria-label="Delete Expense"><i class="fas fa-trash-can"></i></a>
+            {% if edit_restrictions.can_edit %}
+            <a href="{% url 'expense_edit' budget.id expense.pk %}" class="btn btn-sm" title="Edit Expense" aria-label="Edit Expense"><i class="fas fa-pen-to-square"></i></a>
+            {% else %}
+            <button class="btn btn-sm" disabled title="{{ edit_restrictions.reasons|join:', ' }}" aria-label="Cannot edit expense"><i class="fas fa-pen-to-square"></i></button>
+            {% endif %}
+            {% if expense.can_be_deleted %}
+            <a href="{% url 'expense_delete' budget.id expense.pk %}" class="btn btn-danger btn-sm" title="Delete Expense" aria-label="Delete Expense"><i class="fas fa-trash-can"></i></a>
+            {% endif %}
         </span>
     </div>
     <div class="card-body">
         <div class="grid-2-cols">
             <div>
                 <p><strong>Payee:</strong> {% if expense.payee %}{{ expense.payee.name }}{% else %}-{% endif %}</p>
-                <p><strong>Type:</strong> {{ expense.get_expense_type_display }}</p>
-                <p><strong>Total Amount:</strong> ${{ expense.total_amount|floatformat:2 }}</p>
+                <p><strong>Type:</strong> <i class="fas {{ expense.get_expense_type_icon }} {{ expense.get_expense_type_icon_css_class }}" aria-label="{{ expense.get_expense_type_display }}"></i> {{ expense.get_expense_type_display }}</p>
+                <p><strong>Amount:</strong> {{ expense.amount|amount_with_class }}</p>
             </div>
             <div>
-                <p><strong>Started:</strong> {{ expense.started_at|date:"Y-m-d" }}</p>
+                <p><strong>Started:</strong> {{ expense.start_date|date:"Y-m-d" }}</p>
                 {% if expense.expense_type == 'split_payment' %}
-                    <p><strong>Installments:</strong> {{ expense.installments_count }}</p>
+                    <p><strong>Installments:</strong> {{ expense.total_parts }}</p>
                 {% endif %}
-                <p><strong>Status:</strong> 
+                {% if expense.expense_type == 'recurring_with_end' and expense.end_date %}
+                    <p><strong>End Date:</strong> {{ expense.end_date|date:"Y-m-d" }}</p>
+                {% endif %}
+                <p><strong>Status:</strong>
                     {% if expense.closed_at %}
                         <span class="status-paid">Completed</span>
                     {% else %}
@@ -34,6 +44,13 @@
                 </p>
             </div>
         </div>
+
+        {% if expense.notes %}
+        <div class="notes-section">
+            <p><strong>Notes:</strong></p>
+            <div class="notes-content">{{ expense.notes|linebreaks }}</div>
+        </div>
+        {% endif %}
     </div>
 </div>
 
@@ -56,7 +73,7 @@
                     <tr class="{% if item.status == 'paid' %}expense-item-paid{% else %}expense-item-pending{% endif %}">
                         <td>{{ item.month }}</td>
                         <td>{{ item.due_date|date:"Y-m-d" }}</td>
-                        <td class="amount-column">${{ item.amount|floatformat:2 }}</td>
+                        <td class="amount-column">{{ item.amount|amount_with_class }}</td>
                         <td>
                             {% if item.payment_date %}
                                 {{ item.payment_date|date:"Y-m-d" }}
@@ -65,10 +82,11 @@
                             {% endif %}
                         </td>
                         <td class="actions-column">
+                            <a href="{% url 'expense_item_edit' budget.id item.pk %}" class="btn btn-sm" title="Edit Due Date" aria-label="Edit Due Date"><i class="fas fa-calendar-days"></i></a>
                             {% if item.status == 'pending' %}
-                                <a href="{% url 'expense_item_pay' item.pk %}" class="btn btn-success btn-sm" title="Mark as Paid" aria-label="Mark as Paid"><i class="fas fa-circle-check"></i></a>
+                                <a href="{% url 'expense_item_pay' budget.id item.pk %}" class="btn btn-sm" title="Mark as Paid" aria-label="Mark as Paid"><i class="fas fa-check"></i></a>
                             {% else %}
-                                <a href="{% url 'expense_item_unpay' item.pk %}" class="btn btn-warning btn-sm" title="Mark as Unpaid" aria-label="Mark as Unpaid"><i class="fas fa-rotate-left"></i></a>
+                                <a href="{% url 'expense_item_unpay' budget.id item.pk %}" class="btn btn-sm" title="Mark as Unpaid" aria-label="Mark as Unpaid"><i class="fas fa-undo"></i></a>
                             {% endif %}
                         </td>
                     </tr>
@@ -76,14 +94,8 @@
                 </tbody>
             </table>
         {% else %}
-            <p>No expense items found. This expense may need to be processed for the current month.</p>
+            <p>No expense items found. This expense may need a month to be added to the budget.</p>
         {% endif %}
-    </div>
-</div>
-
-<div class="card">
-    <div class="card-body">
-        <a href="{% url 'expense_list' %}" class="btn btn-secondary"><i class="fas fa-arrow-left icon-left"></i>Back to Expenses</a>
     </div>
 </div>
 {% endblock %}

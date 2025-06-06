@@ -1,78 +1,144 @@
 {% extends 'expenses/base.html' %}
 
-{% block title %}{{ title }} - Expense Tracker{% endblock %}
+{% block title %}{{ title }}{% endblock %}
 
 {% block content %}
+<h1><i class="fas fa-plus-circle"></i> {{ title }}</h1>
+
 <div class="card">
-    <div class="card-header">
-        {{ title }}
-    </div>
     <div class="card-body">
         <form method="post">
             {% csrf_token %}
-            
+
             {% if form.non_field_errors %}
                 <div class="message error">
                     {{ form.non_field_errors }}
                 </div>
             {% endif %}
-            
+
+            {% if edit_restrictions and not edit_restrictions.can_edit_amount %}
+                <div class="message warning">
+                    <i class="fas fa-exclamation-triangle"></i> Note: Amount cannot be edited because this expense has paid items. You can still update other fields.
+                </div>
+            {% endif %}
+
+            {% if edit_restrictions and not edit_restrictions.can_edit_date %}
+                <div class="message warning">
+                    <i class="fas fa-exclamation-triangle"></i> Note: Date cannot be edited for expenses earlier than next month. You can still update other fields.
+                </div>
+            {% endif %}
+
+            <!-- Two column layout for main fields -->
+            <div class="grid-2-cols">
+                <div class="form-group">
+                    <label for="{{ form.title.id_for_label }}">{{ form.title.label }}:</label>
+                    {{ form.title }}
+                    {% if form.title.errors %}
+                        <div class="message error">{{ form.title.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.amount.id_for_label }}" id="amount-label">{{ form.amount.label }}:</label>
+                    {{ form.amount }}
+                    <small id="amount-help">{{ form.amount.help_text }}</small>
+                    {% if edit_restrictions and not edit_restrictions.can_edit_amount %}
+                        <small class="text-muted"><i class="fas fa-lock"></i> Amount cannot be edited because expense has paid items</small>
+                    {% endif %}
+                    {% if form.amount.errors %}
+                        <div class="message error">{{ form.amount.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.payee.id_for_label }}">{{ form.payee.label }}:</label>
+                    {{ form.payee }}
+                    {% if form.payee.errors %}
+                        <div class="message error">{{ form.payee.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.expense_type.id_for_label }}">{{ form.expense_type.label }}:</label>
+                    {{ form.expense_type }}
+                    {% if form.expense_type.errors %}
+                        <div class="message error">{{ form.expense_type.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group" id="total-parts-group">
+                    <label for="{{ form.total_parts.id_for_label }}">{{ form.total_parts.label }}:</label>
+                    {{ form.total_parts }}
+                    {% if form.total_parts.errors %}
+                        <div class="message error">{{ form.total_parts.errors }}</div>
+                    {% endif %}
+                    <small>{{ form.total_parts.help_text }}</small>
+                </div>
+
+                <div class="form-group" id="skip-parts-group">
+                    <label for="{{ form.skip_parts.id_for_label }}">{{ form.skip_parts.label }}:</label>
+                    {{ form.skip_parts }}
+                    {% if form.skip_parts.errors %}
+                        <div class="message error">{{ form.skip_parts.errors }}</div>
+                    {% endif %}
+                    <small>{{ form.skip_parts.help_text }}</small>
+                    {% if form.skip_parts.help_text %}
+                        <small class="text-muted"><i class="fas fa-lock"></i> Skip parts cannot be changed after expense creation</small>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.start_date.id_for_label }}">{{ form.start_date.label }}:</label>
+                    {{ form.start_date }}
+                    <small>{{ form.start_date.help_text }}</small>
+                    {% if edit_restrictions and not edit_restrictions.can_edit_date %}
+                        <small class="text-muted"><i class="fas fa-lock"></i> Date cannot be edited for expenses earlier than next month</small>
+                    {% endif %}
+                    {% if form.start_date.errors %}
+                        <div class="message error">{{ form.start_date.errors }}</div>
+                    {% endif %}
+                </div>
+                
+                <div class="form-group">
+                    <label for="{{ form.day_of_month.id_for_label }}">{{ form.day_of_month.label }}:</label>
+                    {{ form.day_of_month }}
+                    <small>{{ form.day_of_month.help_text }}</small>
+                    {% if form.day_of_month.errors %}
+                        <div class="message error">{{ form.day_of_month.errors }}</div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="form-group" id="end-date-group">
+                <label for="{{ form.end_date.id_for_label }}">{{ form.end_date.label }}:</label>
+                {{ form.end_date }}
+                <small>End date must be on or after the start date. The final payment will be generated in the month containing this date.</small>
+                <div id="payment-count-preview" style="display: none; margin-top: 8px;">
+                    <small><strong>Payment Preview:</strong> <span id="payment-count-text"></span></small>
+                </div>
+                {% if form.end_date.help_text %}
+                    <small>{{ form.end_date.help_text }}</small>
+                {% endif %}
+                {% if form.end_date.errors %}
+                    <div class="message error">{{ form.end_date.errors }}</div>
+                {% endif %}
+            </div>
+
+            <!-- Notes field below in full width -->
             <div class="form-group">
-                <label for="{{ form.payee.id_for_label }}">{{ form.payee.label }}:</label>
-                {{ form.payee }}
-                {% if form.payee.errors %}
-                    <div class="message error">{{ form.payee.errors }}</div>
+                <label for="{{ form.notes.id_for_label }}">{{ form.notes.label }}:</label>
+                {{ form.notes }}
+                {% if form.notes.help_text %}
+                    <small>{{ form.notes.help_text }}</small>
+                {% endif %}
+                {% if form.notes.errors %}
+                    <div class="message error">{{ form.notes.errors }}</div>
                 {% endif %}
             </div>
-            
-            <div class="form-group">
-                <label for="{{ form.title.id_for_label }}">{{ form.title.label }}:</label>
-                {{ form.title }}
-                {% if form.title.errors %}
-                    <div class="message error">{{ form.title.errors }}</div>
-                {% endif %}
-            </div>
-            
-            <div class="form-group">
-                <label for="{{ form.expense_type.id_for_label }}">{{ form.expense_type.label }}:</label>
-                {{ form.expense_type }}
-                {% if form.expense_type.errors %}
-                    <div class="message error">{{ form.expense_type.errors }}</div>
-                {% endif %}
-            </div>
-            
-            <div class="form-group">
-                <label for="{{ form.total_amount.id_for_label }}">{{ form.total_amount.label }}:</label>
-                {{ form.total_amount }}
-                {% if form.total_amount.errors %}
-                    <div class="message error">{{ form.total_amount.errors }}</div>
-                {% endif %}
-            </div>
-            
-            <div class="form-group" id="installments-group">
-                <label for="{{ form.installments_count.id_for_label }}">{{ form.installments_count.label }}:</label>
-                {{ form.installments_count }}
-                {% if form.installments_count.errors %}
-                    <div class="message error">{{ form.installments_count.errors }}</div>
-                {% endif %}
-                <small>Only required for split payment expenses</small>
-            </div>
-            
-            <div class="form-group">
-                <label for="{{ form.started_at.id_for_label }}">{{ form.started_at.label }}:</label>
-                {{ form.started_at }}
-                <small>Start date cannot be earlier than the current month. If you set it to the current month, expense items will be created immediately.</small>
-                {% if form.started_at.help_text %}
-                    <small>{{ form.started_at.help_text }}</small>
-                {% endif %}
-                {% if form.started_at.errors %}
-                    <div class="message error">{{ form.started_at.errors }}</div>
-                {% endif %}
-            </div>
-            
+
             <div class="form-actions">
                 <button type="submit" class="btn"><i class="fas fa-floppy-disk icon-left"></i>Save Expense</button>
-                <a href="{% url 'expense_list' %}" class="btn btn-secondary"><i class="fas fa-xmark icon-left"></i>Cancel</a>
+                <a href="{% url 'expense_list' budget.id %}" class="btn btn-secondary"><i class="fas fa-xmark icon-left"></i>Cancel</a>
             </div>
         </form>
     </div>
@@ -81,22 +147,123 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const expenseTypeSelect = document.getElementById('expense-type-select');
-    const installmentsGroup = document.getElementById('installments-group');
-    const installmentsInput = document.querySelector('#installments-group input');
-    
-    function toggleInstallments() {
+    const totalPartsGroup = document.getElementById('total-parts-group');
+    const totalPartsInput = document.querySelector('#total-parts-group input');
+    const skipPartsGroup = document.getElementById('skip-parts-group');
+    const skipPartsInput = document.querySelector('#skip-parts-group input');
+    const endDateGroup = document.getElementById('end-date-group');
+    const endDateInput = document.querySelector('#end-date-group input');
+    const amountLabel = document.getElementById('amount-label');
+    const amountHelp = document.getElementById('amount-help');
+    const amountInput = document.querySelector('input[name="amount"]');
+
+    function toggleFields() {
+        // Handle total_parts and skip_parts fields
         if (expenseTypeSelect.value === 'split_payment') {
-            installmentsGroup.style.display = 'block';
-            installmentsInput.required = true;
+            totalPartsGroup.style.display = 'block';
+            totalPartsInput.required = true;
+            skipPartsGroup.style.display = 'block';
         } else {
-            installmentsGroup.style.display = 'none';
-            installmentsInput.required = false;
-            installmentsInput.value = '0';
+            totalPartsGroup.style.display = 'none';
+            totalPartsInput.required = false;
+            totalPartsInput.value = '0';
+            skipPartsGroup.style.display = 'none';
+            skipPartsInput.value = '0';
+        }
+        
+        // Handle end date field
+        if (expenseTypeSelect.value === 'recurring_with_end') {
+            endDateGroup.style.display = 'block';
+            endDateInput.required = true;
+        } else {
+            endDateGroup.style.display = 'none';
+            endDateInput.required = false;
+            endDateInput.value = '';
+        }
+        
+        // Handle amount field label and help text
+        if (expenseTypeSelect.value === 'split_payment') {
+            amountLabel.textContent = amountInput.dataset.splitLabel + ':';
+            amountHelp.textContent = amountInput.dataset.splitHelp;
+        } else {
+            amountLabel.textContent = amountInput.dataset.otherLabel + ':';
+            amountHelp.textContent = amountInput.dataset.otherHelp;
+        }
+    }
+
+    expenseTypeSelect.addEventListener('change', toggleFields);
+    toggleFields(); // Initialize on page load
+    
+    // Payment count preview for recurring_with_end
+    function calculatePaymentCount() {
+        const startDateInput = document.querySelector('input[name="start_date"]');
+        const endDateInput = document.querySelector('input[name="end_date"]');
+        const paymentCountPreview = document.getElementById('payment-count-preview');
+        const paymentCountText = document.getElementById('payment-count-text');
+        
+        if (expenseTypeSelect.value === 'recurring_with_end' && startDateInput.value && endDateInput.value) {
+            const startDate = new Date(startDateInput.value);
+            const endDate = new Date(endDateInput.value);
+            
+            if (endDate >= startDate) {
+                const startYear = startDate.getFullYear();
+                const startMonth = startDate.getMonth();
+                const endYear = endDate.getFullYear();
+                const endMonth = endDate.getMonth();
+                
+                const totalMonths = (endYear - startYear) * 12 + (endMonth - startMonth) + 1;
+                
+                if (totalMonths > 0) {
+                    paymentCountText.textContent = `${totalMonths} payment${totalMonths === 1 ? '' : 's'} will be generated`;
+                    paymentCountPreview.style.display = 'block';
+                } else {
+                    paymentCountPreview.style.display = 'none';
+                }
+            } else {
+                paymentCountPreview.style.display = 'none';
+            }
+        } else {
+            paymentCountPreview.style.display = 'none';
         }
     }
     
-    expenseTypeSelect.addEventListener('change', toggleInstallments);
-    toggleInstallments(); // Initialize on page load
+    document.querySelector('input[name="start_date"]').addEventListener('change', calculatePaymentCount);
+    endDateInput.addEventListener('change', calculatePaymentCount);
+    calculatePaymentCount(); // Initialize on page load
+    
+    // Auto-populate day_of_month from start_date
+    function updateDayOfMonth() {
+        const startDateInput = document.querySelector('input[name="start_date"]');
+        const dayOfMonthInput = document.querySelector('input[name="day_of_month"]');
+        
+        if (startDateInput.value && !dayOfMonthInput.value) {
+            const startDate = new Date(startDateInput.value);
+            dayOfMonthInput.value = startDate.getDate();
+        }
+    }
+    
+    document.querySelector('input[name="start_date"]').addEventListener('change', updateDayOfMonth);
+    
+    // Character counter for notes field
+    function setupNotesCounter() {
+        const notesField = document.querySelector('textarea[name="notes"]');
+        if (notesField) {
+            const counter = document.createElement('small');
+            counter.className = 'character-counter';
+            notesField.parentNode.appendChild(counter);
+            
+            function updateCounter() {
+                const remaining = 1024 - notesField.value.length;
+                counter.textContent = `${remaining} characters remaining`;
+                counter.className = remaining < 50 ? 'character-counter warning' : 'character-counter';
+            }
+            
+            notesField.addEventListener('input', updateCounter);
+            updateCounter();
+        }
+    }
+    
+    setupNotesCounter();
 });
 </script>
 {% endblock %}

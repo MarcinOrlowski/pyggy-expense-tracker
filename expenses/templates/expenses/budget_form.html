@@ -1,0 +1,53 @@
+{% extends 'expenses/base.html' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<h1>{{ title }}</h1>
+
+<div class="card">
+    <div class="card-body">
+        <form method="post">
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+                <div class="message error">
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+
+            <div class="form-group">
+                <label for="{{ form.name.id_for_label }}">{{ form.name.label }}:</label>
+                {{ form.name }}
+                {% if form.name.errors %}
+                    <div class="message error">{{ form.name.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.start_date.id_for_label }}">{{ form.start_date.label }}:</label>
+                {{ form.start_date }}
+                {% if form.start_date.errors %}
+                    <div class="message error">{{ form.start_date.errors }}</div>
+                {% endif %}
+                {% if form.start_date.help_text %}
+                    <small class="form-text">{{ form.start_date.help_text }}</small>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.initial_amount.id_for_label }}">{{ form.initial_amount.label }}:</label>
+                {{ form.initial_amount }}
+                {% if form.initial_amount.errors %}
+                    <div class="message error">{{ form.initial_amount.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn"><i class="fas fa-floppy-disk icon-left"></i>Save Budget</button>
+                <a href="{% url 'budget_list' %}" class="btn btn-secondary"><i class="fas fa-xmark icon-left"></i>Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

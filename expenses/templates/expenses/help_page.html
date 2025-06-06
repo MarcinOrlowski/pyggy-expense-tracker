@@ -1,0 +1,255 @@
+{% extends 'expenses/base.html' %}
+
+{% block title %}{{ title }} - Help{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="breadcrumb">
+        <a href="{% url 'help_index' %}"><i class="fas fa-question-circle"></i> Help</a>
+        <span class="breadcrumb-separator"><i class="fas fa-chevron-right"></i></span>
+        <span>{{ title }}</span>
+    </div>
+    <h1>{{ title }}</h1>
+</div>
+
+<div class="help-content">
+    <div class="help-navigation">
+        {% if is_readme %}
+            <a href="{% url 'help_index' %}?list=1" class="btn btn-secondary">
+                <i class="fas fa-list"></i> View All Documentation Files
+            </a>
+        {% else %}
+            <a href="{% url 'help_index' %}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Back to Help Index
+            </a>
+        {% endif %}
+    </div>
+    
+    <div class="markdown-content {% if error %}error{% endif %}">
+        {{ content|safe }}
+    </div>
+    
+    <div class="help-footer">
+        <hr>
+        <div class="help-actions">
+            <a href="{% url 'help_index' %}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Back to Help Index
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+.breadcrumb {
+    margin-bottom: 1rem;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.breadcrumb a {
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+.breadcrumb a:hover {
+    text-decoration: underline;
+}
+
+.breadcrumb-separator {
+    margin: 0 0.5rem;
+    font-size: 0.8rem;
+}
+
+.help-content {
+    max-width: 800px;
+}
+
+.help-navigation {
+    margin-bottom: 2rem;
+}
+
+.markdown-content {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 2rem;
+    line-height: 1.6;
+}
+
+.markdown-content.error {
+    border-color: var(--danger-color);
+    background: rgba(220, 53, 69, 0.05);
+}
+
+.markdown-content h1,
+.markdown-content h2,
+.markdown-content h3,
+.markdown-content h4,
+.markdown-content h5,
+.markdown-content h6 {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    color: var(--text-color);
+}
+
+.markdown-content h1:first-child,
+.markdown-content h2:first-child,
+.markdown-content h3:first-child {
+    margin-top: 0;
+}
+
+.markdown-content h1 { font-size: 2rem; border-bottom: 2px solid var(--border-color); padding-bottom: 0.5rem; }
+.markdown-content h2 { font-size: 1.5rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.3rem; }
+.markdown-content h3 { font-size: 1.3rem; }
+.markdown-content h4 { font-size: 1.1rem; }
+
+.markdown-content p {
+    margin-bottom: 1rem;
+}
+
+.markdown-content ul,
+.markdown-content ol {
+    margin-bottom: 1rem;
+    padding-left: 2rem;
+}
+
+.markdown-content li {
+    margin-bottom: 0.5rem;
+}
+
+.markdown-content blockquote {
+    border-left: 4px solid var(--primary-color);
+    margin: 1rem 0;
+    padding: 0.5rem 1rem;
+    background: rgba(0, 123, 255, 0.05);
+    font-style: italic;
+}
+
+.markdown-content code {
+    background: var(--bg-light);
+    padding: 0.2rem 0.4rem;
+    border-radius: 3px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+}
+
+.markdown-content pre {
+    background: var(--bg-light);
+    padding: 1rem;
+    border-radius: 5px;
+    overflow-x: auto;
+    margin: 1rem 0;
+}
+
+.markdown-content pre code {
+    background: none;
+    padding: 0;
+}
+
+.markdown-content table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+}
+
+.markdown-content th,
+.markdown-content td {
+    border: 1px solid var(--border-color);
+    padding: 0.5rem 1rem;
+    text-align: left;
+}
+
+.markdown-content th {
+    background: var(--bg-light);
+    font-weight: 600;
+}
+
+.markdown-content a {
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+.markdown-content a:hover {
+    text-decoration: underline;
+}
+
+.help-footer {
+    margin-top: 2rem;
+}
+
+.help-footer hr {
+    border: none;
+    height: 1px;
+    background: var(--border-color);
+    margin: 2rem 0 1rem 0;
+}
+
+.help-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.help-error {
+    text-align: center;
+    padding: 3rem 1rem;
+}
+
+.help-error-icon {
+    color: #dc3545;
+    margin-bottom: 2rem;
+}
+
+.help-error h2 {
+    color: var(--text-color);
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+}
+
+.help-error p {
+    color: var(--text-muted);
+    margin-bottom: 2rem;
+    font-size: 1.1rem;
+}
+
+.help-error-actions {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.help-error-actions .btn {
+    min-width: 150px;
+}
+
+@media (max-width: 768px) {
+    .markdown-content {
+        padding: 1rem;
+    }
+    
+    .markdown-content h1 { font-size: 1.5rem; }
+    .markdown-content h2 { font-size: 1.3rem; }
+    .markdown-content h3 { font-size: 1.1rem; }
+    
+    .help-actions {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .help-error {
+        padding: 2rem 1rem;
+    }
+    
+    .help-error-actions {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .help-error-actions .btn {
+        width: 100%;
+        max-width: 250px;
+    }
+}
+</style>
+{% endblock %}

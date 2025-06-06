@@ -1,0 +1,53 @@
+{% extends 'expenses/base.html' %}
+{% load currency_tags %}
+
+{% block title %}Budgets{% endblock %}
+
+{% block content %}
+<h1><i class="fas fa-wallet"></i> Budgets</h1>
+
+<div class="card">
+    <div class="card-header">
+        Budgets ({{ budgets|length }})
+        <span class="card-header-action">
+            <a href="{% url 'budget_create' %}" class="btn"><i class="fas fa-circle-plus icon-left"></i>Add New Budget</a>
+        </span>
+    </div>
+    <div class="card-body">
+        {% if budgets %}
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Start Date</th>
+                        <th class="text-right">Balance</th>
+                        <th class="text-right">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for budget in budgets %}
+                        <tr>
+                            <td>
+                                <a href="{% url 'dashboard' budget.pk %}">{{ budget.name }}</a>
+                            </td>
+                            <td>{{ budget.start_date|date:"Y-m-d" }}</td>
+                            <td class="text-right">
+                                {{ budget.current_balance|amount_with_class }}
+                            </td>
+                            <td class="text-right">
+                                <a href="{% url 'dashboard' budget.pk %}" class="btn btn-sm" title="Open Budget"><i class="fas fa-eye"></i></a>
+                                <a href="{% url 'budget_edit' budget.pk %}" class="btn btn-sm" title="Edit Budget"><i class="fas fa-edit"></i></a>
+                                {% if budget.can_be_deleted %}
+                                <a href="{% url 'budget_delete' budget.pk %}" class="btn btn-danger btn-sm" title="Delete Budget"><i class="fas fa-trash"></i></a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p class="no-data">No budgets found. <a href="{% url 'budget_create' %}">Create your first budget</a>.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

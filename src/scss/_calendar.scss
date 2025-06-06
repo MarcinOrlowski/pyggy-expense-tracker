@@ -1,0 +1,155 @@
+// Calendar styles
+.calendar-container {
+    height: 100%;
+}
+
+.calendar-header {
+    text-align: center;
+}
+
+// Calendar Grid
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 1px;
+    background: repeating-linear-gradient(
+        135deg,
+        rgba(128, 128, 128, 0.15),
+        rgba(128, 128, 128, 0.15) 3px,
+        transparent 3px,
+        transparent 6px
+    );
+    padding: 1px;
+    border-radius: 4px;
+}
+
+// Weekday Headers
+.calendar-weekday {
+    background: var(--bg-secondary);
+    padding: 0.25rem;
+    text-align: center;
+    font-weight: 600;
+    font-size: 0.75rem;
+    color: var(--text-primary);
+}
+
+// Weekend headers have different background
+.calendar-weekday--weekend {
+    background: var(--bg-secondary);
+    color: var(--text-secondary);
+}
+
+// Today's weekday header
+.calendar-weekday--today {
+    background: var(--calendar-today-bg);
+    color: var(--text-primary);
+    font-weight: 700;
+}
+
+// Calendar Days
+.calendar-day {
+    aspect-ratio: 1;
+    background: var(--calendar-cell-bg);
+    border: 1px solid transparent;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    padding: 0.125rem;
+    transition: all 0.2s;
+}
+
+.calendar-day:hover:not(.calendar-day--empty) {
+    background: var(--calendar-cell-hover);
+    transform: scale(1.05);
+}
+
+.calendar-day--empty {
+    background: transparent;
+}
+
+.calendar-day--today {
+    background: var(--calendar-today-bg);
+    color: var(--text-primary);
+    font-weight: 700;
+    box-shadow: 0 2px 8px rgba(88, 73, 166, 0.5);
+}
+
+.calendar-day--today:hover {
+    background: var(--calendar-today-hover);
+    color: var(--text-primary);
+    transform: scale(1.1);
+}
+
+.calendar-day--has-due {
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    position: relative;
+}
+
+.calendar-day--has-due::before {
+    content: '';
+    position: absolute;
+    top: 3px;
+    right: 3px;
+    width: 6px;
+    height: 6px;
+    background: var(--color-green);  // Future due = green
+    border-radius: 50%;
+}
+
+// Due today shows orange/yellow
+.calendar-day--has-due.calendar-day--today::before {
+    background: var(--color-orange);
+}
+
+.calendar-day--has-due.calendar-day--today {
+    background: var(--calendar-today-bg);
+    color: var(--text-primary);
+}
+
+.calendar-day--past {
+    color: var(--text-muted);
+    opacity: 0.6;
+    background: var(--calendar-past-bg);
+}
+
+.calendar-day--past:hover {
+    background: var(--calendar-cell-hover);
+    opacity: 0.7;
+}
+
+.calendar-day--future {
+    background: var(--calendar-future-bg);
+}
+
+.calendar-day--future:hover {
+    background: var(--calendar-today-hover);
+    opacity: 0.5;
+}
+
+// Future weekend days are darker
+.calendar-day--future.calendar-day--weekend {
+    background: var(--calendar-future-weekend-bg) !important;
+    color: var(--text-secondary);
+}
+
+.calendar-day--future.calendar-day--weekend:hover {
+    background: var(--calendar-today-hover) !important;
+    opacity: 0.6;
+}
+
+// Overdue payments (past days with due items) show red dot
+.calendar-day--past.calendar-day--has-due::before {
+    background: var(--calendar-indicator-overdue);
+}
+
+// Legend
+.calendar-indicator-legend {
+    color: var(--color-orange);
+    font-size: 0.75rem;
+}

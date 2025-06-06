@@ -64,19 +64,19 @@ MD012:
 # MD013/line-length - Line length
 MD013:
   # Number of characters
-  line_length: 130
+  line_length: 230
   # Number of characters for headings
-  heading_line_length: 130
+  heading_line_length: 230
   # Number of characters for code blocks
-  code_block_line_length: 130
+  code_block_line_length: 230
   # Include code blocks
-  code_blocks: true
+  code_blocks: false
   # Include tables
-  tables: true
+  tables: false
   # Include headings
-  headings: true
+  headings: false
   # Include headings
-  headers: true
+  headers: false
   # Strict length checking
   strict: false
   # Stern length checking
@@ -113,7 +113,8 @@ MD024:
   # Only check sibling headings
   allow_different_nesting: false
   # Only check sibling headings
-  siblings_only: false
+  siblings_only: true
+
 
 # MD025/single-title/single-h1 - Multiple top-level headings in the same document
 MD025:

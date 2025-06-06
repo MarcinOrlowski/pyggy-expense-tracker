@@ -1,0 +1,39 @@
+// Color Theme Variables
+:root {
+    // Base colors from terminal theme
+    --bg-primary: #1a0f1a;      // Dark purple/black background
+    --bg-secondary: #2d1b2d;    // Slightly lighter purple
+    --bg-tertiary: #3d2a3d;     // Even lighter for cards
+
+    --text-primary: #e6e6e6;    // Light gray text
+    --text-secondary: #b3b3b3;  // Dimmed text
+    --text-muted: #808080;      // Muted text
+
+    // Accent colors from the palette
+    --color-green: #50fa7b;     // Success, positive actions
+    --color-red: #ff5555;       // Danger, negative actions
+    --color-yellow: #f1fa8c;    // Warnings, highlights
+    --color-blue: #8be9fd;      // Info, links
+    --color-purple: #bd93f9;    // Primary actions
+    --color-cyan: #8be9fd;      // Secondary elements
+    --color-orange: #ffb86c;    // Accent elements
+
+    // Faint/muted versions
+    --color-green-muted: #50fa7b33;
+    --color-red-muted: #ff555533;
+    --color-yellow-muted: #f1fa8c33;
+    --color-blue-muted: #8be9fd33;
+    --color-purple-muted: #bd93f933;
+    
+    // Calendar-specific colors
+    --calendar-today-bg: #5849a6;  // Darker purple for today
+    --calendar-today-hover: #473580;  // Even darker on hover
+    --calendar-cell-bg: var(--bg-secondary);  // Darker bg for calendar cells
+    --calendar-cell-hover: var(--bg-secondary);
+    --calendar-past-bg: var(--bg-secondary);
+    --calendar-future-bg: rgba(88, 73, 166, 0.25);  // 25% of today color
+    --calendar-future-weekend-bg: rgba(50, 40, 100, 0.5);  // Much darker purple for weekends
+    --calendar-indicator-due: var(--color-green);
+    --calendar-indicator-due-today: var(--color-orange);
+    --calendar-indicator-overdue: #ff2020;  // Brighter red for overdue
+}
