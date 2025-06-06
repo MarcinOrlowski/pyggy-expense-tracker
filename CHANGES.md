@@ -6,6 +6,8 @@
 
 ## @dev
 
+- [#0147] Group expense list entries by year-month for better date validation visibility and improved chronological organization
+- Fixed CSS loading issue after HTTP redirects by switching from django-sass-processor runtime compilation to pre-compiled CSS files
 - [#0142] Enhanced dashboard title with relative time indicator for past months (e.g., "Dashboard (3 months ago)")
 - [#0140] Made table rows clickable for view actions, removed view icons for cleaner UI
 - [#0051] Added close buttons to flash messages with Font Awesome icons and smooth animation effects

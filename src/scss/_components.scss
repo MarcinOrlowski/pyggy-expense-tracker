@@ -744,3 +744,28 @@ footer {
     margin-left: 0.5rem;
 }
 
+// Month Separator Rows
+.month-separator-row {
+    background-color: var(--bg-secondary) !important;
+}
+
+.month-separator-row:hover {
+    background-color: var(--bg-secondary) !important;
+    transform: none !important;
+}
+
+.month-separator {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--color-purple);
+    padding: 0.75rem 1rem !important;
+    border-top: 2px solid var(--color-purple);
+    border-bottom: 1px solid rgba(189, 147, 249, 0.3);
+    text-align: left;
+}
+
+.month-separator i {
+    color: var(--color-cyan);
+    margin-right: 0.5rem;
+}
+

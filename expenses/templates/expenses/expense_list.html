@@ -53,38 +53,45 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for expense in expenses %}
-                    <tr class="clickable-row" data-href="{% url 'expense_detail' budget.id expense.pk %}" style="cursor: pointer;">
-                        <td>
-                            {{ expense.title }}
-                            {% if expense.notes %}
-                                <i class="fas fa-sticky-note" title="Has notes"></i>
-                            {% endif %}
-                        </td>
-                        <td>{% if expense.payee %}{{ expense.payee.name }}{% else %}-{% endif %}</td>
-                        <td><i class="fas {{ expense.get_expense_type_icon }} {{ expense.get_expense_type_icon_css_class }}" aria-label="{{ expense.get_expense_type_display }}" title="{{ expense.get_expense_type_display }}"></i> {{ expense.get_expense_type_display }}</td>
-                        <td class="amount-column">
-                            {% if expense.expense_type == 'split_payment' %}
-                                {{ expense.amount|amount_with_class }} <small>/ month</small>
-                            {% else %}
-                                {{ expense.amount|amount_with_class }}
-                            {% endif %}
-                        </td>
-                        <td>{{ expense.start_date|date:"Y-m-d" }}</td>
-                        <td>
-                            {% if expense.expense_type == 'split_payment' %}
-                                {{ expense.total_parts }}
-                            {% else %}
-                                -
-                            {% endif %}
-                        </td>
-                        <td class="actions-column">
-                            <a href="{% url 'expense_edit' budget.id expense.pk %}" class="btn btn-sm" title="Edit Expense" aria-label="Edit Expense"><i class="fas fa-pencil"></i></a>
-                            {% if expense.can_be_deleted %}
-                            <a href="{% url 'expense_delete' budget.id expense.pk %}" class="btn btn-danger btn-sm" title="Delete Expense" aria-label="Delete Expense"><i class="fas fa-trash-can"></i></a>
-                            {% endif %}
-                        </td>
-                    </tr>
+                    {% for year_month, month_expenses in grouped_expenses.items %}
+                        <tr class="month-separator-row">
+                            <td colspan="7" class="month-separator">
+                                <i class="fas fa-calendar-alt"></i> {{ year_month }}
+                            </td>
+                        </tr>
+                        {% for expense in month_expenses %}
+                        <tr class="clickable-row" data-href="{% url 'expense_detail' budget.id expense.pk %}" style="cursor: pointer;">
+                            <td>
+                                {{ expense.title }}
+                                {% if expense.notes %}
+                                    <i class="fas fa-sticky-note" title="Has notes"></i>
+                                {% endif %}
+                            </td>
+                            <td>{% if expense.payee %}{{ expense.payee.name }}{% else %}-{% endif %}</td>
+                            <td><i class="fas {{ expense.get_expense_type_icon }} {{ expense.get_expense_type_icon_css_class }}" aria-label="{{ expense.get_expense_type_display }}" title="{{ expense.get_expense_type_display }}"></i> {{ expense.get_expense_type_display }}</td>
+                            <td class="amount-column">
+                                {% if expense.expense_type == 'split_payment' %}
+                                    {{ expense.amount|amount_with_class }} <small>/ month</small>
+                                {% else %}
+                                    {{ expense.amount|amount_with_class }}
+                                {% endif %}
+                            </td>
+                            <td>{{ expense.start_date|date:"Y-m-d" }}</td>
+                            <td>
+                                {% if expense.expense_type == 'split_payment' %}
+                                    {{ expense.total_parts }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                            <td class="actions-column">
+                                <a href="{% url 'expense_edit' budget.id expense.pk %}" class="btn btn-sm" title="Edit Expense" aria-label="Edit Expense"><i class="fas fa-pencil"></i></a>
+                                {% if expense.can_be_deleted %}
+                                <a href="{% url 'expense_delete' budget.id expense.pk %}" class="btn btn-danger btn-sm" title="Delete Expense" aria-label="Delete Expense"><i class="fas fa-trash-can"></i></a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
                     {% endfor %}
                 </tbody>
             </table>
