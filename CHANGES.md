@@ -6,6 +6,7 @@
 
 ## @dev
 
+- [#0051] Added close buttons to flash messages with Font Awesome icons and smooth animation effects
 - [#0134] Unified edit icons across the application to use fa-pencil consistently
 - [#0124] Improved payment confirmation redirect behavior to navigate to budget dashboard after payment operations
 - [#0131] Replace text navigation instructions with direct "Add First Month" buttons
@@ -18,7 +19,6 @@
 - [#0114] Added in-app help system that renders markdown documentation files with README.md priority, user-friendly error handling, and responsive design
 - [#0062] Added separate colors for expense type icons to improve visual differentiation between expense types
 - [#0102] Split application files into one-file-one-class model for improved code organization and maintainability
-- Fixed test failures in ExpenseItemEditForm validation and view context to ensure consistent form behavior
 - [#0105] Allow negative initial values for budget creation and editing to support deficit tracking
 - [#0104] Added balance column to month list view showing total amount for each month
 - [#0096] Fixed calendar weekday highlighting to only appear when viewing current month
@@ -60,6 +60,7 @@
 - [#0008] Added Days column to dashboard expense items table showing days until due
 - [#0007] Implemented reusable template components for dashboard and month views
 - [#0001] Replaced text navigation links with icon-based action buttons
+- Fixed test failures in ExpenseItemEditForm validation and view context to ensure consistent form behavior
 - Added sequential month creation (only next month after most recent)
 - Added user-selectable initial month (no preset default)
 - Added month deletion restrictions (only most recent, no paid expenses)

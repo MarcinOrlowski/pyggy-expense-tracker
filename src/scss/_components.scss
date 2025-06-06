@@ -133,31 +133,67 @@ footer {
     }
 }
 
-// Messages
-.messages {
+// Flash Messages
+.flash-messages {
     margin-bottom: 1rem;
 }
 
-.message {
+.flash-message {
     padding: 0.75rem 1rem;
     margin-bottom: 0.5rem;
     border-radius: 4px;
     border-left: 4px solid;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
-.message.success {
+.flash-message-text {
+    flex: 1;
+}
+
+.flash-message-close {
+    background: none;
+    border: none;
+    color: inherit;
+    cursor: pointer;
+    padding: 0.25rem;
+    margin-left: 1rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    opacity: 0.7;
+    transition: opacity 0.2s ease, background-color 0.2s ease;
+}
+
+.flash-message-close:hover,
+.flash-message-close:focus {
+    opacity: 1;
+    background-color: rgba(0, 0, 0, 0.1);
+    outline: none;
+}
+
+.flash-message-close i {
+    font-size: 0.75rem;
+}
+
+.flash-message-success {
     background-color: var(--color-green-muted);
     border-color: var(--color-green);
     color: var(--color-green);
 }
 
-.message.error {
+.flash-message-error {
     background-color: var(--color-red-muted);
     border-color: var(--color-red);
     color: var(--color-red);
 }
 
-.message.warning {
+.flash-message-warning {
     background-color: var(--color-yellow-muted);
     border-color: var(--color-yellow);
     color: var(--color-yellow);
