@@ -4,6 +4,10 @@
 
 ---
 
+## @dev
+
+- [#0074] Fixed expense creation redirect to show expense list instead of detail view for better user experience
+
 ## v1.0 (2025-06-06)
 
 

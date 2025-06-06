@@ -54,7 +54,7 @@ def expense_create(request, budget_id):
             messages.success(
                 request, f'Expense "{expense.title}" created successfully.'
             )
-            return redirect("expense_detail", budget_id=budget_id, pk=expense.pk)
+            return redirect("expense_list", budget_id=budget_id)
     else:
         # Set default start date to current month's first day for this budget
         most_recent_month = (
