@@ -13,6 +13,7 @@
 ## Required Sections
 
 ### 1. Technical Approach (1 paragraph)
+
 ```markdown
 ## Technical Approach
 - High-level architecture decision
@@ -21,9 +22,13 @@
 ```
 
 **Example:**
-> We'll implement water tracking as a React component in our existing mobile app, storing data in our PostgreSQL database with a new `hydration_logs` table. The feature will use our existing notification service for reminders and integrate with the current nutrition module via shared user_id foreign keys.
+> We'll implement water tracking as a React component in our existing mobile app, storing data in
+> our PostgreSQL database with a new `hydration_logs` table. The feature will use our existing
+> notification service for reminders and integrate with the current nutrition module via shared
+> user_id foreign keys.
 
 ### 2. Data Model (If applicable)
+
 ```markdown
 ## Data Model
 - Key entities and relationships
@@ -32,6 +37,7 @@
 ```
 
 **Example:**
+
 ```sql
 hydration_logs
 - id (UUID, PK)
@@ -44,6 +50,7 @@ Daily index on (user_id, logged_at::date) for quick aggregations
 ```
 
 ### 3. API/Interface Design
+
 ```markdown
 ## API Design
 - Endpoint signatures (not full specs)
@@ -52,7 +59,8 @@ Daily index on (user_id, logged_at::date) for quick aggregations
 ```
 
 **Example:**
-```
+
+```text
 POST /api/v1/hydration/log
 Request: { amount_ml: 250 }
 Response: { id: "uuid", daily_total_ml: 1750 }
@@ -62,7 +70,9 @@ Response: { date: "2024-01-15", total_ml: 2500, logs: [...] }
 
 Errors: Standard 400/401/500 with { error: "message" }
 ```
+
 ### 4. Security & Performance
+
 ```markdown
 ## Security & Performance
 - Specific requirements only
@@ -70,12 +80,14 @@ Errors: Standard 400/401/500 with { error: "message" }
 ```
 
 **Example:**
+
 - Authentication: Existing JWT token validation
 - Rate limiting: 100 logs per user per hour
 - Performance: <200ms response time for logging
 - Data retention: 90 days of detailed logs, then daily aggregates only
 
 ### 5. Technical Risks & Mitigations
+
 ```markdown
 ## Technical Risks & Mitigations
 - Top 2-3 risks only
@@ -83,11 +95,13 @@ Errors: Standard 400/401/500 with { error: "message" }
 ```
 
 **Example:**
+
 1. **Risk**: Database bloat from high-frequency logging → **Mitigation**: Daily aggregation job + 90-day retention
 2. **Risk**: Notification service overload → **Mitigation**: Batch notifications, max 5/day per user
 3. **Risk**: Mobile app performance impact → **Mitigation**: Local caching with background sync
 
 ### 6. Implementation Plan
+
 ```markdown
 ## Implementation Plan
 - Phase breakdown (if phased)
@@ -96,6 +110,7 @@ Errors: Standard 400/401/500 with { error: "message" }
 ```
 
 **Example:**
+
 - Phase 1 (S): Database schema + basic API endpoints - 2 days
 - Phase 2 (M): Mobile UI component + integration - 3 days  
 - Phase 3 (S): Notification service integration - 2 days
@@ -106,6 +121,7 @@ Dependencies: Nutrition module v2.0 deployed
 ## Writing Best Practices
 
 ### DO:
+
 - ✅ Reference the PRD version you're implementing
 - ✅ Focus on implementation decisions
 - ✅ Use diagrams over lengthy explanations
@@ -114,6 +130,7 @@ Dependencies: Nutrition module v2.0 deployed
 - ✅ Define clear integration boundaries
 
 ### DON'T:
+
 - ❌ Repeat requirements from the PRD
 - ❌ List multiple options without choosing
 - ❌ Include full API documentation
@@ -137,10 +154,8 @@ Before finalizing your TRD, ensure:
 ```markdown
 # [Feature Name] TRD
 
-**Last Updated**: [Date]
 **Ticket**: [Link to github ticket]
 **PRD Reference**: [PRD version]
-
 
 ## Technical Approach
 [1 paragraph describing overall implementation strategy]
@@ -186,6 +201,7 @@ Dependencies: [List any blockers]
 The TRD should enable a developer to start implementation immediately. It's about **HOW** to build what the PRD defined.
 
 **Your TRD should answer:**
+
 - HOW will we build it?
 - WHAT technical decisions were made?
 - WHAT are the risks?

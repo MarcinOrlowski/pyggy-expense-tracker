@@ -46,7 +46,7 @@
                         <th>Title</th>
                         <th>Payee</th>
                         <th>Type</th>
-                        <th class="amount-column">Total Amount</th>
+                        <th class="amount-column">Amount</th>
                         <th>Started</th>
                         <th>Installments</th>
                         <th class="actions-column">Actions</th>
@@ -62,12 +62,18 @@
                             {% endif %}
                         </td>
                         <td>{% if expense.payee %}{{ expense.payee.name }}{% else %}-{% endif %}</td>
-                        <td><i class="fas {{ expense.get_expense_type_icon }}" aria-label="{{ expense.get_expense_type_display }}" title="{{ expense.get_expense_type_display }}"></i> {{ expense.get_expense_type_display }}</td>
-                        <td class="amount-column">{{ expense.total_amount|currency }}</td>
-                        <td>{{ expense.started_at|date:"Y-m-d" }}</td>
+                        <td><i class="fas {{ expense.get_expense_type_icon }} {{ expense.get_expense_type_icon_css_class }}" aria-label="{{ expense.get_expense_type_display }}" title="{{ expense.get_expense_type_display }}"></i> {{ expense.get_expense_type_display }}</td>
+                        <td class="amount-column">
+                            {% if expense.expense_type == 'split_payment' %}
+                                {{ expense.amount|amount_with_class }} <small>/ month</small>
+                            {% else %}
+                                {{ expense.amount|amount_with_class }}
+                            {% endif %}
+                        </td>
+                        <td>{{ expense.start_date|date:"Y-m-d" }}</td>
                         <td>
                             {% if expense.expense_type == 'split_payment' %}
-                                {{ expense.installments_count }}
+                                {{ expense.total_parts }}
                             {% else %}
                                 -
                             {% endif %}

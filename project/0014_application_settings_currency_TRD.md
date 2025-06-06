@@ -1,4 +1,5 @@
 # Technical Requirements Document (TRD)
+
 ## Application Settings Infrastructure with Currency and Locale Support
 
 **Feature ID:** #0014  
@@ -7,11 +8,13 @@
 
 ### 1. Technical Overview
 
-This document outlines the technical implementation of the application settings infrastructure with locale-aware currency formatting support. The solution uses Django's model system, babel for internationalization, and Django's caching framework for performance.
+This document outlines the technical implementation of the application settings infrastructure with
+locale-aware currency formatting support. The solution uses Django's model system, babel for
+internationalization, and Django's caching framework for performance.
 
 ### 2. Architecture
 
-```
+```text
 ┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
 │   Templates     │────▶│ Template Tags   │────▶│ Settings Service│
 └─────────────────┘     └─────────────────┘     └─────────────────┘
@@ -36,37 +39,37 @@ This document outlines the technical implementation of the application settings 
 
 class Settings(models.Model):
     """Application-wide settings singleton model."""
-    
+
     currency = models.CharField(
         max_length=3,
         default='USD',
         help_text='ISO 4217 currency code'
     )
-    
+
     locale = models.CharField(
         max_length=10,
         default='en_US',
         help_text='Locale identifier (e.g., en_US, fr_FR)'
     )
-    
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    
+
     class Meta:
         verbose_name = "Settings"
         verbose_name_plural = "Settings"
-    
+
     def save(self, *args, **kwargs):
         """Ensure only one Settings instance exists."""
         self.pk = 1
         super().save(*args, **kwargs)
         # Clear cache when settings are saved
         cache.delete('app_settings')
-    
+
     def delete(self, *args, **kwargs):
         """Prevent deletion of settings."""
         pass
-    
+
     @classmethod
     def load(cls):
         """Load or create settings instance."""
@@ -87,12 +90,13 @@ from babel.core import Locale
 from decimal import Decimal
 from .models import Settings
 
+
 class SettingsService:
     """Service for managing application settings and currency formatting."""
-    
+
     CACHE_KEY = 'app_settings'
     CACHE_TIMEOUT = 3600  # 1 hour
-    
+
     @classmethod
     def get_settings(cls):
         """Get cached settings or load from database."""
@@ -101,17 +105,17 @@ class SettingsService:
             settings = Settings.load()
             cache.set(cls.CACHE_KEY, settings, cls.CACHE_TIMEOUT)
         return settings
-    
+
     @classmethod
     def get_currency(cls):
         """Get current currency code."""
         return cls.get_settings().currency
-    
+
     @classmethod
     def get_locale(cls):
         """Get current locale."""
         return cls.get_settings().locale
-    
+
     @classmethod
     def format_currency(cls, amount, include_symbol=True):
         """
@@ -126,13 +130,13 @@ class SettingsService:
         """
         if amount is None:
             return ''
-        
+
         settings = cls.get_settings()
-        
+
         # Ensure amount is Decimal
         if not isinstance(amount, Decimal):
             amount = Decimal(str(amount))
-        
+
         # Format using babel
         try:
             formatted = babel_format_currency(
@@ -145,7 +149,7 @@ class SettingsService:
         except Exception as e:
             # Fallback to basic formatting if babel fails
             return f"{settings.currency} {amount:.2f}"
-    
+
     @classmethod
     def clear_cache(cls):
         """Clear settings cache."""
@@ -165,17 +169,19 @@ from ..services import SettingsService
 
 register = template.Library()
 
+
 @register.filter
 def currency(value):
     """Format value as currency using app settings."""
     if value is None or value == '':
         return ''
-    
+
     try:
         amount = Decimal(str(value))
         return SettingsService.format_currency(amount)
     except (ValueError, TypeError):
         return value
+
 
 @register.simple_tag
 def currency_symbol():
@@ -184,12 +190,13 @@ def currency_symbol():
     # Get symbol from locale
     from babel import Locale
     from babel.numbers import get_currency_symbol
-    
+
     try:
         locale_obj = Locale.parse(settings.locale)
         return get_currency_symbol(settings.currency, locale_obj)
     except:
         return settings.currency
+
 
 @register.simple_tag
 def format_amount(amount, show_symbol=True):
@@ -200,7 +207,8 @@ def format_amount(amount, show_symbol=True):
 ### 6. Dependencies
 
 Add to `requirements.txt`:
-```
+
+```text
 babel==2.13.1
 ```
 
@@ -210,6 +218,7 @@ babel==2.13.1
 # Migration file: 0007_add_settings_model.py
 
 from django.db import migrations, models
+
 
 def create_default_settings(apps, schema_editor):
     Settings = apps.get_model('expenses', 'Settings')
@@ -221,6 +230,7 @@ def create_default_settings(apps, schema_editor):
         }
     )
 
+
 class Migration(migrations.Migration):
     dependencies = [
         ('expenses', '0006_make_payee_optional'),
@@ -230,9 +240,13 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Settings',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('currency', models.CharField(default='USD', help_text='ISO 4217 currency code', max_length=3)),
-                ('locale', models.CharField(default='en_US', help_text='Locale identifier (e.g., en_US, fr_FR)', max_length=10)),
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False,
+                                           verbose_name='ID')),
+                ('currency',
+                 models.CharField(default='USD', help_text='ISO 4217 currency code', max_length=3)),
+                ('locale', models.CharField(default='en_US',
+                                            help_text='Locale identifier (e.g., en_US, fr_FR)',
+                                            max_length=10)),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('updated_at', models.DateTimeField(auto_now=True)),
             ],
@@ -248,6 +262,7 @@ class Migration(migrations.Migration):
 ### 8. Template Updates
 
 Example template usage:
+
 ```django
 {% load currency_tags %}
 
@@ -270,11 +285,11 @@ Example template usage:
 class SettingsAdmin(admin.ModelAdmin):
     list_display = ['currency', 'locale', 'updated_at']
     fields = ['currency', 'locale']
-    
+
     def has_add_permission(self, request):
         # Ensure only one instance
         return not Settings.objects.exists()
-    
+
     def has_delete_permission(self, request, obj=None):
         # Prevent deletion
         return False
@@ -289,11 +304,11 @@ class SettingsServiceTest(TestCase):
     def test_format_currency_usd_en_us(self):
         """Test USD formatting with US locale."""
         # Test implementation
-        
+
     def test_format_currency_eur_fr_fr(self):
         """Test EUR formatting with French locale."""
         # Test implementation
-        
+
     def test_cache_performance(self):
         """Test settings caching works correctly."""
         # Test implementation
@@ -327,6 +342,7 @@ class SettingsServiceTest(TestCase):
 ### 14. Currency Filter Usage Examples
 
 #### Basic Usage
+
 ```django
 {% load currency_tags %}
 
@@ -341,6 +357,7 @@ ${{ item.amount|floatformat:2 }}
 #### Template Examples
 
 **expenses/includes/expense_items_table.html:**
+
 ```django
 {% load currency_tags %}
 ...
@@ -348,6 +365,7 @@ ${{ item.amount|floatformat:2 }}
 ```
 
 **expenses/includes/month_summary.html:**
+
 ```django
 {% load currency_tags %}
 ...
@@ -357,6 +375,7 @@ ${{ item.amount|floatformat:2 }}
 ```
 
 **Forms with currency symbol:**
+
 ```django
 {% load currency_tags %}
 <div class="form-group">

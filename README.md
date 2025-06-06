@@ -1,10 +1,14 @@
+![PyGGy Logo](docs/img/logo.png)
+
 # PyGGy - Python (Monthly) Expense Tracker
 
-A Django-based expense tracking application designed to manage different types of expenses with monthly processing workflows. This proof-of-concept demonstrates core expense management functionality as a foundation for a comprehensive budget management system.
+A Django-based expense tracking application designed to manage different types of
+expenses with monthly processing workflows.
 
 ## Features
 
 ### Core Functionality
+
 - **Four Expense Types**:
   - **Endless Recurring**: Monthly expenses without end date (utilities, subscriptions)
   - **Split Payments**: Fixed installments (loans, payment plans)
@@ -15,35 +19,25 @@ A Django-based expense tracking application designed to manage different types o
 - **Multiple Budgets**: Let's you track multiple money pipelines at once
 - **Business Rules Enforcement**: Start date validation, automatic expense completion
 
-### Technical Highlights
-- Built with Django 5.2 LTS
-- SQLite database (PostgreSQL-ready)
-- Responsive HTML5/CSS3 interface with SASS styling
-- Function-based views for simplicity
-- Comprehensive model validation
-
-## Requirements
-
-- Python 3.12 or higher
-- Django 5.2.1
-- Virtual environment (recommended `venv`)
-
 ## Installation
 
 ### Using Docker (Recommended)
 
 1. **Clone the repository**
+
    ```bash
    git clone https://github.com/MarcinOrlowski/pyggy-expense-tracker.git
    cd pyggy-expense-tracker
    ```
 
 2. **Start the application**
+
    ```bash
    docker compose up
    ```
 
 3. **[Optional] Create superuser (in a new terminal)**
+
    ```bash
    docker compose exec web python manage.py createsuperuser
    ```
@@ -53,33 +47,39 @@ See [DOCKER.md](DOCKER.md) for detailed Docker usage, including building and pub
 ### Manual Installation
 
 1. **Clone the repository**
+
    ```bash
    git clone https://github.com/MarcinOrlowski/pyggy-expense-tracker.git
    cd pyggy-expense-tracker
    ```
 
 2. **Create and activate virtual environment (see separate scripts in `bin/` folder for Fish, ZSh etc)**
+
    ```bash
    python -m venv venv
    source venv/bin/activate  # On Windows: venv\Scripts\activate
    ```
 
 3. **Install dependencies**
+
    ```bash
    pip install -r requirements.txt
    ```
 
 4. **Run database migrations**
+
    ```bash
    python manage.py migrate
    ```
 
 5. **Load initial data**
+
    ```bash
    python manage.py loaddata fixtures/initial_data.json
    ```
 
 6. **(Optional) Create superuser for admin access**
+
    ```bash
    python manage.py createsuperuser
    ```
@@ -87,25 +87,29 @@ See [DOCKER.md](DOCKER.md) for detailed Docker usage, including building and pub
 ## Running the Application
 
 Start the development server:
+
 ```bash
 python manage.py runserver
 ```
 
 Access the application:
-- Main application: http://127.0.0.1:8000/
-- Django Admin interface: http://127.0.0.1:8000/admin/
+
+- Main application: <http://127.0.0.1:8000/>
+- Django Admin interface: <http://127.0.0.1:8000/admin/>
 
 ## Quick Start Scripts
 
 The project includes convenience scripts:
 
 - **init.sh**: Run migrations and load initial data
+
   ```bash
   chmod +x init.sh
   ./init.sh
   ```
 
 - **run.sh**: Start the development server
+
   ```bash
   chmod +x run.sh
   ./run.sh
@@ -117,7 +121,7 @@ The project includes convenience scripts:
 
 1. **Add Payment Methods**: Navigate to Payment Methods and add your preferred payment types
 2. **Add Payees**: Create vendors/companies in the Payees section
-3. **Create Expenses**: 
+3. **Create Expenses**:
    - Choose expense type (Endless, Split, or One-time)
    - Set start date (must be current month or later)
    - For split payments, specify total installments
@@ -146,6 +150,7 @@ The project includes convenience scripts:
 ### SASS/CSS
 
 The project uses SASS for styling with django-sass-processor for automatic compilation:
+
 - Source files: `src/scss/` directory  
 - Styles are automatically compiled when running the development server
 - No manual compilation needed - Django handles it via `{% sass_src %}` template tag
@@ -159,11 +164,7 @@ The project uses SASS for styling with django-sass-processor for automatic compi
 ### Testing
 
 Run Django tests:
+
 ```bash
 python manage.py test
 ```
-
-### Database
-
-The project uses SQLite by default but is designed to work with PostgreSQL. Database configuration is in `pyggy/settings.py`.
-

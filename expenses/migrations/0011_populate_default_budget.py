@@ -5,42 +5,37 @@ from datetime import date
 
 
 def create_default_budget_and_update_months(apps, schema_editor):
-    Budget = apps.get_model('expenses', 'Budget')
-    Month = apps.get_model('expenses', 'Month')
-    
+    Budget = apps.get_model("expenses", "Budget")
+    Month = apps.get_model("expenses", "Month")
+
     # Create default budget
     default_budget, created = Budget.objects.get_or_create(
-        name='Default',
-        defaults={
-            'start_date': date.today(),
-            'initial_amount': 0
-        }
+        name="Default", defaults={"start_date": date.today(), "initial_amount": 0}
     )
-    
+
     # Update all existing months to use the default budget
     Month.objects.filter(budget__isnull=True).update(budget=default_budget)
 
 
 def reverse_migration(apps, schema_editor):
-    Month = apps.get_model('expenses', 'Month')
-    Budget = apps.get_model('expenses', 'Budget')
-    
+    Month = apps.get_model("expenses", "Month")
+    Budget = apps.get_model("expenses", "Budget")
+
     # Remove budget references from months
     Month.objects.update(budget=None)
-    
+
     # Delete the default budget
-    Budget.objects.filter(name='Default').delete()
+    Budget.objects.filter(name="Default").delete()
 
 
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('expenses', '0010_add_budget_model'),
+        ("expenses", "0010_add_budget_model"),
     ]
 
     operations = [
         migrations.RunPython(
-            create_default_budget_and_update_months,
-            reverse_migration
+            create_default_budget_and_update_months, reverse_migration
         ),
     ]

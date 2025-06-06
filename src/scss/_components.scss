@@ -53,6 +53,35 @@ nav {
     border: none;
     color: var(--text-secondary);
     transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    width: auto;
+    min-width: auto;
+    padding: 0.5rem 0.75rem;
+}
+
+.nav-actions .btn-icon i {
+    flex-shrink: 0;
+}
+
+.nav-actions .btn-icon span {
+    font-size: 0.875rem;
+    white-space: nowrap;
+}
+
+// Hide text labels on small screens (mobile)
+@media (max-width: 768px) {
+    .nav-actions .btn-icon span {
+        display: none;
+    }
+    
+    .nav-actions .btn-icon {
+        width: 38px;
+        min-width: 38px;
+        padding: 0.5rem;
+        justify-content: center;
+    }
 }
 
 .nav-actions .btn-icon:hover {
@@ -656,5 +685,38 @@ footer {
     color: var(--color-purple);
     transform: none;
     box-shadow: 0 0 10px var(--color-purple-muted);
+}
+
+// Amount styling classes
+.amount-positive {
+    color: var(--color-green);
+    font-weight: 500;
+}
+
+.amount-negative {
+    color: var(--color-red);
+    font-weight: 500;
+}
+
+.amount-zero {
+    color: var(--color-green);
+    font-weight: 500;
+}
+
+// Expense Type Icon Colors
+.expense-type-icon-endless-recurring {
+    color: var(--color-blue) !important;
+}
+
+.expense-type-icon-split-payment {
+    color: var(--color-orange) !important;
+}
+
+.expense-type-icon-one-time {
+    color: var(--color-green) !important;
+}
+
+.expense-type-icon-recurring-with-end {
+    color: var(--color-purple) !important;
 }
 

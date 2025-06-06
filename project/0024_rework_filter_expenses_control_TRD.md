@@ -1,10 +1,13 @@
 # Technical Requirements Document (TRD)
+
 ## Ticket #0024: Rework Filter Expenses Control to Take One Line Only
 
 ### 1. Technical Overview
+
 This document outlines the technical implementation details for consolidating the expense filter controls into a single-line interface, replacing the current multi-line card-based layout.
 
 ### 2. Architecture Impact
+
 - **Frontend Only**: Changes are limited to HTML templates and SCSS styles
 - **No Backend Changes**: Django views and models remain unchanged
 - **No Database Impact**: No migrations or data changes required
@@ -15,16 +18,19 @@ This document outlines the technical implementation details for consolidating th
 #### 3.1 File Modifications
 
 **Files to Modify:**
+
 1. `expenses/templates/expenses/expense_list.html` - Update filter HTML structure
 2. `src/scss/_components.scss` - Add new filter-bar styles
 3. `src/scss/_responsive.scss` - Add responsive behavior for filter-bar
 
 **Files to Compile:**
+
 - `compile_scss.py` - Run after SCSS changes to generate CSS
 
 #### 3.2 HTML Structure Changes
 
 **Current Structure (to be removed):**
+
 ```html
 <div class="card">
     <div class="card-header">Filter Expenses</div>
@@ -41,6 +47,7 @@ This document outlines the technical implementation details for consolidating th
 ```
 
 **New Structure:**
+
 ```html
 <div class="filter-bar">
     <form method="get" class="filter-form">
@@ -73,6 +80,7 @@ This document outlines the technical implementation details for consolidating th
 #### 3.3 SCSS Styles Implementation
 
 **New styles to add to `_components.scss`:**
+
 ```scss
 // Filter Bar Styles
 .filter-bar {
@@ -147,6 +155,7 @@ This document outlines the technical implementation details for consolidating th
 ```
 
 **Responsive styles to add to `_responsive.scss`:**
+
 ```scss
 // Filter bar responsive
 @media (max-width: 768px) {
@@ -200,21 +209,25 @@ This document outlines the technical implementation details for consolidating th
    - [ ] No visual glitches or alignment issues
 
 ### 5. Browser Compatibility
+
 - Modern browsers (Chrome, Firefox, Safari, Edge)
 - Flexbox support required (all modern browsers)
 - No JavaScript dependencies
 
 ### 6. Performance Considerations
+
 - Reduced DOM elements (removed card wrapper)
 - Less CSS to process
 - Expected minor performance improvement
 
 ### 7. Security Considerations
+
 - No security impact
 - Form maintains CSRF protection
 - No new input validation required
 
 ### 8. Rollback Plan
+
 - Keep backup of original `expense_list.html`
 - SCSS changes are additive (old styles can coexist)
 - Git revert if needed
@@ -222,28 +235,33 @@ This document outlines the technical implementation details for consolidating th
 ### 9. Testing Scenarios
 
 **Desktop Testing:**
+
 1. Verify single-line layout at 1920x1080
 2. Test filter functionality with various selections
 3. Ensure proper spacing between elements
 4. Check hover states on buttons and dropdowns
 
 **Mobile Testing:**
+
 1. Verify stacked layout at 375x667 (iPhone SE)
 2. Test touch interactions with dropdowns
 3. Ensure buttons are tap-friendly
 4. Verify no horizontal scroll
 
 **Edge Cases:**
+
 1. Long payee names in dropdown
 2. No payees available
 3. Filter with no results
 4. Multiple filter combinations
 
 ### 10. Documentation Updates
+
 - No user documentation required (UI is self-explanatory)
 - Update any developer documentation if it references the filter UI
 
 ### 11. Deployment Notes
+
 - No special deployment requirements
 - Standard CSS cache busting may be needed
 - No database migrations

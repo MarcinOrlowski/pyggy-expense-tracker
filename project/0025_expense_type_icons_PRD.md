@@ -5,17 +5,27 @@
 
 ## Problem Statement
 
-Users currently see only text labels for expense types in the active expenses display, making it harder to quickly identify and categorize different expense types at a glance. The lack of visual differentiation reduces the user experience and scanning efficiency when managing multiple expenses across different categories.
+Users currently see only text labels for expense types in the active expenses display, making it
+harder to quickly identify and categorize different expense types at a glance. The lack of visual
+differentiation reduces the user experience and scanning efficiency when managing multiple expenses
+across different categories.
 
 ## Solution Overview
 
-Add hardcoded Font Awesome icons to each expense type that display alongside or instead of text labels in expense listings. Each of the four expense types (Endless Recurring, Split Payment, One Time, Recurring with End Date) will have a distinct, intuitive icon with fixed mapping in the code. Success means users can identify expense types instantly through visual cues rather than reading text labels.
+Add hardcoded Font Awesome icons to each expense type that display alongside or instead of text
+labels in expense listings. Each of the four expense types (Endless Recurring, Split Payment, One
+Time, Recurring with End Date) will have a distinct, intuitive icon with fixed mapping in the code.
+Success means users can identify expense types instantly through visual cues rather than reading
+text labels.
 
 ## User Stories
 
-1. As a user viewing my expense list, I want to see distinct icons for each expense type, so that I can quickly identify different categories of expenses without reading text labels
-2. As a user managing multiple expenses, I want visual differentiation between recurring and one-time payments, so that I can better organize my financial planning
-3. As a user with accessibility needs, I want icon tooltips with expense type names, so that I understand the meaning of each visual indicator
+1. As a user viewing my expense list, I want to see distinct icons for each expense type, so that I
+   can quickly identify different categories of expenses without reading text labels
+2. As a user managing multiple expenses, I want visual differentiation between recurring and
+   one-time payments, so that I can better organize my financial planning
+3. As a user with accessibility needs, I want icon tooltips with expense type names, so that I
+   understand the meaning of each visual indicator
 
 ## Acceptance Criteria
 

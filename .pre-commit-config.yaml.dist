@@ -1,12 +1,5 @@
 ##################################################################################
 #
-# Laravel API Response Builder PHPStan config file
-#
-# @author    Marcin Orlowski <mail (#) marcinOrlowski (.) com>
-# @copyright 2016-2025 Marcin Orlowski
-# @license   http://www.opensource.org/licenses/mit-license.php MIT
-# @link      https://github.com/MarcinOrlowski/laravel-api-response-builder
-#
 ##################################################################################
 #
 # Using pre-commit hooks #
@@ -81,3 +74,11 @@ repos:
       # Runs PHPStan analyser
       - id: php-stan
         files: \.(php)$
+
+  - repo: https://github.com/psf/black
+    rev: 25.1.0
+    hooks:
+      - id: black
+        args: [--line-length=88]
+        language_version: python3.12
+

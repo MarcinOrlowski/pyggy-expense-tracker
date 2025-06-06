@@ -5,9 +5,9 @@ from django.db import migrations
 
 def remove_default_budget(apps, schema_editor):
     """Remove the Default budget if it exists."""
-    Budget = apps.get_model('expenses', 'Budget')
+    Budget = apps.get_model("expenses", "Budget")
     # Only delete if no months are associated with it
-    default_budgets = Budget.objects.filter(name='Default')
+    default_budgets = Budget.objects.filter(name="Default")
     for budget in default_budgets:
         if budget.month_set.count() == 0:
             budget.delete()
@@ -15,26 +15,20 @@ def remove_default_budget(apps, schema_editor):
 
 def create_default_budget(apps, schema_editor):
     """Re-create the Default budget for reversal."""
-    Budget = apps.get_model('expenses', 'Budget')
+    Budget = apps.get_model("expenses", "Budget")
     from datetime import date
+
     Budget.objects.get_or_create(
-        name='Default',
-        defaults={
-            'start_date': date.today(),
-            'initial_amount': 0
-        }
+        name="Default", defaults={"start_date": date.today(), "initial_amount": 0}
     )
 
 
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('expenses', '0013_alter_month_budget'),
+        ("expenses", "0013_alter_month_budget"),
     ]
 
     operations = [
-        migrations.RunPython(
-            remove_default_budget,
-            create_default_budget
-        ),
+        migrations.RunPython(remove_default_budget, create_default_budget),
     ]

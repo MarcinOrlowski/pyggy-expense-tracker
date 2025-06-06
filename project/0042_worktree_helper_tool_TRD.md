@@ -4,7 +4,10 @@
 
 ## Technical Approach
 
-We'll rewrite worktree.sh as a command-based tool requiring explicit `open` or `close` commands. The script will use standard command parsing with `$1` for command and `$2` for ticket number. Implementation will split existing functionality into separate functions and add new close logic using git's native `git branch -d` and `git worktree remove` commands with proper error handling.
+We'll rewrite worktree.sh as a command-based tool requiring explicit `open` or `close` commands. The
+script will use standard command parsing with `$1` for command and `$2` for ticket number.
+Implementation will split existing functionality into separate functions and add new close logic
+using git's native `git branch -d` and `git worktree remove` commands with proper error handling.
 
 ## Command Interface Design
 

@@ -1,0 +1,137 @@
+{% extends 'expenses/base.html' %}
+
+{% block title %}Help & Documentation{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1><i class="fas fa-question-circle"></i> Help & Documentation</h1>
+    <p>Find answers and learn how to use PyGGy effectively.</p>
+</div>
+
+{% if error %}
+    <div class="message error">
+        <i class="fas fa-exclamation-triangle"></i> {{ error }}
+    </div>
+{% endif %}
+
+{% if docs %}
+    <div class="help-grid">
+        {% for doc in docs %}
+            <div class="help-card">
+                <div class="help-card-icon">
+                    <i class="fas fa-file-text"></i>
+                </div>
+                <div class="help-card-content">
+                    <h3><a href="{% url 'help_page' doc.url_name %}">{{ doc.title }}</a></h3>
+                    <p>View documentation: {{ doc.filename }}</p>
+                </div>
+                <div class="help-card-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    {% if not error %}
+        <div class="empty-state">
+            <i class="fas fa-file-text fa-3x"></i>
+            <h3>No Documentation Available</h3>
+            <p>There are currently no documentation files available in the docs/ directory.</p>
+        </div>
+    {% endif %}
+{% endif %}
+
+<style>
+.help-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.help-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    color: inherit;
+}
+
+.help-card:hover {
+    border-color: var(--primary-color);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transform: translateY(-2px);
+}
+
+.help-card-icon {
+    font-size: 2rem;
+    color: var(--primary-color);
+    min-width: 50px;
+    text-align: center;
+}
+
+.help-card-content {
+    flex: 1;
+}
+
+.help-card-content h3 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.2rem;
+}
+
+.help-card-content h3 a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.help-card-content h3 a:hover {
+    color: var(--primary-color);
+}
+
+.help-card-content p {
+    margin: 0;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.help-card-arrow {
+    color: var(--text-muted);
+    font-size: 1.2rem;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: var(--text-muted);
+}
+
+.empty-state i {
+    color: var(--text-muted);
+    margin-bottom: 1rem;
+}
+
+.empty-state h3 {
+    margin: 1rem 0 0.5rem 0;
+}
+
+@media (max-width: 768px) {
+    .help-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .help-card {
+        padding: 1rem;
+    }
+    
+    .help-card-icon {
+        font-size: 1.5rem;
+        min-width: 40px;
+    }
+}
+</style>
+{% endblock %}

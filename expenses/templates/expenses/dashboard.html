@@ -29,7 +29,7 @@
     </div>
     <div class="card-body">
         <p>No months have been created yet. Start by adding your first month to begin tracking expenses.</p>
-        <p>Go to <strong>Months → Add initial month</strong> to choose your starting month.</p>
+        <a href="{% url 'month_process' budget.id %}" class="btn btn-primary"><i class="fas fa-calendar-plus icon-left"></i>Add initial month</a>
     </div>
 </div>
 {% elif not_current_month %}
@@ -46,7 +46,7 @@
 
 <!-- Current Month Expenses List -->
 {% if has_any_months and current_month %}
-{% include "expenses/includes/expense_items_table.html" with table_title="Current Month Expenses" month=current_month items=all_expense_items layout="dashboard" empty_message="No expense items this month." %}
+{% include "expenses/includes/expense_items_table.html" with table_title="Expenses" month=current_month items=all_expense_items layout="dashboard" empty_message="No expense items this month." %}
 {% endif %}
 
 {% endblock %}

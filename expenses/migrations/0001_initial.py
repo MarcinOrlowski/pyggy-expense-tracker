@@ -9,90 +9,194 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Expense',
+            name="Expense",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('title', models.CharField(max_length=255)),
-                ('expense_type', models.CharField(choices=[('endless_recurring', 'Endless Recurring'), ('split_payment', 'Split Payment'), ('one_time', 'One Time')], max_length=20)),
-                ('total_amount', models.DecimalField(decimal_places=2, max_digits=13, validators=[django.core.validators.MinValueValidator(0.01)])),
-                ('installments_count', models.PositiveIntegerField(default=0)),
-                ('started_at', models.DateField()),
-                ('closed_at', models.DateTimeField(blank=True, null=True)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("title", models.CharField(max_length=255)),
+                (
+                    "expense_type",
+                    models.CharField(
+                        choices=[
+                            ("endless_recurring", "Endless Recurring"),
+                            ("split_payment", "Split Payment"),
+                            ("one_time", "One Time"),
+                        ],
+                        max_length=20,
+                    ),
+                ),
+                (
+                    "total_amount",
+                    models.DecimalField(
+                        decimal_places=2,
+                        max_digits=13,
+                        validators=[django.core.validators.MinValueValidator(0.01)],
+                    ),
+                ),
+                ("installments_count", models.PositiveIntegerField(default=0)),
+                ("started_at", models.DateField()),
+                ("closed_at", models.DateTimeField(blank=True, null=True)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
             ],
             options={
-                'ordering': ['-created_at'],
+                "ordering": ["-created_at"],
             },
         ),
         migrations.CreateModel(
-            name='Payee',
+            name="Payee",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=255, unique=True)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=255, unique=True)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
             ],
             options={
-                'ordering': ['name'],
+                "ordering": ["name"],
             },
         ),
         migrations.CreateModel(
-            name='PaymentMethod',
+            name="PaymentMethod",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=255, unique=True)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=255, unique=True)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
             ],
             options={
-                'ordering': ['name'],
+                "ordering": ["name"],
             },
         ),
         migrations.CreateModel(
-            name='Month',
+            name="Month",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('year', models.PositiveSmallIntegerField(validators=[django.core.validators.MinValueValidator(2020), django.core.validators.MaxValueValidator(2099)])),
-                ('month', models.PositiveSmallIntegerField(validators=[django.core.validators.MinValueValidator(1), django.core.validators.MaxValueValidator(12)])),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "year",
+                    models.PositiveSmallIntegerField(
+                        validators=[
+                            django.core.validators.MinValueValidator(2020),
+                            django.core.validators.MaxValueValidator(2099),
+                        ]
+                    ),
+                ),
+                (
+                    "month",
+                    models.PositiveSmallIntegerField(
+                        validators=[
+                            django.core.validators.MinValueValidator(1),
+                            django.core.validators.MaxValueValidator(12),
+                        ]
+                    ),
+                ),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
             ],
             options={
-                'ordering': ['-year', '-month'],
-                'unique_together': {('year', 'month')},
+                "ordering": ["-year", "-month"],
+                "unique_together": {("year", "month")},
             },
         ),
         migrations.CreateModel(
-            name='ExpenseItem',
+            name="ExpenseItem",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('due_date', models.DateField()),
-                ('payment_date', models.DateField(blank=True, null=True)),
-                ('amount', models.DecimalField(decimal_places=2, max_digits=13, validators=[django.core.validators.MinValueValidator(0.01)])),
-                ('status', models.CharField(choices=[('pending', 'Pending'), ('paid', 'Paid')], default='pending', max_length=10)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
-                ('expense', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='expenses.expense')),
-                ('month', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='expenses.month')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("due_date", models.DateField()),
+                ("payment_date", models.DateField(blank=True, null=True)),
+                (
+                    "amount",
+                    models.DecimalField(
+                        decimal_places=2,
+                        max_digits=13,
+                        validators=[django.core.validators.MinValueValidator(0.01)],
+                    ),
+                ),
+                (
+                    "status",
+                    models.CharField(
+                        choices=[("pending", "Pending"), ("paid", "Paid")],
+                        default="pending",
+                        max_length=10,
+                    ),
+                ),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
+                (
+                    "expense",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="expenses.expense",
+                    ),
+                ),
+                (
+                    "month",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to="expenses.month"
+                    ),
+                ),
             ],
             options={
-                'ordering': ['due_date', '-created_at'],
+                "ordering": ["due_date", "-created_at"],
             },
         ),
         migrations.AddField(
-            model_name='expense',
-            name='payee',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='expenses.payee'),
+            model_name="expense",
+            name="payee",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, to="expenses.payee"
+            ),
         ),
         migrations.AddField(
-            model_name='expense',
-            name='payment_method',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='expenses.paymentmethod'),
+            model_name="expense",
+            name="payment_method",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                to="expenses.paymentmethod",
+            ),
         ),
     ]

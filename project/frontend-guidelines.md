@@ -1,5 +1,6 @@
 # Frontend Guidelines
-# Expense Tracker PoC - Simplified Frontend Architecture
+
+Expense Tracker PoC - Simplified Frontend Architecture
 
 ## 1. Overview
 
@@ -15,7 +16,7 @@ This document defines the frontend architecture guidelines for the Expense Track
 
 ## 3. File Organization
 
-```
+```text
 static/
 ├── css/
 │   ├── base.css           # Global styles
@@ -45,12 +46,14 @@ static/
 ### 4.1 What's Allowed
 
 ✅ **External CSS files referenced via Django static**
+
 ```html
 <link rel="stylesheet" href="{% static 'css/base.css' %}">
 <link rel="stylesheet" href="{% static 'css/pages/dashboard.css' %}">
 ```
 
 ✅ **Conditional CSS loading**
+
 ```html
 {% if user.is_authenticated %}
     <link rel="stylesheet" href="{% static 'css/authenticated.css' %}">
@@ -58,6 +61,7 @@ static/
 ```
 
 ✅ **Component-specific CSS**
+
 ```html
 {% if page_type == 'dashboard' %}
     <link rel="stylesheet" href="{% static 'css/pages/dashboard.css' %}">
@@ -67,12 +71,14 @@ static/
 ### 4.2 What's Not Allowed
 
 ❌ **Inline styles**
+
 ```html
 <!-- Don't do this -->
 <div style="color: red; margin: 10px;">Content</div>
 ```
 
 ❌ **Style blocks with actual CSS code**
+
 ```html
 <!-- Don't do this -->
 <style>
@@ -251,12 +257,14 @@ body {
 ### 5.1 What's Allowed
 
 ✅ **External JavaScript files**
+
 ```html
 <script src="{% static 'js/base.js' %}"></script>
 <script src="{% static 'js/pages/dashboard.js' %}"></script>
 ```
 
 ✅ **Conditional JavaScript loading**
+
 ```html
 {% if page_requires_charts %}
     <script src="{% static 'js/components/charts.js' %}"></script>
@@ -264,6 +272,7 @@ body {
 ```
 
 ✅ **Script tags for external libraries**
+
 ```html
 <script src="https://cdn.jsdelivr.net/npm/htmx.org@1.8.4/dist/htmx.min.js"></script>
 ```
@@ -271,12 +280,14 @@ body {
 ### 5.2 What's Not Allowed
 
 ❌ **Inline JavaScript**
+
 ```html
 <!-- Don't do this -->
 <button onclick="alert('clicked')">Click me</button>
 ```
 
 ❌ **Script blocks with actual JavaScript code**
+
 ```html
 <!-- Don't do this -->
 <script>
@@ -571,6 +582,7 @@ function enhanceExpenseForms() {
 ## 10. Browser Support
 
 Target modern browsers with graceful degradation:
+
 - Chrome 80+
 - Firefox 75+
 - Safari 13+

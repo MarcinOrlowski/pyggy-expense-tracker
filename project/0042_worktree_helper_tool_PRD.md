@@ -4,19 +4,30 @@
 
 ## Problem Statement
 
-Developers using the current worktree.sh script can only create/open worktrees but cannot cleanly close them, leading to accumulation of unused branches and worktrees. Manual cleanup requires multiple git commands and is error-prone. This creates repository clutter and increases cognitive overhead for developers managing multiple ticket branches simultaneously.
+Developers using the current worktree.sh script can only create/open worktrees but cannot cleanly
+close them, leading to accumulation of unused branches and worktrees. Manual cleanup requires
+multiple git commands and is error-prone. This creates repository clutter and increases cognitive
+overhead for developers managing multiple ticket branches simultaneously.
 
 ## Solution Overview
 
-Enhance worktree.sh to support both `open` and `close` commands, providing a complete worktree lifecycle management tool. The `close` command will safely delete merged branches and remove associated worktrees automatically. Success means developers can manage worktree lifecycle with simple, memorable commands while maintaining git repository cleanliness.
+Enhance worktree.sh to support both `open` and `close` commands, providing a complete worktree
+lifecycle management tool. The `close` command will safely delete merged branches and remove
+associated worktrees automatically. Success means developers can manage worktree lifecycle with
+simple, memorable commands while maintaining git repository cleanliness.
 
 ## User Stories
 
-1. As a developer, I want to open a worktree using `worktree.sh open <ticket>`, so that I can quickly start working on a ticket with an isolated environment
-2. As a developer, I want to close a worktree using `worktree.sh close <ticket>`, so that I can automatically clean up branches and worktrees when done
-3. As a developer, I want to get ticket information using `worktree.sh info <ticket>`, so that I can see ticket details and worktree status without creating anything
-4. As a developer, I want safe branch deletion (only merged branches), so that I don't accidentally lose unmerged work
-5. As a developer, I want clear error messages when cleanup fails, so that I can understand and resolve issues manually
+1. As a developer, I want to open a worktree using `worktree.sh open <ticket>`, so that I can
+   quickly start working on a ticket with an isolated environment
+2. As a developer, I want to close a worktree using `worktree.sh close <ticket>`, so that I can
+   automatically clean up branches and worktrees when done
+3. As a developer, I want to get ticket information using `worktree.sh info <ticket>`, so that I can
+   see ticket details and worktree status without creating anything
+4. As a developer, I want safe branch deletion (only merged branches), so that I don't accidentally
+   lose unmerged work
+5. As a developer, I want clear error messages when cleanup fails, so that I can understand and
+   resolve issues manually
 
 ## Acceptance Criteria
 

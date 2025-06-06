@@ -4,58 +4,77 @@
 **Ticket**: [#0044](https://github.com/MarcinOrlowski/pyggy-expense-tracker/issues/44)
 
 ## Technical Approach
-We'll implement budget scoping by modifying URL patterns to include budget_id parameter and updating all views to filter data based on the budget from the URL. A context processor will make the current budget available in all templates by extracting it from the URL parameters. The current budget will be displayed in the header with a link to switch budgets. All views will be updated to filter data based on the budget_id from the URL, with automatic redirection to budget selection for users accessing the root URL.
+
+We'll implement budget scoping by modifying URL patterns to include budget_id parameter and updating
+all views to filter data based on the budget from the URL. A context processor will make the current
+budget available in all templates by extracting it from the URL parameters. The current budget will
+be displayed in the header with a link to switch budgets. All views will be updated to filter data
+based on the budget_id from the URL, with automatic redirection to budget selection for users
+accessing the root URL.
 
 ## Data Model
+
 No new models required. Existing relationships:
+
 - Budget → Month (ForeignKey with CASCADE)
 - Month → Expense (ForeignKey with CASCADE)
 - Expense → ExpenseItem (ForeignKey with CASCADE)
 
 Session storage:
+
 ```python
 request.session['current_budget_id'] = budget_id
 ```
 
 ## API Design
+
 URL pattern changes:
-```
+
+```text
 # From:
+
 /expenses/
 /months/
 /months/<year>/<month>/
 
 # To:
+
 /budgets/<int:budget_id>/expenses/
 /budgets/<int:budget_id>/months/
 /budgets/<int:budget_id>/months/<year>/<month>/
 /budgets/<int:budget_id>/dashboard/
 
 # Budget management (unchanged):
+
 /budgets/
 /budgets/create/
 /budgets/<int:pk>/edit/
+
 ```
 
 Budget selection endpoint:
-```
+
+```text
 POST /budgets/select/
 Request: { budget_id: 1 }
 Response: Redirect to /budgets/1/dashboard/
 ```
 
 ## Security & Performance
+
 - Authorization: Users can only access budgets that exist (404 for non-existent)
 - Session security: Django's built-in session framework with secure cookies (no need - not using auth)
 - Query performance: All queries already filter by relationships, minimal impact
 - URL validation: 404 response for invalid budget_id in URLs
 
 ## Technical Risks & Mitigations
+
 1. **Risk**: Existing URLs break for users → **Mitigation**: No need. That's project under development.
 2. **Risk**: Session expiry loses budget context → **Mitigation**: why session keeps budget context? it's always referenced in URL?
 3. **Risk**: Complex template URL updates → **Mitigation**: Create template tag for budget-aware URL generation
 
 ## Implementation Plan
+
 - Phase 1 (S): Create context processor and session management
 - Phase 2 (M): Update URL patterns and views to handle budget_id
 - Phase 3 (M): Add current budget display and template updates
@@ -65,6 +84,7 @@ Response: Redirect to /budgets/1/dashboard/
 Dependencies: None (uses existing Budget model)
 
 ## Monitoring & Rollback
+
 - Feature flag: `BUDGET_SCOPING_ENABLED` in settings.py
 - Key metrics: Session data for current_budget_id, 404 rates on budget URLs
 - Rollback: Set feature flag to False, legacy URLs remain functional
@@ -72,6 +92,7 @@ Dependencies: None (uses existing Budget model)
 ## Implementation Details
 
 ### 1. Context Processor (`expenses/context_processors.py`):
+
 ```python
 def current_budget(request):
     budget_id = request.session.get('current_budget_id')
@@ -85,6 +106,7 @@ def current_budget(request):
 ```
 
 ### 2. View Mixin (`expenses/mixins.py`):
+
 ```python
 class BudgetScopedMixin:
     def dispatch(self, request, *args, **kwargs):
@@ -102,6 +124,7 @@ class BudgetScopedMixin:
 ```
 
 ### 3. Budget Selection View:
+
 ```python
 def select_budget(request):
     if request.method == 'POST':
@@ -115,5 +138,5 @@ def select_budget(request):
 ```
 
 ### 4. Template Updates:
-- Replace `{% url 'expenses:month_list' %}` with `{% url 'expenses:month_list' current_budget_id %}`
 
+- Replace `{% url 'expenses:month_list' %}` with `{% url 'expenses:month_list' current_budget_id %}`

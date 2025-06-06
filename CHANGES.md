@@ -1,8 +1,41 @@
-# Change Log
+![PyGGy Logo](img/logo.png)
+
+# PyGGy Changelog
+
+---
 
 ## @dev
 
 - [#0051] Added close buttons to flash messages with Font Awesome icons and smooth animation effects
+- [#0134] Unified edit icons across the application to use fa-pencil consistently
+- [#0124] Improved payment confirmation redirect behavior to navigate to budget dashboard after payment operations
+- [#0131] Replace text navigation instructions with direct "Add First Month" buttons
+
+## v1.0 (2025-06-06)
+
+- [#0112] Set default values for new expense creation (expense type defaults to "one-time", start date defaults to current date)
+- [#0120] Added comprehensive type hints to Python codebase for improved code quality and developer experience
+- [#0118] Changed expense item edit behavior to redirect to budget dashboard after save or cancel
+- [#0114] Added in-app help system that renders markdown documentation files with README.md priority, user-friendly error handling, and responsive design
+- [#0062] Added separate colors for expense type icons to improve visual differentiation between expense types
+- [#0102] Split application files into one-file-one-class model for improved code organization and maintainability
+- [#0105] Allow negative initial values for budget creation and editing to support deficit tracking
+- [#0104] Added balance column to month list view showing total amount for each month
+- [#0096] Fixed calendar weekday highlighting to only appear when viewing current month
+- [#0099] Added payment methods management UI with full CRUD operations
+- [#0095] Fixed budget dashboard edit action to redirect to expense item editing instead of expense editing
+- [#0095] Enhanced expense item editing to allow modification of both amount and due date (restricted to same month)
+- [#0092] Added text labels next to icons in main toolbar action buttons for improved user experience and accessibility
+- [#0087] Exposed explicit due date functionality with comprehensive expense model restructuring, flexible one-time expense scheduling, and enhanced due date calculation logic
+- [#0084] Added date editing restrictions for expenses to prevent historical date modifications and maintain financial data integrity
+- [#0072] Refactored payees list layout by removing created column and right-aligning expenses column for better readability
+- [#0073] Enhanced amount input sanitization with international format support (comma/dot decimal separators, currency symbols)
+- [#0075] Bind expenses directly to budgets to fix invisible expenses bug
+- [#0063] Added partial split payment tracking with configurable start installment number
+- [#0069] Added linters and Github Actions to guard the code.
+- [#0067] Added edit expense button next to each expense in dashboard (when editable)
+- [#0050] Added conditional expense editing with restrictions based on payment status and expense type
+- [#0064] Refactored split payments to use monthly installment amount instead of total amount calculation
 - [#0058] Disabled budget start date field in edit form when months exist
 - [#0016] Renamed Django configuration directory from expense_tracker to pyggy to match project name
 - [#0056] Fixed failing unit tests by updating method names and function signatures to match current codebase
@@ -27,6 +60,7 @@
 - [#0008] Added Days column to dashboard expense items table showing days until due
 - [#0007] Implemented reusable template components for dashboard and month views
 - [#0001] Replaced text navigation links with icon-based action buttons
+- Fixed test failures in ExpenseItemEditForm validation and view context to ensure consistent form behavior
 - Added sequential month creation (only next month after most recent)
 - Added user-selectable initial month (no preset default)
 - Added month deletion restrictions (only most recent, no paid expenses)
@@ -36,16 +70,6 @@
 - Added immediate expense item creation for current month expenses
 - Added future expense support (processed when month arrives)
 - Added smart form defaults (current month's first day)
-- Added optional `payment_id` field for transaction references
 - Added payment reference ID to payment forms
-- Removed payment method column from all table views
 - Added paid item styling (dimmed + strikethrough)
 - Added right alignment for amount and action columns
-- Removed redundant status columns from all tables
-- Removed Quick Actions section from dashboard
-- Removed "Process Current Month" button from dashboard
-- Changed payment date format to date-only (`YYYY-MM-DD`)
-- Added `ExpenseItem.payment_id` field migration
-- Fixed button styling with proper CSS classes (no inline styles)
-- Enhanced model validation methods
-- Made expense payee field optional
