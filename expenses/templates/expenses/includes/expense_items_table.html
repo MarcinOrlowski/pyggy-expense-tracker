@@ -2,8 +2,7 @@
 <div class="card">
     <div class="card-header">
         {{ table_title|default:"Expense Items" }}
-        {% if items %}({{ items|length }}){% endif %}
-        {% if month %}- {{ month.year }}-{{ month.month|stringformat:"02d" }}{% endif %}
+        {% if month %} - {{ month.year }}-{{ month.month|stringformat:"02d" }}{% endif %}
     </div>
     <div class="card-body">
         {% if items %}

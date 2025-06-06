@@ -1,6 +1,11 @@
-# Change Log
+![PyGGy Logo](img/logo.png)
 
-## @dev
+# PyGGy Changelog
+
+---
+
+## v1.0 (2025-06-06)
+
 
 - [#0112] Set default values for new expense creation (expense type defaults to "one-time", start date defaults to current date)
 - [#0120] Added comprehensive type hints to Python codebase for improved code quality and developer experience
@@ -59,16 +64,6 @@
 - Added immediate expense item creation for current month expenses
 - Added future expense support (processed when month arrives)
 - Added smart form defaults (current month's first day)
-- Added optional `payment_id` field for transaction references
 - Added payment reference ID to payment forms
-- Removed payment method column from all table views
 - Added paid item styling (dimmed + strikethrough)
 - Added right alignment for amount and action columns
-- Removed redundant status columns from all tables
-- Removed Quick Actions section from dashboard
-- Removed "Process Current Month" button from dashboard
-- Changed payment date format to date-only (`YYYY-MM-DD`)
-- Added `ExpenseItem.payment_id` field migration
-- Fixed button styling with proper CSS classes (no inline styles)
-- Enhanced model validation methods
-- Made expense payee field optional
