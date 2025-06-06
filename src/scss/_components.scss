@@ -359,6 +359,21 @@ footer {
     background-color: rgba(189, 147, 249, 0.1);
 }
 
+// Clickable row styles
+.table .clickable-row {
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.table .clickable-row:hover {
+    background-color: rgba(189, 147, 249, 0.15);
+    transform: translateY(-1px);
+}
+
+.table .clickable-row .actions-column {
+    cursor: default;
+}
+
 .table a {
     color: var(--color-cyan);
     text-decoration: none;

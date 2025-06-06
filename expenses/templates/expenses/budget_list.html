@@ -26,16 +26,13 @@
                 </thead>
                 <tbody>
                     {% for budget in budgets %}
-                        <tr>
-                            <td>
-                                <a href="{% url 'dashboard' budget.pk %}">{{ budget.name }}</a>
-                            </td>
+                        <tr class="clickable-row" data-href="{% url 'dashboard' budget.pk %}" style="cursor: pointer;">
+                            <td>{{ budget.name }}</td>
                             <td>{{ budget.start_date|date:"Y-m-d" }}</td>
                             <td class="text-right">
                                 {{ budget.current_balance|amount_with_class }}
                             </td>
                             <td class="text-right">
-                                <a href="{% url 'dashboard' budget.pk %}" class="btn btn-sm" title="Open Budget"><i class="fas fa-eye"></i></a>
                                 <a href="{% url 'budget_edit' budget.pk %}" class="btn btn-sm" title="Edit Budget"><i class="fas fa-pencil"></i></a>
                                 {% if budget.can_be_deleted %}
                                 <a href="{% url 'budget_delete' budget.pk %}" class="btn btn-danger btn-sm" title="Delete Budget"><i class="fas fa-trash"></i></a>

@@ -33,11 +33,10 @@
                 </thead>
                 <tbody>
                     {% for payee in payees %}
-                    <tr>
+                    <tr class="clickable-row" data-href="{% url 'payee_edit' payee.pk %}" style="cursor: pointer;">
                         <td>{{ payee.name }}</td>
                         <td class="amount-column">{{ payee.expense_count }}</td>
                         <td class="actions-column">
-                            <a href="{% url 'payee_edit' payee.pk %}" class="btn btn-sm" title="Edit Payee" aria-label="Edit Payee"><i class="fas fa-pen-to-square"></i></a>
                             {% if payee.is_hidden %}
                                 <form method="post" action="{% url 'payee_unhide' payee.pk %}" class="form-inline">
                                     {% csrf_token %}

@@ -23,10 +23,9 @@
                 </thead>
                 <tbody>
                     {% for method in payment_methods %}
-                    <tr>
-                        <td><a href="{% url 'payment_method_edit' method.pk %}">{{ method.name }}</a></td>
+                    <tr class="clickable-row" data-href="{% url 'payment_method_edit' method.pk %}" style="cursor: pointer;">
+                        <td>{{ method.name }}</td>
                         <td class="actions-column">
-                            <a href="{% url 'payment_method_edit' method.pk %}" class="btn btn-sm" title="Edit Payment Method" aria-label="Edit Payment Method"><i class="fas fa-pen-to-square"></i></a>
                             <a href="{% url 'payment_method_delete' method.pk %}" class="btn btn-sm btn-danger" title="Delete Payment Method" aria-label="Delete Payment Method"><i class="fas fa-trash-can"></i></a>
                         </td>
                     </tr>

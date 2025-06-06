@@ -27,11 +27,10 @@
                 </thead>
                 <tbody>
                     {% for month in months %}
-                    <tr>
+                    <tr class="clickable-row" data-href="{% url 'month_detail' budget.id month.year month.month %}" style="cursor: pointer;">
                         <td>{{ month.year }}-{{ month.month|stringformat:"02d" }}</td>
                         <td class="text-right">{{ month.balance|amount_with_class }}</td>
                         <td class="actions-column">
-                            <a href="{% url 'month_detail' budget.id month.year month.month %}" class="btn btn-sm" title="View Details" aria-label="View Details"><i class="fas fa-eye"></i></a>
                             {% if month.can_be_deleted %}
                             <a href="{% url 'month_delete' budget.id month.year month.month %}" class="btn btn-danger btn-sm" title="Delete Month" aria-label="Delete Month"><i class="fas fa-trash-can"></i></a>
                             {% endif %}

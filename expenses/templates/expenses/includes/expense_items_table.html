@@ -18,7 +18,7 @@
                 </thead>
                 <tbody>
                     {% for item in items %}
-                    <tr class="{% if item.status == 'paid' %}expense-item-paid{% else %}expense-item-pending{% endif %}">
+                    <tr class="clickable-row {% if item.status == 'paid' %}expense-item-paid{% else %}expense-item-pending{% endif %}" data-href="{% url 'expense_detail' budget.id item.expense.pk %}" style="cursor: pointer;">
                         <td>{{ item.due_date|date:"Y-m-d" }}</td>
                         <td class="days-column">
                             {% if item.status == 'paid' %}
@@ -34,7 +34,7 @@
                         <td class="amount-column">{{ item.amount|amount_with_class }}</td>
                         <td>
                             <i class="fas {{ item.expense.get_expense_type_icon }} {{ item.expense.get_expense_type_icon_css_class }}" aria-label="{{ item.expense.get_expense_type_display }}" title="{{ item.expense.get_expense_type_display }}"></i>
-                            <a href="{% url 'expense_detail' budget.id item.expense.pk %}">{{ item.expense.title }}</a>
+                            {{ item.expense.title }}
                         </td>
                         <td class="actions-column">
                             {% if item.status == 'pending' %}
@@ -45,7 +45,6 @@
                             {% if item.expense.can_be_edited %}
                                 <a href="{% url 'expense_item_edit' budget.id item.pk %}" class="btn btn-sm" title="Edit Item" aria-label="Edit Item"><i class="fas fa-pencil"></i></a>
                             {% endif %}
-                            <a href="{% url 'expense_detail' budget.id item.expense.pk %}" class="btn btn-sm" title="View Details" aria-label="View Details"><i class="fas fa-eye"></i></a>
                         </td>
                     </tr>
                     {% endfor %}
