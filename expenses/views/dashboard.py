@@ -1,5 +1,7 @@
 from django.shortcuts import render, get_object_or_404
+from django.db.models import Sum, Count, Q
 from datetime import date
+from collections import OrderedDict
 from ..models import ExpenseItem, Month, Budget
 
 
@@ -20,15 +22,47 @@ def dashboard(request, budget_id):
 
     if current_month:
         # Get all expense items for the current month, ordered by due date
-        all_expense_items = (
+        current_month_items = (
             ExpenseItem.objects.filter(month=current_month)
             .select_related("expense", "expense__payee")
             .order_by("due_date")
         )
 
-        # Separate for counting and totals
-        pending_items = [item for item in all_expense_items if item.status == "pending"]
-        paid_items = [item for item in all_expense_items if item.status == "paid"]
+        # Get all pending expense items from past months
+        past_pending_items = (
+            ExpenseItem.objects.filter(
+                Q(month__budget=budget, month__year__lt=current_month.year, status="pending") |
+                Q(month__budget=budget, month__year=current_month.year, month__month__lt=current_month.month, status="pending")
+            )
+            .select_related("expense", "expense__payee", "month")
+            .order_by("-month__year", "-month__month", "due_date")
+        )
+
+        # Group all items by month for display with totals
+        grouped_expense_items = OrderedDict()
+        month_totals = {}
+        
+        # Add current month items first (newest)
+        if current_month_items:
+            current_month_key = f"{current_month.year}-{current_month.month:02d}"
+            grouped_expense_items[current_month_key] = list(current_month_items)
+            month_totals[current_month_key] = sum(item.amount for item in current_month_items)
+
+        # Add past months with pending items (already ordered by year/month desc)
+        for item in past_pending_items:
+            month_key = f"{item.month.year}-{item.month.month:02d}"
+            if month_key not in grouped_expense_items:
+                grouped_expense_items[month_key] = []
+                month_totals[month_key] = 0
+            grouped_expense_items[month_key].append(item)
+            month_totals[month_key] += item.amount
+
+        # Create flat list for backward compatibility with summary calculations
+        all_expense_items = list(current_month_items)
+
+        # Separate current month items for counting and totals
+        pending_items = [item for item in current_month_items if item.status == "pending"]
+        paid_items = [item for item in current_month_items if item.status == "paid"]
 
         total_pending = sum(item.amount for item in pending_items)
         total_paid = sum(item.amount for item in paid_items)
@@ -43,15 +77,7 @@ def dashboard(request, budget_id):
         )
 
         # Check if any overdue items exist from previous months in this budget
-        has_overdue = (
-            ExpenseItem.objects.filter(
-                payment_date__isnull=True,
-                due_date__lt=current_date,
-                month__budget=budget,
-            )
-            .exclude(month=current_month)
-            .exists()
-        )
+        has_overdue = len(past_pending_items) > 0
 
         # Add today to due_days if there are overdue items and we're showing current calendar month
         if (
@@ -69,6 +95,8 @@ def dashboard(request, budget_id):
         total_paid = 0
         total_month = 0
         due_days = set()
+        grouped_expense_items = OrderedDict()
+        month_totals = {}
 
     # Build calendar weeks (Monday start) - show most recent month if available
     calendar.setfirstweekday(calendar.MONDAY)
@@ -125,6 +153,8 @@ def dashboard(request, budget_id):
         "current_date": current_date,
         "has_any_months": has_any_months,
         "all_expense_items": all_expense_items,
+        "grouped_expense_items": grouped_expense_items,
+        "month_totals": month_totals,
         "dashboard_summary": dashboard_summary,
         "not_has_any_months": not has_any_months,
         "not_current_month": current_month is None,

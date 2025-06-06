@@ -1,0 +1,74 @@
+{% load currency_tags %}
+<div class="card">
+    <div class="card-header">
+        {{ table_title|default:"Expense Items" }}
+    </div>
+    <div class="card-body">
+        {% if grouped_items %}
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Due Date</th>
+                        <th class="days-column">Days</th>
+                        <th class="amount-column">Amount</th>
+                        <th>Expense</th>
+                        <th class="actions-column">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for year_month, month_items in grouped_items.items %}
+                        <tr class="month-separator-row">
+                            <td class="month-separator">
+                                <i class="fas fa-calendar-alt"></i> {{ year_month }}
+                            </td>
+                            <td></td>
+                            <td class="amount-column">
+                                {% load currency_tags %}
+                                {% with month_total=month_totals|dict_lookup:year_month %}
+                                    {% if month_total and month_total > 0 %}
+                                        <small class="text-muted">{% format_amount month_total %}</small>
+                                    {% endif %}
+                                {% endwith %}
+                            </td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        {% for item in month_items %}
+                        <tr class="clickable-row {% if item.status == 'paid' %}expense-item-paid{% else %}expense-item-pending{% endif %}" data-href="{% url 'expense_detail' budget.id item.expense.pk %}" style="cursor: pointer;">
+                            <td>{{ item.due_date|date:"Y-m-d" }}</td>
+                            <td class="days-column">
+                                {% if item.status == 'paid' %}
+                                    {# Show nothing for paid items #}
+                                {% elif item.days_until_due < -99 %}
+                                    <span class="text-danger">-</span>
+                                {% elif item.days_until_due < 0 %}
+                                    <span class="text-danger">{{ item.days_until_due }}</span>
+                                {% else %}
+                                    {{ item.days_until_due }}
+                                {% endif %}
+                            </td>
+                            <td class="amount-column">{{ item.amount|amount_with_class }}</td>
+                            <td>
+                                <i class="fas {{ item.expense.get_expense_type_icon }} {{ item.expense.get_expense_type_icon_css_class }}" aria-label="{{ item.expense.get_expense_type_display }}" title="{{ item.expense.get_expense_type_display }}"></i>
+                                {{ item.expense.title }}
+                            </td>
+                            <td class="actions-column">
+                                {% if item.status == 'pending' %}
+                                    <a href="{% url 'expense_item_pay' budget.id item.pk %}" class="btn btn-sm" title="Mark as Paid" aria-label="Mark as Paid"><i class="fas fa-check"></i></a>
+                                {% else %}
+                                    <a href="{% url 'expense_item_unpay' budget.id item.pk %}" class="btn btn-sm" title="Mark as Unpaid" aria-label="Mark as Unpaid"><i class="fas fa-undo"></i></a>
+                                {% endif %}
+                                {% if item.expense.can_be_edited %}
+                                    <a href="{% url 'expense_item_edit' budget.id item.pk %}" class="btn btn-sm" title="Edit Item" aria-label="Edit Item"><i class="fas fa-pencil"></i></a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>{{ empty_message|default:"No expense items." }}</p>
+        {% endif %}
+    </div>
+</div>

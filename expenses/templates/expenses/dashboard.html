@@ -44,9 +44,14 @@
 {% endif %}
 
 
-<!-- Current Month Expenses List -->
+<!-- Expenses List -->
 {% if has_any_months and current_month %}
-{% include "expenses/includes/expense_items_table.html" with table_title="Expenses" month=current_month items=all_expense_items layout="dashboard" empty_message="No expense items this month." %}
+    {% if grouped_expense_items %}
+        {% include "expenses/includes/grouped_expense_items_table.html" with table_title="Expenses" grouped_items=grouped_expense_items month_totals=month_totals layout="dashboard" empty_message="No expense items." %}
+    {% else %}
+        {% include "expenses/includes/expense_items_table.html" with table_title="Expenses" month=current_month items=all_expense_items layout="dashboard" empty_message="No expense items this month." %}
+    {% endif %}
 {% endif %}
+
 
 {% endblock %}
