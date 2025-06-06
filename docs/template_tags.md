@@ -13,6 +13,7 @@ This document describes the custom template tags and filters available in the Py
 **Description:** Formats a numeric value as currency using the application's configured currency settings.
 
 **Example:**
+
 ```django
 {% load currency %}
 {{ expense.amount|currency }}
@@ -31,6 +32,7 @@ This document describes the custom template tags and filters available in the Py
 **Description:** Returns the currency symbol for the currently configured currency and locale.
 
 **Example:**
+
 ```django
 {% load currency_symbol %}
 {% currency_symbol %}
@@ -49,6 +51,7 @@ This document describes the custom template tags and filters available in the Py
 **Description:** Formats an amount with optional symbol control. The `show_symbol` parameter is optional and defaults to `True`.
 
 **Examples:**
+
 ```django
 {% load format_amount %}
 {% format_amount expense.amount %}
@@ -71,11 +74,13 @@ This document describes the custom template tags and filters available in the Py
 **Description:** Formats a value as currency and wraps it in a span with an appropriate CSS class based on whether the amount is positive, negative, or zero.
 
 **CSS Classes:**
+
 - `amount-positive` - for positive amounts
 - `amount-negative` - for negative amounts  
 - `amount-zero` - for zero amounts
 
 **Example:**
+
 ```django
 {% load amount_with_class %}
 {{ balance|amount_with_class }}
@@ -94,6 +99,7 @@ This document describes the custom template tags and filters available in the Py
 **Description:** Creates a date object from separate year, month, and day integers.
 
 **Example:**
+
 ```django
 {% load create_date %}
 {% create_date 2024 12 25 as christmas %}
