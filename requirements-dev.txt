@@ -12,3 +12,4 @@ mypy
 django-stubs
 types-Markdown
 black
+python-dateutil
