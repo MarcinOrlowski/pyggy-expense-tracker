@@ -23,5 +23,7 @@ def current_budget(request):
 
 def testing_context(request):
     """Provide testing context for templates."""
-    testing = 'test' in sys.argv or 'pytest' in sys.modules or 'GITHUB_ACTIONS' in os.environ
+    testing = (
+        "test" in sys.argv or "pytest" in sys.modules or "GITHUB_ACTIONS" in os.environ
+    )
     return {"testing": testing}

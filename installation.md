@@ -1,4 +1,4 @@
-# PyGGy - Python (Monthly) Expense Tracker
+# General information
 
 ## Technical Highlights
 
@@ -10,9 +10,13 @@
 
 ## Requirements
 
+- Docker (for containerized deployment (**recommended**))
+
+or
+
 - Python 3.12 or higher
 - Django 5.2.1
-- Virtual environment (recommended `venv`)
+- Virtual environment (built-in `venv` recommended)
 
 ## Installation
 

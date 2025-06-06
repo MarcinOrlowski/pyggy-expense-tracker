@@ -10,27 +10,25 @@ class ExpenseFormDefaultsTestCase(TestCase):
     def setUp(self):
         """Set up test data"""
         self.budget = Budget.objects.create(
-            name="Test Budget",
-            start_date=date.today(),
-            initial_amount=1000.00
+            name="Test Budget", start_date=date.today(), initial_amount=1000.00
         )
 
     def test_new_expense_form_has_default_values(self):
         """Test that new expense form has correct default values"""
         form = ExpenseForm(budget=self.budget)
-        
+
         # Check that expense_type defaults to "one_time"
         self.assertEqual(
             form.fields["expense_type"].initial,
             Expense.TYPE_ONE_TIME,
-            "Expense type should default to 'one_time'"
+            "Expense type should default to 'one_time'",
         )
-        
+
         # Check that start_date defaults to current date
         self.assertEqual(
             form.fields["start_date"].initial,
             date.today(),
-            "Start date should default to current date"
+            "Start date should default to current date",
         )
 
     def test_existing_expense_form_preserves_values(self):
@@ -42,21 +40,21 @@ class ExpenseFormDefaultsTestCase(TestCase):
             expense_type=Expense.TYPE_ENDLESS_RECURRING,
             amount=100.00,
             start_date=date(2024, 1, 15),
-            day_of_month=15
+            day_of_month=15,
         )
-        
+
         # Create form for editing
         form = ExpenseForm(instance=expense, budget=self.budget)
-        
+
         # Defaults should NOT be applied when editing existing expense
         self.assertNotEqual(
             form.fields["expense_type"].initial,
             Expense.TYPE_ONE_TIME,
-            "Expense type should not be overridden when editing existing expense"
+            "Expense type should not be overridden when editing existing expense",
         )
-        
+
         self.assertNotEqual(
             form.fields["start_date"].initial,
             date.today(),
-            "Start date should not be overridden when editing existing expense"
+            "Start date should not be overridden when editing existing expense",
         )

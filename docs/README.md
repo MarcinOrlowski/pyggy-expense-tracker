@@ -8,13 +8,19 @@ aspects of the application.
 
 ## Table of Contents
 
+### User Documentation
+
 - [Getting Started](getting_started) - Quick setup and first steps
 - [Understanding Expense Types](expense_types) - The four types of expenses and when to use them
 - [Budget Management](budgets) - Creating and managing budgets effectively
 - [Monthly Workflow](monthly_workflow) - How to work with monthly processing and payment tracking
 - [Managing Payees & Payment Methods](payees_and_payments) - Setting up vendors and payment options
-- [Docker Setup](docker) - Running PyGGy with Docker (technical)
-- [Error Handling](error_handling) - Understanding application errors (technical)
+
+### Developer Documentation
+
+- [Template Tags](template_tags) - Custom Django template tags and filters reference
+- [Docker Setup](docker) - Running PyGGy with Docker
+- [Error Handling](error_handling) - Understanding application errors
 
 ## What is PyGGy?
 
