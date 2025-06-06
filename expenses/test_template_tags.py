@@ -136,7 +136,7 @@ class CurrencySymbolTagTest(TestCase):
         # In Japanese locale, JPY symbol might be ¥ or ￥
         self.assertIn(result, ["¥", "￥", "JP¥"])
 
-    @patch("expenses.templatetags.currency_tags.get_currency_symbol")
+    @patch("expenses.templatetags.currency_symbol.get_currency_symbol")
     def test_currency_symbol_fallback_on_error(self, mock_get_symbol):
         """Test currency symbol falls back to currency code on error."""
         # Make get_currency_symbol raise a LookupError
