@@ -20,9 +20,7 @@ def expense_item_pay(request, budget_id, pk):
 
                 check_expense_completion(item.expense)
             messages.success(request, "Payment recorded successfully.")
-            return redirect(
-                "expense_detail", budget_id=budget_id, pk=expense_item.expense.pk
-            )
+            return redirect("dashboard", budget_id=budget_id)
     else:
         form = PaymentForm(
             instance=expense_item,
@@ -52,9 +50,7 @@ def expense_item_unpay(request, budget_id, pk):
         expense_item.payment_method = None
         expense_item.save()
         messages.success(request, "Payment unmarked successfully.")
-        return redirect(
-            "expense_detail", budget_id=budget_id, pk=expense_item.expense.pk
-        )
+        return redirect("dashboard", budget_id=budget_id)
 
     context = {
         "budget": budget,
