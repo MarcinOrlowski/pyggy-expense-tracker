@@ -94,6 +94,25 @@ def dashboard(request, budget_id):
     # Get current weekday (0=Monday, 6=Sunday)
     current_weekday = current_date.weekday()
 
+    # Calculate relative time indicator for dashboard title
+    relative_time_text = ""
+    if current_month and hasattr(current_month, 'year') and hasattr(current_month, 'month'):
+        try:
+            current_month_date = date(current_month.year, current_month.month, 1)
+            current_calendar_date = date(current_date.year, current_date.month, 1)
+            
+            if current_month_date < current_calendar_date:
+                # Calculate months difference using built-in datetime
+                months_ago = (current_calendar_date.year - current_month_date.year) * 12 + (current_calendar_date.month - current_month_date.month)
+                
+                if months_ago == 1:
+                    relative_time_text = " (1 month ago)"
+                else:
+                    relative_time_text = f" ({months_ago} months ago)"
+        except (TypeError, AttributeError):
+            # Handle cases where mocks or invalid data are used (e.g., in tests)
+            relative_time_text = ""
+
     context = {
         "budget": budget,
         "current_month": current_month,
@@ -113,5 +132,7 @@ def dashboard(request, budget_id):
         # Display month context for proper date highlighting
         "display_month": display_month,
         "display_year": display_year,
+        # Relative time context
+        "relative_time_text": relative_time_text,
     }
     return render(request, "expenses/dashboard.html", context)
