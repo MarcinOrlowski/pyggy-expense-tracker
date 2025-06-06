@@ -10,7 +10,6 @@
 
 ## v1.0 (2025-06-06)
 
-
 - [#0112] Set default values for new expense creation (expense type defaults to "one-time", start date defaults to current date)
 - [#0120] Added comprehensive type hints to Python codebase for improved code quality and developer experience
 - [#0118] Changed expense item edit behavior to redirect to budget dashboard after save or cancel
