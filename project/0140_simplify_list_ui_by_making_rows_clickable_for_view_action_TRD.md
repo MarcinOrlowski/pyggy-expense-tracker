@@ -14,11 +14,13 @@ URLs.
 ## Template Changes
 
 ### Files to Modify:
+
 - `expenses/templates/expenses/expense_list.html` - Remove view icon, add row clickability
 - `expenses/templates/expenses/budget_list.html` - Remove redundant view icon only  
 - `expenses/templates/expenses/month_list.html` - Remove view icon, add row clickability
 
 ### HTML Structure:
+
 ```html
 <!-- Before -->
 <tr>
@@ -41,6 +43,7 @@ URLs.
 ## JavaScript Implementation
 
 ### Click Handler:
+
 ```javascript
 document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('.clickable-row').forEach(row => {
@@ -57,6 +60,7 @@ document.addEventListener('DOMContentLoaded', function() {
 ## CSS Updates
 
 ### Row Hover Styles:
+
 ```css
 .clickable-row {
     cursor: pointer;
