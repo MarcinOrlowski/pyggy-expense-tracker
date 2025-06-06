@@ -1,16 +1,17 @@
-from django.test import TestCase
-from django.template import Context, Template
-from decimal import Decimal
 from datetime import date
+from decimal import Decimal
 from unittest.mock import patch
+
+from django.template import Context, Template
+from django.test import TestCase
+
 from expenses.models import Settings
-from expenses.templatetags.currency_tags import (
-    currency,
-    currency_symbol,
-    format_amount,
-    amount_with_class,
-)
 from expenses.services import SettingsService
+from expenses.templatetags.amount_with_class import amount_with_class
+from expenses.templatetags.create_date import create_date
+from expenses.templatetags.currency import currency
+from expenses.templatetags.currency_symbol import currency_symbol
+from expenses.templatetags.format_amount import format_amount
 
 
 class CurrencyFilterTest(TestCase):
@@ -409,31 +410,23 @@ class CreateDateTagTest(TestCase):
 
     def test_create_date_valid_parameters(self):
         """Test create_date with valid year, month, day."""
-        from expenses.templatetags.currency_tags import create_date
-
         result = create_date(2023, 12, 25)
         expected = date(2023, 12, 25)
         self.assertEqual(result, expected)
 
     def test_create_date_string_parameters(self):
         """Test create_date with string parameters."""
-        from expenses.templatetags.currency_tags import create_date
-
         result = create_date("2023", "6", "15")
         expected = date(2023, 6, 15)
         self.assertEqual(result, expected)
 
     def test_create_date_invalid_parameters(self):
         """Test create_date with invalid parameters."""
-        from expenses.templatetags.currency_tags import create_date
-
         result = create_date("invalid", "month", "day")
         self.assertIsNone(result)
 
     def test_create_date_invalid_date(self):
         """Test create_date with invalid date (February 30th)."""
-        from expenses.templatetags.currency_tags import create_date
-
         result = create_date(2023, 2, 30)
         self.assertIsNone(result)
 

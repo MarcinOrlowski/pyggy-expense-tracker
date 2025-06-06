@@ -9,15 +9,15 @@ from django.core.management import call_command
 from django.test import TestCase, override_settings
 
 
-@skipIf('GITHUB_ACTIONS' in os.environ, "Skip SCSS tests in GitHub Actions")
+@skipIf("GITHUB_ACTIONS" in os.environ, "Skip SCSS tests in GitHub Actions")
 @override_settings(
     SASS_PROCESSOR_ENABLED=True,
     SASS_PROCESSOR_AUTO_INCLUDE=True,
     STATICFILES_FINDERS=[
-        'django.contrib.staticfiles.finders.FileSystemFinder',
-        'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-        'sass_processor.finders.CssFinder',
-    ]
+        "django.contrib.staticfiles.finders.FileSystemFinder",
+        "django.contrib.staticfiles.finders.AppDirectoriesFinder",
+        "sass_processor.finders.CssFinder",
+    ],
 )
 class SCSSSassProcessorTest(TestCase):
     """Test SCSS auto-compilation functionality with django-sass-processor."""

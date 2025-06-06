@@ -96,15 +96,21 @@ def dashboard(request, budget_id):
 
     # Calculate relative time indicator for dashboard title
     relative_time_text = ""
-    if current_month and hasattr(current_month, 'year') and hasattr(current_month, 'month'):
+    if (
+        current_month
+        and hasattr(current_month, "year")
+        and hasattr(current_month, "month")
+    ):
         try:
             current_month_date = date(current_month.year, current_month.month, 1)
             current_calendar_date = date(current_date.year, current_date.month, 1)
-            
+
             if current_month_date < current_calendar_date:
                 # Calculate months difference using built-in datetime
-                months_ago = (current_calendar_date.year - current_month_date.year) * 12 + (current_calendar_date.month - current_month_date.month)
-                
+                months_ago = (
+                    current_calendar_date.year - current_month_date.year
+                ) * 12 + (current_calendar_date.month - current_month_date.month)
+
                 if months_ago == 1:
                     relative_time_text = " (1 month ago)"
                 else:

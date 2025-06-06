@@ -193,14 +193,14 @@ class CalendarHighlightingTest(TestCase):
         # Read the actual template file using Django template loading
         import os
         from django.conf import settings
-        
+
         template_path = os.path.join(
-            settings.BASE_DIR, 
-            "expenses", 
-            "templates", 
-            "expenses", 
-            "includes", 
-            "calendar_grid.html"
+            settings.BASE_DIR,
+            "expenses",
+            "templates",
+            "expenses",
+            "includes",
+            "calendar_grid.html",
         )
         with open(template_path, "r") as f:
             template_content = f.read()
