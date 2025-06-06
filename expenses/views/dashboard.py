@@ -57,8 +57,8 @@ def dashboard(request, budget_id):
             grouped_expense_items[month_key].append(item)
             month_totals[month_key] += item.amount
 
-        # Create flat list for backward compatibility with summary calculations
-        all_expense_items = list(current_month_items)
+        # Keep as QuerySet for backward compatibility with template
+        all_expense_items = current_month_items
 
         # Separate current month items for counting and totals
         pending_items = [item for item in current_month_items if item.status == "pending"]
@@ -77,7 +77,7 @@ def dashboard(request, budget_id):
         )
 
         # Check if any overdue items exist from previous months in this budget
-        has_overdue = len(past_pending_items) > 0
+        has_overdue = past_pending_items.exists()
 
         # Add today to due_days if there are overdue items and we're showing current calendar month
         if (
