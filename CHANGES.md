@@ -6,6 +6,7 @@
 
 ## @dev
 
+- [#0134] Unified edit icons across the application to use fa-pencil consistently
 - [#0124] Improved payment confirmation redirect behavior to navigate to budget dashboard after payment operations
 - [#0131] Replace text navigation instructions with direct "Add First Month" buttons
 
