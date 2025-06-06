@@ -6,7 +6,7 @@
 
 ## @dev
 
-- [#0140] Simplified list UI by making entire table rows clickable for view actions, removing dedicated view icons to reduce visual clutter and improve usability
+- [#0140] Made table rows clickable for view actions, removed view icons for cleaner UI
 - [#0051] Added close buttons to flash messages with Font Awesome icons and smooth animation effects
 - [#0134] Unified edit icons across the application to use fa-pencil consistently
 - [#0124] Improved payment confirmation redirect behavior to navigate to budget dashboard after payment operations
