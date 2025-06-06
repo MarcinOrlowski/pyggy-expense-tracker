@@ -8,7 +8,6 @@
 - Function-based views for simplicity
 - Comprehensive model validation
 
-
 ## Requirements
 
 - Python 3.12 or higher
