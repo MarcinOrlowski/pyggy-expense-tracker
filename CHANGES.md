@@ -6,10 +6,9 @@
 
 ## @dev
 
-- [#0074] Fixed expense creation redirect to show expense list instead of detail view for better user experience
+- [#0131] Replace text navigation instructions with direct "Add First Month" buttons
 
 ## v1.0 (2025-06-06)
-
 
 - [#0112] Set default values for new expense creation (expense type defaults to "one-time", start date defaults to current date)
 - [#0120] Added comprehensive type hints to Python codebase for improved code quality and developer experience
