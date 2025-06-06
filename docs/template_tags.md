@@ -59,7 +59,8 @@ This document describes the custom template tags and filters available in the Py
 {% format_amount expense.amount False %}
 ```
 
-**Output:** 
+**Output:**
+
 - With symbol: `$1,234.56`
 - Without symbol: `1,234.56`
 
