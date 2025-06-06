@@ -16,7 +16,7 @@
     <!-- Font Awesome 6.5.1 -->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.5.1/css/all.css" crossorigin="anonymous" />
     {% if not testing %}
-        <link href="{% sass_src 'scss/main.scss' %}" rel="stylesheet" type="text/css" />
+        <link href="{% static 'scss/main.css' %}" rel="stylesheet" type="text/css" />
     {% else %}
         <!-- Minimal CSS for testing environments -->
         <style>

@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from datetime import date
+from collections import OrderedDict
 from ..models import Expense, ExpenseItem, Month, Payee, Budget
 from ..forms import ExpenseForm
 
@@ -9,10 +10,10 @@ def expense_list(request, budget_id):
     """List active expenses with filtering options for a specific budget"""
     budget = get_object_or_404(Budget, id=budget_id)
 
-    # Get expenses that belong directly to this budget
+    # Get expenses that belong directly to this budget, ordered by start_date desc
     expenses = Expense.objects.filter(
         closed_at__isnull=True, budget=budget
-    ).select_related("payee")
+    ).select_related("payee").order_by("-start_date", "-created_at")
 
     # Simple filtering
     expense_type = request.GET.get("type")
@@ -23,12 +24,21 @@ def expense_list(request, budget_id):
     if payee_id:
         expenses = expenses.filter(payee_id=payee_id)
 
+    # Group expenses by year-month
+    grouped_expenses = OrderedDict()
+    for expense in expenses:
+        year_month = expense.start_date.strftime("%Y-%m")
+        if year_month not in grouped_expenses:
+            grouped_expenses[year_month] = []
+        grouped_expenses[year_month].append(expense)
+
     # Only show non-hidden payees in the filter dropdown
     payees = Payee.objects.filter(hidden_at__isnull=True)
 
     context = {
         "budget": budget,
         "expenses": expenses,
+        "grouped_expenses": grouped_expenses,
         "payees": payees,
         "expense_types": Expense.EXPENSE_TYPES,
         "selected_type": expense_type,
