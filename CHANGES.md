@@ -4,6 +4,10 @@
 
 ---
 
+## @dev
+
+- [#0131] Replace text navigation instructions with direct "Add First Month" buttons
+
 ## v1.0 (2025-06-06)
 
 
