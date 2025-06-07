@@ -5,7 +5,12 @@
 
 ## Technical Approach
 
-We'll implement a simplified form on the dashboard.html template that creates one-time expenses with optional immediate payment. The form will use existing Django forms and models (Expense, ExpenseItem, Payment) with a new QuickPaymentForm class. The form will post to a new dashboard view method that handles expense creation and optional payment recording in a single transaction. Integration will reuse existing expense creation logic from services.py and redirect back to dashboard with flash messages.
+We'll implement a simplified form on the dashboard.html template that creates one-time expenses with
+optional immediate payment. The form will use existing Django forms and models (Expense,
+ExpenseItem, Payment) with a new QuickPaymentForm class. The form will post to a new dashboard view
+method that handles expense creation and optional payment recording in a single transaction.
+Integration will reuse existing expense creation logic from services.py and redirect back to
+dashboard with flash messages.
 
 ## Data Model
 

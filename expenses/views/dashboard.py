@@ -6,6 +6,7 @@ from datetime import date, datetime
 from collections import OrderedDict
 from ..models import ExpenseItem, BudgetMonth, Budget, Expense, Payment
 from ..forms import QuickExpenseForm
+from ..services import SettingsService
 
 
 def dashboard(request, budget_id):
@@ -236,14 +237,16 @@ def handle_quick_expense(request, budget_id):
                     from ..services import check_expense_completion
                     check_expense_completion(expense)
                     
+                    formatted_amount = SettingsService.format_currency(expense.amount)
                     messages.success(
                         request, 
-                        f'Quick expense "{expense.title}" created and marked as paid!'
+                        f'Quick expense "{expense.title}" ({formatted_amount}) created and marked as paid!'
                     )
                 else:
+                    formatted_amount = SettingsService.format_currency(expense.amount)
                     messages.success(
                         request, 
-                        f'Quick expense "{expense.title}" created successfully!'
+                        f'Quick expense "{expense.title}" ({formatted_amount}) created successfully!'
                     )
                 
         except Exception as e:

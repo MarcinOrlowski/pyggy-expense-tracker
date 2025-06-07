@@ -4,11 +4,19 @@
 
 ## Problem Statement
 
-Users currently need to navigate away from the dashboard to the full expense creation form to add quick one-time payments, interrupting their workflow and adding unnecessary complexity for simple transactions. This creates friction for the most common expense type (one-time payments) and reduces efficiency in day-to-day expense tracking. The current process requires too many steps for what should be a simple, immediate action.
+Users currently need to navigate away from the dashboard to the full expense creation form to add
+quick one-time payments, interrupting their workflow and adding unnecessary complexity for simple
+transactions. This creates friction for the most common expense type (one-time payments) and reduces
+efficiency in day-to-day expense tracking. The current process requires too many steps for what
+should be a simple, immediate action.
 
 ## Solution Overview
 
-Add a streamlined quick payment form directly on the month dashboard that enables one-click creation of one-time expenses for the current date. The form will only capture essential information (description, payee, amount) and include an optional checkbox to automatically mark the expense as paid with a full payment record. This eliminates navigation overhead and provides immediate access to the most common expense creation workflow right from the primary dashboard view.
+Add a streamlined quick payment form directly on the month dashboard that enables one-click creation
+of one-time expenses for the current date. The form will only capture essential information (
+description, payee, amount) and include an optional checkbox to automatically mark the expense as
+paid with a full payment record. This eliminates navigation overhead and provides immediate access
+to the most common expense creation workflow right from the primary dashboard view.
 
 ## User Stories
 

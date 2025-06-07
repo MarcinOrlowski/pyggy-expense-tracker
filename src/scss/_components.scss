@@ -769,3 +769,34 @@ footer {
     margin-right: 0.5rem;
 }
 
+// Quick Expense Form
+.quick-expense-form {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.quick-expense-form .form-group {
+    margin-bottom: 0;
+    flex: 1;
+    min-width: 120px;
+}
+
+.quick-expense-form .form-group input,
+.quick-expense-form .form-group select {
+    width: 100%;
+}
+
+.form-check-inline {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    white-space: nowrap;
+}
+
+.form-check-inline label {
+    color: var(--text-primary);
+    margin: 0;
+}
+
