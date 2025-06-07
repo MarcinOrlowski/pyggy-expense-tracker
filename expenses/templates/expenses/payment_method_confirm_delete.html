@@ -10,9 +10,9 @@
     <div class="card-body">
         <p>Are you sure you want to delete the payment method "<strong>{{ payment_method.name }}</strong>"?</p>
 
-        {% if expense_items_count > 0 %}
+        {% if payment_count > 0 %}
             <div class="message warning">
-                <strong>Warning:</strong> This payment method has been used in {{ expense_items_count }} expense payment{{ expense_items_count|pluralize }}.
+                <strong>Warning:</strong> This payment method has been used in {{ payment_count }} payment{{ payment_count|pluralize }}.
                 You cannot delete this payment method until all associated payments are updated or removed.
             </div>
         {% else %}
@@ -31,11 +31,11 @@
     </div>
 </div>
 
-{% if expense_items_count > 0 %}
+{% if payment_count > 0 %}
 <div class="card">
     <div class="card-header">Payment Method Usage</div>
     <div class="card-body">
-        <p>This payment method is currently being used by {{ expense_items_count }} expense item{{ expense_items_count|pluralize }}.</p>
+        <p>This payment method is currently being used by {{ payment_count }} payment{{ payment_count|pluralize }}.</p>
         <p>Payment methods that are in use cannot be deleted to maintain payment history integrity.</p>
     </div>
 </div>
