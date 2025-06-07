@@ -76,17 +76,17 @@
                     <thead>
                         <tr>
                             <th>Payment Date</th>
-                            <th class="text-end">Amount</th>
+                            <th class="amount-column">Amount</th>
                             <th>Payment Method</th>
                             <th>Transaction ID</th>
-                            <th class="text-center">Actions</th>
+                            <th class="actions-column">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for payment in payments %}
                         <tr>
                             <td>{{ payment.payment_date|date:"Y-m-d H:i" }}</td>
-                            <td class="text-end">{{ payment.amount|amount_with_class }}</td>
+                            <td class="amount-column">{{ payment.amount|amount_with_class }}</td>
                             <td>
                                 {% if payment.payment_method %}
                                     {{ payment.payment_method.name }}
@@ -101,7 +101,7 @@
                                     ---
                                 {% endif %}
                             </td>
-                            <td class="text-center">
+                            <td class="actions-column">
                                 <button class="btn btn-sm btn-outline-danger" 
                                         onclick="deletePayment({{ payment.id }})"
                                         title="Delete Payment">
