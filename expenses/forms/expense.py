@@ -218,8 +218,8 @@ class ExpenseForm(forms.ModelForm):
                             )
 
         # Type-specific validation
-        if expense_type == Expense.TYPE_SPLIT_PAYMENT and total_parts <= 0:
-            raise ValidationError("Split payments must have total_parts > 0")
+        if expense_type == Expense.TYPE_SPLIT_PAYMENT and total_parts < 2:
+            raise ValidationError("Split payments must have at least 2 total installments")
 
         if (
             expense_type

@@ -72,6 +72,83 @@ class InitialInstallmentModelTest(TestCase):
         )
         expense.full_clean()
 
+    def test_split_payment_minimum_2_total_parts_valid(self):
+        """Test split payment with minimum valid total_parts (2)."""
+        expense = Expense(
+            budget=self.budget,
+            title="Test Split Payment",
+            expense_type=Expense.TYPE_SPLIT_PAYMENT,
+            amount=Decimal("100.00"),
+            total_parts=2,
+            skip_parts=0,
+            start_date=date.today(),
+            day_of_month=date.today().day,
+        )
+        expense.full_clean()
+
+    def test_split_payment_one_total_part_invalid(self):
+        """Test split payment with only 1 total_part fails validation."""
+        expense = Expense(
+            budget=self.budget,
+            title="Test Split Payment",
+            expense_type=Expense.TYPE_SPLIT_PAYMENT,
+            amount=Decimal("100.00"),
+            total_parts=1,
+            skip_parts=0,
+            start_date=date.today(),
+            day_of_month=date.today().day,
+        )
+        with self.assertRaises(ValidationError) as cm:
+            expense.full_clean()
+        self.assertIn("Split payments must have at least 2 total installments", str(cm.exception))
+
+    def test_split_payment_zero_total_parts_invalid(self):
+        """Test split payment with 0 total_parts fails validation."""
+        expense = Expense(
+            budget=self.budget,
+            title="Test Split Payment",
+            expense_type=Expense.TYPE_SPLIT_PAYMENT,
+            amount=Decimal("100.00"),
+            total_parts=0,
+            skip_parts=0,
+            start_date=date.today(),
+            day_of_month=date.today().day,
+        )
+        with self.assertRaises(ValidationError) as cm:
+            expense.full_clean()
+        self.assertIn("Split payments must have at least 2 total installments", str(cm.exception))
+
+    def test_split_payment_edge_case_remaining_one_installment_valid(self):
+        """Test split payment with remaining 1 installment but original total >= 2 is valid."""
+        expense = Expense(
+            budget=self.budget,
+            title="Test Split Payment",
+            expense_type=Expense.TYPE_SPLIT_PAYMENT,
+            amount=Decimal("100.00"),
+            total_parts=2,  # Originally 2 installments (valid)
+            skip_parts=1,   # Skipped 1, leaving 1 remaining
+            start_date=date.today(),
+            day_of_month=date.today().day,
+        )
+        # This should be valid - original total was 2, even though only 1 remaining
+        expense.full_clean()
+
+    def test_split_payment_edge_case_all_installments_skipped_invalid(self):
+        """Test split payment with all installments skipped fails validation."""
+        expense = Expense(
+            budget=self.budget,
+            title="Test Split Payment",
+            expense_type=Expense.TYPE_SPLIT_PAYMENT,
+            amount=Decimal("100.00"),
+            total_parts=2,  # Originally 2 installments (valid total)
+            skip_parts=2,   # But skipping all of them (invalid)
+            start_date=date.today(),
+            day_of_month=date.today().day,
+        )
+        with self.assertRaises(ValidationError) as cm:
+            expense.full_clean()
+        self.assertIn("Skip parts must be less than total parts count", str(cm.exception))
+
     def test_split_payment_skip_parts_negative_invalid(self):
         """Test split payment with negative skip_parts fails validation."""
         expense = Expense(
@@ -285,6 +362,51 @@ class InitialInstallmentFormTest(TestCase):
         self.assertFalse(form.is_valid())
         self.assertIn(
             "Skip parts can only be used with split payment expenses", str(form.errors)
+        )
+
+    def test_form_validation_split_payment_minimum_2_total_parts_valid(self):
+        """Test form validation for split payment with minimum valid total_parts (2)."""
+        form_data = {
+            "title": "Test Split Payment",
+            "expense_type": Expense.TYPE_SPLIT_PAYMENT,
+            "amount": "100.00",
+            "total_parts": 2,
+            "skip_parts": 0,
+            "start_date": date.today().strftime("%Y-%m-%d"),
+        }
+        form = ExpenseForm(data=form_data, budget=self.budget)
+        self.assertTrue(form.is_valid(), f"Form errors: {form.errors}")
+
+    def test_form_validation_split_payment_one_total_part_invalid(self):
+        """Test form validation for split payment with only 1 total_part."""
+        form_data = {
+            "title": "Test Split Payment",
+            "expense_type": Expense.TYPE_SPLIT_PAYMENT,
+            "amount": "100.00",
+            "total_parts": 1,
+            "skip_parts": 0,
+            "start_date": date.today().strftime("%Y-%m-%d"),
+        }
+        form = ExpenseForm(data=form_data, budget=self.budget)
+        self.assertFalse(form.is_valid())
+        self.assertIn(
+            "Split payments must have at least 2 total installments", str(form.errors)
+        )
+
+    def test_form_validation_split_payment_zero_total_parts_invalid(self):
+        """Test form validation for split payment with 0 total_parts."""
+        form_data = {
+            "title": "Test Split Payment",
+            "expense_type": Expense.TYPE_SPLIT_PAYMENT,
+            "amount": "100.00",
+            "total_parts": 0,
+            "skip_parts": 0,
+            "start_date": date.today().strftime("%Y-%m-%d"),
+        }
+        form = ExpenseForm(data=form_data, budget=self.budget)
+        self.assertFalse(form.is_valid())
+        self.assertIn(
+            "Split payments must have at least 2 total installments", str(form.errors)
         )
 
     def test_form_initial_installment_read_only_on_edit(self):

@@ -134,8 +134,8 @@ class Expense(models.Model):
         from .month import BudgetMonth
 
         # Validate total_parts field
-        if self.expense_type == self.TYPE_SPLIT_PAYMENT and self.total_parts <= 0:
-            raise ValidationError("Split payments must have total_parts > 0")
+        if self.expense_type == self.TYPE_SPLIT_PAYMENT and self.total_parts < 2:
+            raise ValidationError("Split payments must have at least 2 total installments")
 
         if (
             self.expense_type
