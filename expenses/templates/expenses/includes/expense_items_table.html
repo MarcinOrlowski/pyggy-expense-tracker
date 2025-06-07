@@ -32,7 +32,7 @@
                             {% endif %}
                         </td>
                         <td class="amount-column">
-                            {{ item.get_display_amount|amount_with_class }}
+                            {{ item.get_remaining_amount|amount_with_class }}
                             {% if item.get_payment_count > 0 and item.status == 'pending' %}
                                 <small class="text-muted">({{ item.get_payment_count }})</small>
                             {% endif %}
