@@ -64,7 +64,8 @@
                         <th>Month</th>
                         <th>Due Date</th>
                         <th class="amount-column">Amount</th>
-                        <th>Payment Date</th>
+                        <th class="amount-column">Paid</th>
+                        <th class="amount-column">Remaining</th>
                         <th class="actions-column">Actions</th>
                     </tr>
                 </thead>
@@ -74,19 +75,15 @@
                         <td>{{ item.month }}</td>
                         <td>{{ item.due_date|date:"Y-m-d" }}</td>
                         <td class="amount-column">{{ item.amount|amount_with_class }}</td>
-                        <td>
-                            {% if item.payment_date %}
-                                {{ item.payment_date|date:"Y-m-d" }}
-                            {% else %}
-                                -
-                            {% endif %}
-                        </td>
+                        <td class="amount-column">{{ item.get_total_paid|amount_with_class }}</td>
+                        <td class="amount-column">{{ item.get_remaining_amount|amount_with_class }}</td>
                         <td class="actions-column">
                             <a href="{% url 'expense_item_edit' budget.id item.pk %}" class="btn btn-sm" title="Edit Due Date" aria-label="Edit Due Date"><i class="fas fa-calendar-days"></i></a>
-                            {% if item.status == 'pending' %}
-                                <a href="{% url 'expense_item_pay' budget.id item.pk %}" class="btn btn-sm" title="Mark as Paid" aria-label="Mark as Paid"><i class="fas fa-check"></i></a>
-                            {% else %}
-                                <a href="{% url 'expense_item_unpay' budget.id item.pk %}" class="btn btn-sm" title="Mark as Unpaid" aria-label="Mark as Unpaid"><i class="fas fa-undo"></i></a>
+                            {% if item.get_remaining_amount > 0 %}
+                                <a href="{% url 'expense_item_pay' budget.id item.pk %}" class="btn btn-sm" title="Add Payment" aria-label="Add Payment"><i class="fas fa-plus"></i></a>
+                            {% endif %}
+                            {% if item.get_total_paid > 0 %}
+                                <a href="{% url 'expense_item_unpay' budget.id item.pk %}" class="btn btn-sm" title="Remove All Payments" aria-label="Remove All Payments"><i class="fas fa-undo"></i></a>
                             {% endif %}
                         </td>
                     </tr>

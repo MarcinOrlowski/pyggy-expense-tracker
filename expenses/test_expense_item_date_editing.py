@@ -44,7 +44,6 @@ class ExpenseItemDateEditingTest(TestCase):
             month=self.month,
             amount=Decimal("100.00"),
             due_date=date(2024, 1, 20),
-            status="pending",
         )
 
     def test_get_allowed_month_range(self):
@@ -74,7 +73,6 @@ class ExpenseItemDateEditingTest(TestCase):
             month=february_month,
             amount=Decimal("50.00"),
             due_date=date(2024, 1, 15),
-            status="pending",
         )
 
         start_date, end_date = expense_item.get_allowed_month_range()
@@ -263,7 +261,6 @@ class ExpenseItemDateEditingTest(TestCase):
             month=march_month,
             amount=Decimal("75.00"),
             due_date=date(2024, 1, 15),
-            status="pending",
         )
 
         # Should allow dates within March 2024
@@ -300,7 +297,6 @@ class ExpenseItemDateEditingTest(TestCase):
             month=future_month,
             amount=Decimal("50.00"),
             due_date=date(2024, 1, 15),
-            status="pending",
         )
 
         start_date, end_date = future_expense_item.get_allowed_month_range()
@@ -340,7 +336,6 @@ class ExpenseItemDateEditingTest(TestCase):
             month=march_month,
             amount=Decimal("50.00"),
             due_date=date(2024, 1, 15),
-            status="pending",
         )
 
         start_date, end_date = future_expense_item.get_allowed_month_range()
@@ -381,7 +376,6 @@ class ExpenseItemDateEditingTest(TestCase):
             month=february_month,
             amount=Decimal("75.00"),
             due_date=date(2024, 1, 15),
-            status="pending",
         )
 
         start_date, end_date = recurring_item.get_allowed_month_range()

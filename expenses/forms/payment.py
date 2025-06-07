@@ -1,11 +1,24 @@
 from django import forms
 from django.core.exceptions import ValidationError
 from datetime import date
-from ..models import ExpenseItem, PaymentMethod
+from decimal import Decimal
+from ..models import ExpenseItem, PaymentMethod, Payment
 from ..fields import SanitizedDecimalField
 
 
 class PaymentForm(forms.ModelForm):
+    amount = SanitizedDecimalField(
+        max_digits=13,
+        decimal_places=2,
+        min_value=0.01,
+        widget=forms.TextInput(
+            attrs={
+                "placeholder": "25.50",
+                "class": "form-control",
+            }
+        ),
+        help_text="Payment amount (cannot exceed remaining balance)",
+    )
     payment_method = forms.ModelChoiceField(
         queryset=PaymentMethod.objects.all(),
         required=False,
@@ -16,7 +29,7 @@ class PaymentForm(forms.ModelForm):
             attrs={"type": "datetime-local"}, format="%Y-%m-%dT%H:%M"
         ),
         input_formats=["%Y-%m-%dT%H:%M", "%Y-%m-%d %H:%M:%S"],
-        required=False,
+        required=True,
     )
     payment_id = forms.CharField(
         max_length=255,
@@ -28,27 +41,36 @@ class PaymentForm(forms.ModelForm):
     )
 
     class Meta:
-        model = ExpenseItem
-        fields = ["payment_date", "status", "payment_method", "payment_id"]
-        widgets = {
-            "status": forms.Select(),
-        }
+        model = Payment
+        fields = ["amount", "payment_date", "payment_method", "payment_id"]
 
-    def clean(self):
-        cleaned_data = super().clean()
-        if cleaned_data is None:
-            return cleaned_data
+    def __init__(self, *args, **kwargs):
+        self.expense_item = kwargs.pop('expense_item', None)
+        super().__init__(*args, **kwargs)
+        
+        if self.expense_item:
+            # Set remaining amount as placeholder and default
+            remaining = self.expense_item.get_remaining_amount()
+            self.fields['amount'].widget.attrs['placeholder'] = f"Max: {remaining}"
+            self.fields['amount'].help_text = f"Payment amount (max: {remaining})"
+            if not self.initial.get('amount'):
+                self.initial['amount'] = remaining
 
-        status = cleaned_data.get("status")
-        payment_date = cleaned_data.get("payment_date")
+    def clean_amount(self):
+        amount = self.cleaned_data.get('amount')
+        if amount and self.expense_item:
+            remaining = self.expense_item.get_remaining_amount()
+            if amount > remaining:
+                raise ValidationError(f"Payment amount cannot exceed remaining balance of {remaining}")
+        return amount
 
-        if status == "paid" and not payment_date:
-            raise ValidationError("Payment date is required when marking as paid")
-
-        if status == "pending" and payment_date:
-            cleaned_data["payment_date"] = None
-
-        return cleaned_data
+    def save(self, commit=True):
+        payment = super().save(commit=False)
+        if self.expense_item:
+            payment.expense_item = self.expense_item
+        if commit:
+            payment.save()
+        return payment
 
 
 class ExpenseItemEditForm(forms.ModelForm):

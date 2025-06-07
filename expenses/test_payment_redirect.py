@@ -3,7 +3,7 @@ from django.urls import reverse
 from datetime import date
 from decimal import Decimal
 from django.utils import timezone
-from .models import Budget, Month, Expense, ExpenseItem, Payee, PaymentMethod
+from .models import Budget, Month, Expense, ExpenseItem, Payee, PaymentMethod, Payment
 
 
 class PaymentRedirectTest(TestCase):
@@ -46,7 +46,6 @@ class PaymentRedirectTest(TestCase):
             month=self.month,
             amount=Decimal("100.00"),
             due_date=date.today(),
-            status="pending",
         )
 
     def test_payment_redirects_to_dashboard(self):
@@ -57,7 +56,7 @@ class PaymentRedirectTest(TestCase):
         )
 
         post_data = {
-            "status": "paid",
+            "amount": str(self.expense_item.amount),
             "payment_date": timezone.now().strftime("%Y-%m-%dT%H:%M"),
             "payment_method": self.payment_method.id,
         }
@@ -71,11 +70,13 @@ class PaymentRedirectTest(TestCase):
 
     def test_unpayment_redirects_to_dashboard(self):
         """Test that unmarking payment redirects to budget dashboard"""
-        # First mark the item as paid
-        self.expense_item.status = "paid"
-        self.expense_item.payment_date = timezone.now()
-        self.expense_item.payment_method = self.payment_method
-        self.expense_item.save()
+        # First mark the item as paid by creating a payment
+        Payment.objects.create(
+            expense_item=self.expense_item,
+            amount=self.expense_item.amount,
+            payment_date=timezone.now(),
+            payment_method=self.payment_method,
+        )
 
         url = reverse(
             "expense_item_unpay",

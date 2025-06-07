@@ -6,6 +6,7 @@
 
 ## @dev
 
+- [#0100] Reworked payment system to support multiple payments per expense item, enabling partial payment tracking and preventing overpayments
 - [#0005] Enhanced dashboard to display past months with pending expenses in main expense list with month separators for better visibility
 - [#0147] Group expense list entries by year-month for better date validation visibility and improved chronological organization
 - Fixed CSS loading issue after HTTP redirects by switching from django-sass-processor runtime compilation to pre-compiled CSS files

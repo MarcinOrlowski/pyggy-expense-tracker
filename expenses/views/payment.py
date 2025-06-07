@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from datetime import datetime
-from ..models import ExpenseItem, Budget
+from ..models import ExpenseItem, Budget, Payment
 from ..forms import PaymentForm, ExpenseItemEditForm
 
 
@@ -11,22 +11,24 @@ def expense_item_pay(request, budget_id, pk):
     expense_item = get_object_or_404(ExpenseItem, pk=pk, month__budget=budget)
 
     if request.method == "POST":
-        form = PaymentForm(request.POST, instance=expense_item)
+        form = PaymentForm(request.POST, expense_item=expense_item)
         if form.is_valid():
-            item = form.save()
-            if item.status == "paid":
-                # Check if expense should be completed
-                from ..services import check_expense_completion
-
-                check_expense_completion(item.expense)
-            messages.success(request, "Payment recorded successfully.")
+            payment = form.save()
+            # Check if expense should be completed
+            from ..services import check_expense_completion
+            check_expense_completion(expense_item.expense)
+            
+            remaining = expense_item.get_remaining_amount()
+            if remaining <= 0:
+                messages.success(request, f"Payment of {payment.amount} recorded. Expense is now fully paid!")
+            else:
+                messages.success(request, f"Payment of {payment.amount} recorded. Remaining balance: {remaining}")
             return redirect("dashboard", budget_id=budget_id)
     else:
         form = PaymentForm(
-            instance=expense_item,
+            expense_item=expense_item,
             initial={
                 "payment_date": datetime.now().strftime("%Y-%m-%dT%H:%M"),
-                "status": "paid",
             },
         )
 
@@ -40,16 +42,14 @@ def expense_item_pay(request, budget_id, pk):
 
 
 def expense_item_unpay(request, budget_id, pk):
-    """Mark expense item as unpaid"""
+    """Mark expense item as unpaid by removing all payments"""
     budget = get_object_or_404(Budget, id=budget_id)
     expense_item = get_object_or_404(ExpenseItem, pk=pk, month__budget=budget)
 
     if request.method == "POST":
-        expense_item.status = "pending"
-        expense_item.payment_date = None
-        expense_item.payment_method = None
-        expense_item.save()
-        messages.success(request, "Payment unmarked successfully.")
+        payment_count = expense_item.payment_set.count()
+        expense_item.payment_set.all().delete()
+        messages.success(request, f"All payments ({payment_count}) removed successfully.")
         return redirect("dashboard", budget_id=budget_id)
 
     context = {

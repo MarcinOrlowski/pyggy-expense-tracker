@@ -4,7 +4,26 @@ from django.contrib.auth.models import User
 from datetime import date, datetime
 from decimal import Decimal
 from django.utils import timezone
-from .models import Budget, Month, Expense, ExpenseItem, Payee
+from .models import Budget, Month, Expense, ExpenseItem, Payee, Payment
+
+
+def create_paid_expense_item(expense, month, due_date, amount, payment_date=None):
+    """Helper function to create a paid ExpenseItem with Payment record."""
+    if payment_date is None:
+        payment_date = timezone.now()
+    
+    expense_item = ExpenseItem.objects.create(
+        expense=expense,
+        month=month,
+        due_date=due_date,
+        amount=amount,
+    )
+    Payment.objects.create(
+        expense_item=expense_item,
+        amount=amount,
+        payment_date=payment_date,
+    )
+    return expense_item
 
 
 class ExpenseEditingPermissionsTest(TestCase):
@@ -45,7 +64,6 @@ class ExpenseEditingPermissionsTest(TestCase):
             month=self.month,
             amount=Decimal("100.00"),
             due_date=date.today(),
-            status="pending",
         )
 
         self.assertTrue(expense.can_be_edited())
@@ -64,13 +82,11 @@ class ExpenseEditingPermissionsTest(TestCase):
         )
 
         # Create paid expense item
-        ExpenseItem.objects.create(
+        create_paid_expense_item(
             expense=expense,
             month=self.month,
             amount=Decimal("100.00"),
             due_date=date.today(),
-            status="paid",
-            payment_date=timezone.now(),
         )
 
         self.assertTrue(expense.can_be_edited())  # Can still edit other fields
@@ -94,7 +110,6 @@ class ExpenseEditingPermissionsTest(TestCase):
             month=self.month,
             amount=Decimal("50.00"),
             due_date=date.today(),
-            status="pending",
         )
 
         self.assertTrue(expense.can_be_edited())
@@ -176,13 +191,11 @@ class ExpenseEditingPermissionsTest(TestCase):
         )
 
         # Create paid expense item
-        ExpenseItem.objects.create(
+        create_paid_expense_item(
             expense=expense,
             month=self.month,
             amount=Decimal("50.00"),
             due_date=date.today(),
-            status="paid",
-            payment_date=timezone.now(),
         )
 
         restrictions = expense.get_edit_restrictions()
@@ -232,13 +245,11 @@ class ExpenseEditingPermissionsTest(TestCase):
         )
 
         # Create paid expense item
-        ExpenseItem.objects.create(
+        create_paid_expense_item(
             expense=expense,
             month=self.month,
             amount=Decimal("100.00"),
             due_date=date.today(),
-            status="paid",
-            payment_date=timezone.now(),
         )
 
         # Try to change amount via POST

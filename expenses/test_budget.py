@@ -2,10 +2,30 @@ from django.test import TestCase, TransactionTestCase
 from django.core.exceptions import ValidationError
 from django.db import IntegrityError, transaction
 from django.db.models import ProtectedError
+from django.utils import timezone
 from decimal import Decimal
 from datetime import date
-from expenses.models import Budget, Month, Expense, ExpenseItem, Payee, PaymentMethod
+from expenses.models import Budget, Month, Expense, ExpenseItem, Payee, PaymentMethod, Payment
 from expenses.services import process_new_month
+
+
+def create_paid_expense_item(expense, month, due_date, amount, payment_date=None):
+    """Helper function to create a paid ExpenseItem with Payment record."""
+    if payment_date is None:
+        payment_date = timezone.now()
+    
+    expense_item = ExpenseItem.objects.create(
+        expense=expense,
+        month=month,
+        due_date=due_date,
+        amount=amount,
+    )
+    Payment.objects.create(
+        expense_item=expense_item,
+        amount=amount,
+        payment_date=payment_date,
+    )
+    return expense_item
 
 
 class BudgetModelTest(TestCase):
@@ -302,7 +322,6 @@ class BudgetBalanceTest(TestCase):
             month=self.month,
             due_date=date(2024, 1, 15),
             amount=Decimal("200.00"),
-            status="pending",
         )
 
         # Balance should be affected by pending expenses (committed funds)
@@ -323,12 +342,11 @@ class BudgetBalanceTest(TestCase):
         )
 
         # Create paid expense item
-        ExpenseItem.objects.create(
+        create_paid_expense_item(
             expense=expense,
             month=self.month,
             due_date=date(2024, 1, 15),
             amount=Decimal("200.00"),
-            status="paid",
         )
 
         # Balance should be reduced by paid expenses
@@ -359,12 +377,11 @@ class BudgetBalanceTest(TestCase):
         )
 
         # Create expense items
-        ExpenseItem.objects.create(
+        create_paid_expense_item(
             expense=expense1,
             month=self.month,
             due_date=date(2024, 1, 10),
             amount=Decimal("150.00"),
-            status="paid",
         )
 
         ExpenseItem.objects.create(
@@ -372,7 +389,6 @@ class BudgetBalanceTest(TestCase):
             month=self.month,
             due_date=date(2024, 1, 20),
             amount=Decimal("300.00"),
-            status="pending",
         )
 
         # Balance should be reduced by all committed expenses (paid + pending)
@@ -393,12 +409,11 @@ class BudgetBalanceTest(TestCase):
         )
 
         # Create paid expense item
-        ExpenseItem.objects.create(
+        create_paid_expense_item(
             expense=expense,
             month=self.month,
             due_date=date(2024, 1, 15),
             amount=Decimal("1200.00"),
-            status="paid",
         )
 
         # Balance should be negative
@@ -421,12 +436,17 @@ class BudgetBalanceTest(TestCase):
                 payee=self.payee,
             )
 
-            ExpenseItem.objects.create(
+            expense_item = ExpenseItem.objects.create(
                 expense=expense,
                 month=self.month,
                 due_date=date(2024, 1, 10 + i),
                 amount=amount,
-                status="paid",
+            )
+            # Create payment to mark as paid
+            Payment.objects.create(
+                expense_item=expense_item,
+                amount=amount,
+                payment_date=timezone.now(),
             )
 
         # Balance should be 1000 - (100 + 250 + 75.50) = 574.50
@@ -458,12 +478,11 @@ class BudgetBalanceTest(TestCase):
             payee=self.payee,
         )
 
-        ExpenseItem.objects.create(
+        create_paid_expense_item(
             expense=expense,
             month=zero_month,
             due_date=date(2024, 2, 15),
             amount=Decimal("50.00"),
-            status="paid",
         )
 
         # Balance should be negative (overspent from zero)
@@ -492,12 +511,11 @@ class BudgetBalanceTest(TestCase):
             payee=self.payee,
         )
 
-        ExpenseItem.objects.create(
+        create_paid_expense_item(
             expense=expense1,
             month=self.month,
             due_date=date(2024, 1, 15),
             amount=Decimal("100.00"),
-            status="paid",
         )
 
         # Create expense in other budget
@@ -511,12 +529,11 @@ class BudgetBalanceTest(TestCase):
             payee=self.payee,
         )
 
-        ExpenseItem.objects.create(
+        create_paid_expense_item(
             expense=expense2,
             month=other_month,
             due_date=date(2024, 2, 15),
             amount=Decimal("200.00"),
-            status="paid",
         )
 
         # Each budget should only reflect its own expenses
@@ -569,12 +586,11 @@ class BudgetListViewTest(TestCase):
             payee=payee,
         )
 
-        ExpenseItem.objects.create(
+        create_paid_expense_item(
             expense=expense,
             month=month,
             due_date=date(2024, 1, 15),
             amount=Decimal("300.00"),
-            status="paid",
         )
 
         # Test the view logic (as fixed in the view)

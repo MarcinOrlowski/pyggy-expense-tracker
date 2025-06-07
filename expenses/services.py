@@ -137,12 +137,15 @@ def check_expense_completion(expense: Expense) -> bool:
     - endless_recurring: Manual completion only
     - recurring_with_end: Manual completion only
     """
+    from .models import Payment
+    
     if expense.closed_at:
         return True  # Already completed
 
     if expense.expense_type == expense.TYPE_ONE_TIME:
-        # Complete when the single item is paid
-        paid_items = ExpenseItem.objects.filter(expense=expense, status="paid").count()
+        # Complete when the single item is paid (has Payment records totaling full amount)
+        expense_items = ExpenseItem.objects.filter(expense=expense)
+        paid_items = sum(1 for item in expense_items if item.status == ExpenseItem.STATUS_PAID)
         if paid_items > 0:
             expense.closed_at = timezone.now()
             expense.save()
@@ -150,7 +153,8 @@ def check_expense_completion(expense: Expense) -> bool:
 
     elif expense.expense_type == expense.TYPE_SPLIT_PAYMENT:
         # Complete when all remaining installments are paid
-        paid_items = ExpenseItem.objects.filter(expense=expense, status="paid").count()
+        expense_items = ExpenseItem.objects.filter(expense=expense)
+        paid_items = sum(1 for item in expense_items if item.status == ExpenseItem.STATUS_PAID)
         remaining_installments = expense.total_parts - expense.skip_parts
         if paid_items >= remaining_installments:
             expense.closed_at = timezone.now()
