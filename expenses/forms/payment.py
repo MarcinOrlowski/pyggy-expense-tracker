@@ -51,17 +51,22 @@ class PaymentForm(forms.ModelForm):
         if self.expense_item:
             # Set remaining amount as placeholder and default
             remaining = self.expense_item.get_remaining_amount()
-            self.fields['amount'].widget.attrs['placeholder'] = f"Max: {remaining}"
-            self.fields['amount'].help_text = f"Payment amount (max: {remaining})"
-            if not self.initial.get('amount'):
-                self.initial['amount'] = remaining
+            # remaining is negative when money is still owed
+            amount_still_owed = abs(remaining) if remaining < 0 else Decimal('0.00')
+            self.fields['amount'].widget.attrs['placeholder'] = f"Max: {amount_still_owed}"
+            self.fields['amount'].help_text = f"Payment amount (max: {amount_still_owed})"
+            if not self.initial.get('amount') and amount_still_owed > 0:
+                self.initial['amount'] = amount_still_owed
 
     def clean_amount(self):
         amount = self.cleaned_data.get('amount')
         if amount and self.expense_item:
             remaining = self.expense_item.get_remaining_amount()
-            if amount > remaining:
-                raise ValidationError(f"Payment amount cannot exceed remaining balance of {remaining}")
+            # remaining is negative when money is still owed
+            # Convert to positive amount still owed for validation
+            amount_still_owed = abs(remaining) if remaining < 0 else Decimal('0.00')
+            if amount > amount_still_owed:
+                raise ValidationError(f"Payment amount cannot exceed remaining balance of {amount_still_owed}")
         return amount
 
     def save(self, commit=True):

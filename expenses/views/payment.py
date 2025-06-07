@@ -19,10 +19,13 @@ def expense_item_pay(request, budget_id, pk):
             check_expense_completion(expense_item.expense)
             
             remaining = expense_item.get_remaining_amount()
-            if remaining <= 0:
-                messages.success(request, f"Payment of {payment.amount} recorded. Expense is now fully paid!")
+            if remaining >= 0:
+                if remaining > 0:
+                    messages.success(request, f"Payment of {payment.amount} recorded. Overpaid by: {remaining}")
+                else:
+                    messages.success(request, f"Payment of {payment.amount} recorded. Expense is now fully paid!")
             else:
-                messages.success(request, f"Payment of {payment.amount} recorded. Remaining balance: {remaining}")
+                messages.success(request, f"Payment of {payment.amount} recorded. Still owed: {abs(remaining)}")
             return redirect("dashboard", budget_id=budget_id)
     else:
         form = PaymentForm(

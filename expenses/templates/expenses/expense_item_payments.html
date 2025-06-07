@@ -8,7 +8,7 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2>{{ title }}</h2>
         <div>
-            {% if expense_item.get_remaining_amount > 0 %}
+            {% if expense_item.get_remaining_amount < 0 %}
                 <a href="{% url 'expense_item_pay' budget.id expense_item.pk %}" class="btn btn-primary">
                     <i class="fas fa-plus"></i> Add Payment
                 </a>
@@ -33,21 +33,21 @@
                             <i class="fas {{ expense_item.expense.get_expense_type_icon }} {{ expense_item.expense.get_expense_type_icon_css_class }}" aria-label="{{ expense_item.expense.get_expense_type_display }}" title="{{ expense_item.expense.get_expense_type_display }}"></i>
                             {{ expense_item.expense.title }}
                         </td>
-                        <th style="width: 12.5%;">Total Amount</th>
+                        <th style="width: 12.5%;">Total</th>
                         <td style="width: 37.5%;">{{ expense_item.amount|amount_with_class }}</td>
                     </tr>
                     {% if expense_item.expense.payee %}
                     <tr>
                         <th>Payee</th>
                         <td>{{ expense_item.expense.payee.name }}</td>
-                        <th>Amount Paid</th>
+                        <th>Paid</th>
                         <td>{{ expense_item.get_total_paid|amount_with_class }}</td>
                     </tr>
                     {% endif %}
                     <tr>
                         <th>Month</th>
                         <td>{{ expense_item.month }}</td>
-                        <th>Remaining Balance</th>
+                        <th>Remaining</th>
                         <td>{{ expense_item.get_remaining_amount|amount_with_class }}</td>
                     </tr>
                     <tr>
@@ -116,7 +116,7 @@
                 <div class="text-center text-muted py-4">
                     <i class="fas fa-credit-card fa-2x mb-3"></i>
                     <p>No payments have been made for this expense item yet.</p>
-                    {% if expense_item.get_remaining_amount > 0 %}
+                    {% if expense_item.get_remaining_amount < 0 %}
                         <a href="{% url 'expense_item_pay' budget.id expense_item.pk %}" class="btn btn-primary">
                             <i class="fas fa-plus"></i> Make First Payment
                         </a>
