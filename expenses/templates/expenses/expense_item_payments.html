@@ -69,7 +69,7 @@
                             <th>Payment Date</th>
                             <th>Amount</th>
                             <th>Payment Method</th>
-                            <th>Payment ID</th>
+                            <th>Transaction ID</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -86,8 +86,8 @@
                                 {% endif %}
                             </td>
                             <td>
-                                {% if payment.payment_id %}
-                                    <code>{{ payment.payment_id }}</code>
+                                {% if payment.transaction_id %}
+                                    <code>{{ payment.transaction_id }}</code>
                                 {% else %}
                                     <em class="text-muted">No ID</em>
                                 {% endif %}

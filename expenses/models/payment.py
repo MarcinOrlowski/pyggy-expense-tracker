@@ -17,11 +17,11 @@ class Payment(models.Model):
         blank=True, 
         on_delete=models.SET_NULL
     )
-    payment_id = models.CharField(
+    transaction_id = models.CharField(
         max_length=255,
         blank=True,
         null=True,
-        help_text="Optional payment reference ID or transaction number"
+        help_text="Optional transaction reference (e.g., bank transfer ID, check number, receipt number)"
     )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

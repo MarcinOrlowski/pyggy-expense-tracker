@@ -23,10 +23,10 @@ class PaymentAdmin(admin.ModelAdmin):
         "amount",
         "payment_date",
         "payment_method",
-        "payment_id",
+        "transaction_id",
     ]
     list_filter = ["payment_method", "payment_date"]
-    search_fields = ["expense_item__expense__title", "payment_id"]
+    search_fields = ["expense_item__expense__title", "transaction_id"]
     readonly_fields = ["created_at", "updated_at"]
     date_hierarchy = "payment_date"
 

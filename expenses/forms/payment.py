@@ -31,18 +31,18 @@ class PaymentForm(forms.ModelForm):
         input_formats=["%Y-%m-%dT%H:%M", "%Y-%m-%d %H:%M:%S"],
         required=True,
     )
-    payment_id = forms.CharField(
+    transaction_id = forms.CharField(
         max_length=255,
         required=False,
         widget=forms.TextInput(
-            attrs={"placeholder": "Optional payment reference ID or transaction number"}
+            attrs={"placeholder": "Optional transaction reference (e.g., bank transfer ID, check number)"}
         ),
-        help_text="Optional payment reference ID, transaction number, or confirmation code",
+        help_text="Optional transaction reference (e.g., bank transfer ID, check number, receipt number)",
     )
 
     class Meta:
         model = Payment
-        fields = ["amount", "payment_date", "payment_method", "payment_id"]
+        fields = ["amount", "payment_date", "payment_method", "transaction_id"]
 
     def __init__(self, *args, **kwargs):
         self.expense_item = kwargs.pop('expense_item', None)
