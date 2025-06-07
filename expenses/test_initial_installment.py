@@ -2,9 +2,24 @@ from django.test import TestCase
 from django.core.exceptions import ValidationError
 from decimal import Decimal
 from datetime import date
-from expenses.models import Budget, Expense, ExpenseItem, Month
+from django.utils import timezone
+from expenses.models import Budget, Expense, ExpenseItem, Month, Payment
 from expenses.services import create_expense_items_for_month, check_expense_completion
 from expenses.forms import ExpenseForm
+
+
+def create_paid_expense_item_payment(expense_item, amount=None, payment_date=None):
+    """Helper function to create a Payment record for an ExpenseItem."""
+    if payment_date is None:
+        payment_date = timezone.now()
+    if amount is None:
+        amount = expense_item.amount
+    
+    return Payment.objects.create(
+        expense_item=expense_item,
+        amount=amount,
+        payment_date=payment_date,
+    )
 
 
 class InitialInstallmentModelTest(TestCase):
@@ -190,7 +205,6 @@ class InitialInstallmentServiceTest(TestCase):
                 month=self.month,
                 amount=Decimal("100.00"),
                 due_date=date.today(),
-                status="pending",
             )
 
         # Should not be complete yet
@@ -200,19 +214,16 @@ class InitialInstallmentServiceTest(TestCase):
         # Pay 2 items - still not complete
         items = ExpenseItem.objects.filter(expense=expense)[:2]
         for item in items:
-            item.status = "paid"
-            item.save()
+            create_paid_expense_item_payment(item)
 
         self.assertFalse(check_expense_completion(expense))
 
         # Pay the last item - should be complete
-        remaining_item = ExpenseItem.objects.filter(
-            expense=expense, status="pending"
-        ).first()
+        all_items = ExpenseItem.objects.filter(expense=expense)
+        remaining_item = next((item for item in all_items if item.status == ExpenseItem.STATUS_PENDING), None)
         self.assertIsNotNone(remaining_item)
         if remaining_item is not None:
-            remaining_item.status = "paid"
-            remaining_item.save()
+            create_paid_expense_item_payment(remaining_item)
 
         self.assertTrue(check_expense_completion(expense))
         expense.refresh_from_db()
@@ -357,13 +368,11 @@ class InitialInstallmentIntegrationTest(TestCase):
         self.assertEqual(total_items, 2)
 
         # Pay first installment - expense should not be complete
-        items1[0].status = "paid"
-        items1[0].save()
+        create_paid_expense_item_payment(items1[0])
         self.assertFalse(check_expense_completion(expense))
 
         # Pay second installment - expense should be complete
-        items2[0].status = "paid"
-        items2[0].save()
+        create_paid_expense_item_payment(items2[0])
         self.assertTrue(check_expense_completion(expense))
 
         expense.refresh_from_db()

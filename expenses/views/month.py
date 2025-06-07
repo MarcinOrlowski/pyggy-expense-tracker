@@ -37,12 +37,12 @@ def month_detail(request, budget_id, year, month):
     budget = get_object_or_404(Budget, id=budget_id)
     month_obj = get_object_or_404(Month, year=year, month=month, budget=budget)
     expense_items = ExpenseItem.objects.filter(month=month_obj).select_related(
-        "expense", "expense__payee", "payment_method"
+        "expense", "expense__payee"
     )
 
-    total_amount = sum(item.amount for item in expense_items)
-    paid_amount = sum(item.amount for item in expense_items if item.status == "paid")
-    pending_amount = total_amount - paid_amount
+    total_amount = sum(item.get_display_amount() for item in expense_items)
+    paid_amount = sum(item.get_display_amount() for item in expense_items if item.status == ExpenseItem.STATUS_PAID)
+    pending_amount = sum(item.get_display_amount() for item in expense_items if item.status == ExpenseItem.STATUS_PENDING)
 
     # Create normalized summary data for the include
     month_summary = {

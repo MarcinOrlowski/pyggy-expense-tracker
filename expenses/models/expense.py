@@ -217,7 +217,8 @@ class Expense(models.Model):
 
     def can_be_deleted(self) -> bool:
         """Check if this expense can be deleted (no paid expense items)"""
-        return not self.expenseitem_set.filter(status="paid").exists()
+        from .payment import Payment
+        return not Payment.objects.filter(expense_item__expense=self).exists()
 
     def can_be_edited(self) -> bool:
         """Check if this expense can be edited at all"""
@@ -239,7 +240,8 @@ class Expense(models.Model):
             return False
 
         # Cannot edit amount if any expense item is paid
-        has_paid_items = self.expenseitem_set.filter(status="paid").exists()
+        from .payment import Payment
+        has_paid_items = Payment.objects.filter(expense_item__expense=self).exists()
         if has_paid_items:
             return False
 
@@ -315,7 +317,8 @@ class Expense(models.Model):
             reasons_list.append("Recurring expenses with end date cannot be edited")
 
         if restrictions["can_edit"] and not restrictions["can_edit_amount"]:
-            has_paid_items = self.expenseitem_set.filter(status="paid").exists()
+            from .payment import Payment
+            has_paid_items = Payment.objects.filter(expense_item__expense=self).exists()
             if has_paid_items:
                 reasons_list.append(
                     "Amount cannot be edited because expense has paid items"

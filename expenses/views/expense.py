@@ -92,7 +92,7 @@ def expense_detail(request, budget_id, pk):
     # Get all expense items for this expense
     expense_items = (
         ExpenseItem.objects.filter(expense=expense)
-        .select_related("month", "payment_method")
+        .select_related("month")
         .order_by("due_date")
     )
 

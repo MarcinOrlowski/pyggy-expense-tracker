@@ -23,7 +23,8 @@ class Month(models.Model):
 
     def has_paid_expenses(self) -> bool:
         """Check if this month has any paid expense items"""
-        return self.expenseitem_set.filter(status="paid").exists()
+        from .payment import Payment
+        return Payment.objects.filter(expense_item__month=self).exists()
 
     def can_be_deleted(self) -> bool:
         """Check if this month can be deleted (no paid expenses)"""

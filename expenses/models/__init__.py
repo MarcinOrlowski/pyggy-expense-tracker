@@ -2,6 +2,7 @@
 from .budget import Budget
 from .payee import Payee
 from .payment_method import PaymentMethod
+from .payment import Payment
 from .month import Month
 from .expense import Expense
 from .expense_item import ExpenseItem
@@ -12,6 +13,7 @@ __all__ = [
     "Budget",
     "Payee",
     "PaymentMethod",
+    "Payment",
     "Month",
     "Expense",
     "ExpenseItem",

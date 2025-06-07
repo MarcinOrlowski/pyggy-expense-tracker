@@ -29,14 +29,16 @@ def dashboard(request, budget_id):
         )
 
         # Get all pending expense items from past months
-        past_pending_items = (
+        all_past_items = (
             ExpenseItem.objects.filter(
-                Q(month__budget=budget, month__year__lt=current_month.year, status="pending") |
-                Q(month__budget=budget, month__year=current_month.year, month__month__lt=current_month.month, status="pending")
+                Q(month__budget=budget, month__year__lt=current_month.year) |
+                Q(month__budget=budget, month__year=current_month.year, month__month__lt=current_month.month)
             )
             .select_related("expense", "expense__payee", "month")
             .order_by("-month__year", "-month__month", "due_date")
         )
+        # Filter to only pending items using property
+        past_pending_items = [item for item in all_past_items if item.status == ExpenseItem.STATUS_PENDING]
 
         # Group all items by month for display with totals
         grouped_expense_items = OrderedDict()
@@ -46,7 +48,7 @@ def dashboard(request, budget_id):
         if current_month_items:
             current_month_key = f"{current_month.year}-{current_month.month:02d}"
             grouped_expense_items[current_month_key] = list(current_month_items)
-            month_totals[current_month_key] = sum(item.amount for item in current_month_items)
+            month_totals[current_month_key] = sum(item.get_display_amount() for item in current_month_items)
 
         # Add past months with pending items (already ordered by year/month desc)
         for item in past_pending_items:
@@ -55,29 +57,30 @@ def dashboard(request, budget_id):
                 grouped_expense_items[month_key] = []
                 month_totals[month_key] = 0
             grouped_expense_items[month_key].append(item)
-            month_totals[month_key] += item.amount
+            month_totals[month_key] += item.get_display_amount()
 
         # Keep as QuerySet for backward compatibility with template
         all_expense_items = current_month_items
 
         # Separate current month items for counting and totals
-        pending_items = [item for item in current_month_items if item.status == "pending"]
-        paid_items = [item for item in current_month_items if item.status == "paid"]
+        pending_items = [item for item in current_month_items if item.status == ExpenseItem.STATUS_PENDING]
+        paid_items = [item for item in current_month_items if item.status == ExpenseItem.STATUS_PAID]
 
-        total_pending = sum(item.amount for item in pending_items)
-        total_paid = sum(item.amount for item in paid_items)
+        total_pending = sum(item.get_display_amount() for item in pending_items)
+        total_paid = sum(item.get_display_amount() for item in paid_items)
         total_month = total_pending + total_paid
 
         # Calendar data
         # Get days with unpaid items in current month
-        due_days = set(
-            current_month.expenseitem_set.filter(
-                payment_date__isnull=True, due_date__isnull=False
-            ).values_list("due_date__day", flat=True)
-        )
+        all_current_items = current_month.expenseitem_set.filter(due_date__isnull=False)
+        unpaid_days = [
+            item.due_date.day for item in all_current_items 
+            if item.due_date and item.status == ExpenseItem.STATUS_PENDING
+        ]
+        due_days = set(unpaid_days)
 
         # Check if any overdue items exist from previous months in this budget
-        has_overdue = past_pending_items.exists()
+        has_overdue = len(past_pending_items) > 0
 
         # Add today to due_days if there are overdue items and we're showing current calendar month
         if (

@@ -47,14 +47,22 @@
                                     {{ item.days_until_due }}
                                 {% endif %}
                             </td>
-                            <td class="amount-column">{{ item.amount|amount_with_class }}</td>
+                            <td class="amount-column">
+                                {{ item.get_display_amount|amount_with_class }}
+                                {% if item.get_payment_count > 0 and item.status == 'pending' %}
+                                    <small class="text-muted">({{ item.get_payment_count }})</small>
+                                {% endif %}
+                            </td>
                             <td>
                                 <i class="fas {{ item.expense.get_expense_type_icon }} {{ item.expense.get_expense_type_icon_css_class }}" aria-label="{{ item.expense.get_expense_type_display }}" title="{{ item.expense.get_expense_type_display }}"></i>
                                 {{ item.expense.title }}
                             </td>
                             <td class="actions-column">
+                                {% if item.get_payment_count > 0 %}
+                                    <a href="{% url 'expense_item_payments' budget.id item.pk %}" class="btn btn-sm" title="View Payments ({{ item.get_payment_count }})" aria-label="View Payments"><i class="fas fa-list"></i></a>
+                                {% endif %}
                                 {% if item.status == 'pending' %}
-                                    <a href="{% url 'expense_item_pay' budget.id item.pk %}" class="btn btn-sm" title="Mark as Paid" aria-label="Mark as Paid"><i class="fas fa-check"></i></a>
+                                    <a href="{% url 'expense_item_pay' budget.id item.pk %}" class="btn btn-sm" title="Add Payment" aria-label="Add Payment"><i class="fas fa-plus"></i></a>
                                 {% else %}
                                     <a href="{% url 'expense_item_unpay' budget.id item.pk %}" class="btn btn-sm" title="Mark as Unpaid" aria-label="Mark as Unpaid"><i class="fas fa-undo"></i></a>
                                 {% endif %}

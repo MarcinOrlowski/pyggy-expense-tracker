@@ -58,10 +58,10 @@ def payment_method_delete(request, pk):
 
     if request.method == "POST":
         if not payment_method.can_be_deleted():
-            expense_items_count = payment_method.expenseitem_set.count()
+            payment_count = payment_method.payment_set.count()
             messages.error(
                 request,
-                f'Cannot delete payment method "{payment_method.name}" because it is used by {expense_items_count} expense item(s).',
+                f'Cannot delete payment method "{payment_method.name}" because it is used by {payment_count} payment(s).',
             )
         else:
             payment_method.delete()
@@ -71,8 +71,8 @@ def payment_method_delete(request, pk):
     context = {
         "payment_method": payment_method,
         "can_delete": payment_method.can_be_deleted(),
-        "expense_items_count": (
-            payment_method.expenseitem_set.count()
+        "payment_count": (
+            payment_method.payment_set.count()
             if not payment_method.can_be_deleted()
             else 0
         ),

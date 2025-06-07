@@ -7,11 +7,31 @@ from expenses.models import (
     Budget,
     Payee,
     PaymentMethod,
+    Payment,
     Month,
     Expense,
     ExpenseItem,
     Settings,
 )
+
+
+def create_paid_expense_item(expense, month, due_date, amount, payment_date=None):
+    """Helper function to create a paid ExpenseItem with Payment record."""
+    if payment_date is None:
+        payment_date = timezone.now()
+    
+    expense_item = ExpenseItem.objects.create(
+        expense=expense,
+        month=month,
+        due_date=due_date,
+        amount=amount,
+    )
+    Payment.objects.create(
+        expense_item=expense_item,
+        amount=amount,
+        payment_date=payment_date,
+    )
+    return expense_item
 
 
 class PayeeModelTest(TestCase):
@@ -159,7 +179,7 @@ class ExpenseItemModelTest(TestCase):
             month=self.month,
             amount=Decimal("100.00"),
             due_date=date.today(),
-            status="pending",
+
         )
         expected = f"Test Expense - {self.month} - pending"
         self.assertEqual(str(item), expected)
@@ -172,7 +192,7 @@ class ExpenseItemModelTest(TestCase):
             month=self.month,
             amount=Decimal("100.00"),
             due_date=future_date,
-            status="pending",
+
         )
         self.assertEqual(item.days_until_due, 10)
 
@@ -183,7 +203,7 @@ class ExpenseItemModelTest(TestCase):
             month=self.month,
             amount=Decimal("100.00"),
             due_date=date.today(),
-            status="pending",
+
         )
         self.assertEqual(item.days_until_due, 0)
 
@@ -195,7 +215,7 @@ class ExpenseItemModelTest(TestCase):
             month=self.month,
             amount=Decimal("100.00"),
             due_date=past_date,
-            status="pending",
+
         )
         self.assertEqual(item.days_until_due, -5)
 
@@ -285,19 +305,17 @@ class MonthModelTest(TestCase):
             month=self.month,
             amount=Decimal("100.00"),
             due_date=date.today(),
-            status="pending",
+
         )
         self.assertFalse(self.month.has_paid_expenses())
 
     def test_has_paid_expenses_true(self):
         """Test has_paid_expenses when paid items exist."""
-        ExpenseItem.objects.create(
+        create_paid_expense_item(
             expense=self.expense,
             month=self.month,
             amount=Decimal("100.00"),
             due_date=date.today(),
-            status="paid",
-            payment_date=timezone.now(),
         )
         self.assertTrue(self.month.has_paid_expenses())
 
@@ -308,19 +326,17 @@ class MonthModelTest(TestCase):
             month=self.month,
             amount=Decimal("100.00"),
             due_date=date.today(),
-            status="pending",
+
         )
         self.assertTrue(self.month.can_be_deleted())
 
     def test_can_be_deleted_with_paid_expenses(self):
         """Test can_be_deleted returns False when paid expenses exist."""
-        ExpenseItem.objects.create(
+        create_paid_expense_item(
             expense=self.expense,
             month=self.month,
             amount=Decimal("100.00"),
             due_date=date.today(),
-            status="paid",
-            payment_date=timezone.now(),
         )
         self.assertFalse(self.month.can_be_deleted())
 

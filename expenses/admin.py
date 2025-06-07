@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Payee, PaymentMethod, Month, Expense, ExpenseItem, Settings
+from .models import Payee, PaymentMethod, Payment, Month, Expense, ExpenseItem, Settings
 
 
 @admin.register(Payee)
@@ -14,6 +14,28 @@ class PaymentMethodAdmin(admin.ModelAdmin):
     list_display = ["name", "created_at"]
     search_fields = ["name"]
     readonly_fields = ["created_at", "updated_at"]
+
+
+@admin.register(Payment)
+class PaymentAdmin(admin.ModelAdmin):
+    list_display = [
+        "expense_item",
+        "amount",
+        "payment_date",
+        "payment_method",
+        "transaction_id",
+    ]
+    list_filter = ["payment_method", "payment_date"]
+    search_fields = ["expense_item__expense__title", "transaction_id"]
+    readonly_fields = ["created_at", "updated_at"]
+    date_hierarchy = "payment_date"
+
+    def get_queryset(self, request):
+        return (
+            super()
+            .get_queryset(request)
+            .select_related("expense_item", "expense_item__expense", "payment_method")
+        )
 
 
 @admin.register(Month)
@@ -50,19 +72,17 @@ class ExpenseItemAdmin(admin.ModelAdmin):
         "due_date",
         "amount",
         "status",
-        "payment_date",
-        "payment_method",
     ]
-    list_filter = ["status", "month", "expense__expense_type", "payment_method"]
+    list_filter = ["month", "expense__expense_type"]
     search_fields = ["expense__title", "expense__payee__name"]
-    readonly_fields = ["created_at", "updated_at"]
+    readonly_fields = ["created_at", "updated_at", "status"]
     date_hierarchy = "due_date"
 
     def get_queryset(self, request):
         return (
             super()
             .get_queryset(request)
-            .select_related("expense", "expense__payee", "month", "payment_method")
+            .select_related("expense", "expense__payee", "month")
         )
 
 
