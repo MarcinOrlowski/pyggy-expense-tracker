@@ -12,13 +12,13 @@
 - [#0100] Reworked payment system to support multiple payments per expense item, enabling partial payment tracking and preventing overpayments
 - [#0005] Enhanced dashboard to display past months with pending expenses in main expense list with month separators for better visibility
 - [#0147] Group expense list entries by year-month for better date validation visibility and improved chronological organization
-- Fixed CSS loading issue after HTTP redirects by switching from django-sass-processor runtime compilation to pre-compiled CSS files
 - [#0142] Enhanced dashboard title with relative time indicator for past months (e.g., "Dashboard (3 months ago)")
 - [#0140] Made table rows clickable for view actions, removed view icons for cleaner UI
 - [#0051] Added close buttons to flash messages with Font Awesome icons and smooth animation effects
 - [#0134] Unified edit icons across the application to use fa-pencil consistently
 - [#0124] Improved payment confirmation redirect behavior to navigate to budget dashboard after payment operations
 - [#0131] Replace text navigation instructions with direct "Add First Month" buttons
+- Fixed CSS loading issue after HTTP redirects by switching from django-sass-processor runtime compilation to pre-compiled CSS files
 
 ## v1.0 (2025-06-06)
 
