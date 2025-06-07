@@ -56,7 +56,7 @@ def budget_delete(request, pk):
     budget = get_object_or_404(Budget, pk=pk)
 
     # Check if budget has associated months
-    month_count = budget.month_set.count()
+    month_count = budget.budgetmonth_set.count()
 
     if request.method == "POST":
         if month_count > 0:

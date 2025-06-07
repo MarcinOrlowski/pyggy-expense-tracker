@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404
 from django.db.models import Sum, Count, Q
 from datetime import date
 from collections import OrderedDict
-from ..models import ExpenseItem, Month, Budget
+from ..models import ExpenseItem, BudgetMonth, Budget
 
 
 def dashboard(request, budget_id):
@@ -13,11 +13,11 @@ def dashboard(request, budget_id):
     current_date = date.today()
 
     # Check if any months exist in the budget
-    has_any_months = Month.objects.filter(budget=budget).exists()
+    has_any_months = BudgetMonth.objects.filter(budget=budget).exists()
 
     # Get the most recent month from database for this budget
     current_month = (
-        Month.objects.filter(budget=budget).order_by("-year", "-month").first()
+        BudgetMonth.objects.filter(budget=budget).order_by("-year", "-month").first()
     )
 
     if current_month:

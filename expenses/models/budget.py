@@ -15,14 +15,14 @@ class Budget(models.Model):
         if self.start_date and self.start_date < date.today():
             # Allow past dates only if this budget has no months
             if hasattr(self, "pk") and self.pk:
-                if self.month_set.exists():
+                if self.budgetmonth_set.exists():
                     raise ValidationError(
                         "Start date cannot be in the past when budget has existing months"
                     )
 
     def can_be_deleted(self) -> bool:
         """Check if this budget can be deleted (no associated months)"""
-        return not self.month_set.exists()
+        return not self.budgetmonth_set.exists()
 
     def get_current_balance(self) -> Decimal:
         """

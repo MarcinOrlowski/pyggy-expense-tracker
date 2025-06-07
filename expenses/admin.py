@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Payee, PaymentMethod, Payment, Month, Expense, ExpenseItem, Settings
+from .models import Payee, PaymentMethod, Payment, BudgetMonth, Expense, ExpenseItem, Settings
 
 
 @admin.register(Payee)
@@ -38,8 +38,8 @@ class PaymentAdmin(admin.ModelAdmin):
         )
 
 
-@admin.register(Month)
-class MonthAdmin(admin.ModelAdmin):
+@admin.register(BudgetMonth)
+class BudgetMonthAdmin(admin.ModelAdmin):
     list_display = ["year", "month", "created_at"]
     list_filter = ["year", "month"]
     readonly_fields = ["created_at", "updated_at"]

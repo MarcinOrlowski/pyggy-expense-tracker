@@ -6,6 +6,7 @@
 
 ## @dev
 
+- [#0151] Refactored Month entity to BudgetMonth for better semantic clarity and improved code self-documentation
 - [#0100] Reworked payment system to support multiple payments per expense item, enabling partial payment tracking and preventing overpayments
 - [#0005] Enhanced dashboard to display past months with pending expenses in main expense list with month separators for better visibility
 - [#0147] Group expense list entries by year-month for better date validation visibility and improved chronological organization

@@ -18,7 +18,7 @@ class ExpenseItem(models.Model):
     ]
 
     expense = models.ForeignKey("Expense", on_delete=models.CASCADE)
-    month = models.ForeignKey("Month", on_delete=models.CASCADE)
+    month = models.ForeignKey("BudgetMonth", on_delete=models.CASCADE)
     due_date = models.DateField()
     amount = models.DecimalField(
         max_digits=13, decimal_places=2, validators=[MinValueValidator(0.01)]
@@ -28,7 +28,7 @@ class ExpenseItem(models.Model):
 
     def clean(self) -> None:
         # Import here to avoid circular imports
-        from .month import Month
+        from .month import BudgetMonth
 
         # Validate due_date is within allowed range
         if self.due_date and self.expense_id:
@@ -38,7 +38,7 @@ class ExpenseItem(models.Model):
                     self.expense.start_date.year, self.expense.start_date.month, 1
                 ).strftime("%B %Y")
                 if self.expense.expense_type == self.expense.TYPE_ONE_TIME:
-                    most_recent_month = Month.get_most_recent(
+                    most_recent_month = BudgetMonth.get_most_recent(
                         budget=self.expense.budget
                     )
                     if most_recent_month and start_date < date(
@@ -62,7 +62,7 @@ class ExpenseItem(models.Model):
     def get_allowed_month_range(self) -> Tuple[date, date]:
         """Returns (start_date, end_date) tuple for allowed month range based on expense type and creation month"""
         # Import here to avoid circular imports
-        from .month import Month
+        from .month import BudgetMonth
 
         if not self.expense_id:
             raise ValueError("Cannot determine allowed month range without an expense")
@@ -73,7 +73,7 @@ class ExpenseItem(models.Model):
         # For one-time expenses, allow moving as early as the most recent month in budget
         if self.expense.expense_type == self.expense.TYPE_ONE_TIME:
             # Get the most recent (active) month for this budget
-            most_recent_month = Month.get_most_recent(budget=self.expense.budget)
+            most_recent_month = BudgetMonth.get_most_recent(budget=self.expense.budget)
             if most_recent_month:
                 # Start date is the earlier of: expense creation month or most recent month
                 active_month_start = date(

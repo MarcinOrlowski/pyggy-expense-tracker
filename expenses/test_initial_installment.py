@@ -3,7 +3,7 @@ from django.core.exceptions import ValidationError
 from decimal import Decimal
 from datetime import date
 from django.utils import timezone
-from expenses.models import Budget, Expense, ExpenseItem, Month, Payment
+from expenses.models import Budget, Expense, ExpenseItem, BudgetMonth, Payment
 from expenses.services import create_expense_items_for_month, check_expense_completion
 from expenses.forms import ExpenseForm
 
@@ -145,7 +145,7 @@ class InitialInstallmentServiceTest(TestCase):
     def setUp(self):
         """Set up test data."""
         self.budget = Budget.objects.create(name="Test Budget", start_date=date.today())
-        self.month = Month.objects.create(
+        self.month = BudgetMonth.objects.create(
             budget=self.budget, year=date.today().year, month=date.today().month
         )
 
@@ -169,7 +169,7 @@ class InitialInstallmentServiceTest(TestCase):
 
         # Continue creating items until we reach the limit
         for i in range(6):  # 6 more items to reach 7 total
-            month_obj = Month.objects.create(
+            month_obj = BudgetMonth.objects.create(
                 budget=self.budget,
                 year=2026,  # Use different year to avoid conflicts
                 month=i + 1,
@@ -181,7 +181,7 @@ class InitialInstallmentServiceTest(TestCase):
         self.assertEqual(total_items, 7)
 
         # Try to create one more - should not create anything
-        extra_month = Month.objects.create(budget=self.budget, year=2027, month=1)
+        extra_month = BudgetMonth.objects.create(budget=self.budget, year=2027, month=1)
         items = create_expense_items_for_month(expense, extra_month)
         self.assertEqual(len(items), 0)
 
@@ -335,7 +335,7 @@ class InitialInstallmentIntegrationTest(TestCase):
         )
 
         # Create first month and generate expense items
-        month1 = Month.objects.create(
+        month1 = BudgetMonth.objects.create(
             budget=self.budget, year=date.today().year, month=date.today().month
         )
         items1 = create_expense_items_for_month(expense, month1)
@@ -347,7 +347,7 @@ class InitialInstallmentIntegrationTest(TestCase):
             date.today().year if date.today().month < 12 else date.today().year + 1
         )
 
-        month2 = Month.objects.create(
+        month2 = BudgetMonth.objects.create(
             budget=self.budget, year=next_year, month=next_month
         )
         items2 = create_expense_items_for_month(expense, month2)
@@ -357,7 +357,7 @@ class InitialInstallmentIntegrationTest(TestCase):
         third_month = next_month + 1 if next_month < 12 else 1
         third_year = next_year if next_month < 12 else next_year + 1
 
-        month3 = Month.objects.create(
+        month3 = BudgetMonth.objects.create(
             budget=self.budget, year=third_year, month=third_month
         )
         items3 = create_expense_items_for_month(expense, month3)

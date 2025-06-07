@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.template import Context, Template
 from datetime import date, datetime
 from unittest.mock import patch
-from expenses.models import Budget, Month, Expense, ExpenseItem, Payee, Settings
+from expenses.models import Budget, BudgetMonth, Expense, ExpenseItem, Payee, Settings
 from expenses.services import SettingsService
 
 
@@ -28,7 +28,7 @@ class CalendarHighlightingTest(TestCase):
         )
 
         # Create test month
-        self.month = Month.objects.create(month=1, year=2024, budget=self.budget)
+        self.month = BudgetMonth.objects.create(month=1, year=2024, budget=self.budget)
 
         self.client = Client()
 
@@ -265,7 +265,7 @@ class DashboardCalendarIntegrationTest(TestCase):
         mock_date.today.return_value = mock_today
 
         # Create a month for January 2024
-        month = Month.objects.create(month=1, year=2024, budget=self.budget)
+        month = BudgetMonth.objects.create(month=1, year=2024, budget=self.budget)
 
         response = self.client.get(f"/budgets/{self.budget.id}/dashboard/")
 
@@ -289,7 +289,7 @@ class DashboardCalendarIntegrationTest(TestCase):
         mock_date.today.return_value = mock_today
 
         # Create a month for December 2023 (different from current month)
-        month = Month.objects.create(month=12, year=2023, budget=self.budget)
+        month = BudgetMonth.objects.create(month=12, year=2023, budget=self.budget)
 
         response = self.client.get(f"/budgets/{self.budget.id}/dashboard/")
 

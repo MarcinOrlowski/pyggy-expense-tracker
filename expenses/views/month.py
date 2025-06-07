@@ -1,12 +1,12 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
-from ..models import Month, ExpenseItem, Budget
+from ..models import BudgetMonth, ExpenseItem, Budget
 
 
 def month_list(request, budget_id):
     """List all months for a specific budget"""
     budget = get_object_or_404(Budget, id=budget_id)
-    months = Month.objects.filter(budget=budget)
+    months = BudgetMonth.objects.filter(budget=budget)
 
     # Calculate balance for each month (expenses as negative impact)
     from django.db.models import Sum
@@ -22,7 +22,7 @@ def month_list(request, budget_id):
         month.balance = -total_expenses  # type: ignore[attr-defined]
 
     # Get next allowed month for this budget
-    next_allowed = Month.get_next_allowed_month(budget=budget)
+    next_allowed = BudgetMonth.get_next_allowed_month(budget=budget)
 
     context = {
         "budget": budget,
@@ -35,7 +35,7 @@ def month_list(request, budget_id):
 def month_detail(request, budget_id, year, month):
     """Display month details with expense items"""
     budget = get_object_or_404(Budget, id=budget_id)
-    month_obj = get_object_or_404(Month, year=year, month=month, budget=budget)
+    month_obj = get_object_or_404(BudgetMonth, year=year, month=month, budget=budget)
     expense_items = ExpenseItem.objects.filter(month=month_obj).select_related(
         "expense", "expense__payee"
     )
@@ -68,10 +68,10 @@ def month_detail(request, budget_id, year, month):
 def month_delete(request, budget_id, year, month):
     """Delete month with validation"""
     budget = get_object_or_404(Budget, id=budget_id)
-    month_obj = get_object_or_404(Month, year=year, month=month, budget=budget)
+    month_obj = get_object_or_404(BudgetMonth, year=year, month=month, budget=budget)
 
     # Check if this is the most recent month for this budget
-    most_recent = Month.get_most_recent(budget=budget)
+    most_recent = BudgetMonth.get_most_recent(budget=budget)
     if most_recent != month_obj:
         messages.error(request, "You can only delete the most recent month.")
         return redirect("month_list", budget_id=budget_id)
@@ -106,7 +106,7 @@ def month_process(request, budget_id):
     budget = get_object_or_404(Budget, id=budget_id)
 
     # Determine next month to create automatically
-    next_allowed = Month.get_next_allowed_month(budget=budget)
+    next_allowed = BudgetMonth.get_next_allowed_month(budget=budget)
 
     if not next_allowed:
         # No months exist for this budget, use budget start_date for initial month

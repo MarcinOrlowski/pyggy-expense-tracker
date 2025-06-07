@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from datetime import date, datetime
 from decimal import Decimal
 from django.utils import timezone
-from .models import Budget, Month, Expense, ExpenseItem, Payee, Payment
+from .models import Budget, BudgetMonth, Expense, ExpenseItem, Payee, Payment
 
 
 def create_paid_expense_item(expense, month, due_date, amount, payment_date=None):
@@ -39,7 +39,7 @@ class ExpenseEditingPermissionsTest(TestCase):
         )
 
         # Create month
-        self.month = Month.objects.create(
+        self.month = BudgetMonth.objects.create(
             budget=self.budget, year=date.today().year, month=date.today().month
         )
 

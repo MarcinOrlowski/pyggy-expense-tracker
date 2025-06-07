@@ -8,7 +8,7 @@ from expenses.models import (
     Payee,
     PaymentMethod,
     Payment,
-    Month,
+    BudgetMonth,
     Expense,
     ExpenseItem,
     Settings,
@@ -160,7 +160,7 @@ class ExpenseItemModelTest(TestCase):
     def setUp(self):
         """Set up test data."""
         self.budget = Budget.objects.create(name="Test Budget", start_date=date.today())
-        self.month = Month.objects.create(
+        self.month = BudgetMonth.objects.create(
             budget=self.budget, year=date.today().year, month=date.today().month
         )
         self.expense = Expense.objects.create(
@@ -282,13 +282,13 @@ class BudgetModelOrderingTest(TestCase):
         self.assertEqual(budgets[1], budget2)
 
 
-class MonthModelTest(TestCase):
-    """Test cases for Month model methods."""
+class BudgetMonthModelTest(TestCase):
+    """Test cases for BudgetMonth model methods."""
 
     def setUp(self):
         """Set up test data."""
         self.budget = Budget.objects.create(name="Test Budget", start_date=date.today())
-        self.month = Month.objects.create(budget=self.budget, year=2024, month=1)
+        self.month = BudgetMonth.objects.create(budget=self.budget, year=2024, month=1)
         self.expense = Expense.objects.create(
             budget=self.budget,
             title="Test Expense",
@@ -344,21 +344,21 @@ class MonthModelTest(TestCase):
         """Test get_most_recent for all budgets."""
         # Create another month in different budget
         budget2 = Budget.objects.create(name="Budget 2", start_date=date.today())
-        month2 = Month.objects.create(budget=budget2, year=2024, month=2)
+        month2 = BudgetMonth.objects.create(budget=budget2, year=2024, month=2)
 
         # Most recent should be the one with latest year/month
-        most_recent = Month.get_most_recent()
+        most_recent = BudgetMonth.get_most_recent()
         self.assertEqual(most_recent, month2)
 
     def test_get_most_recent_with_budget(self):
         """Test get_most_recent for specific budget."""
         # Create months in same budget
-        month2 = Month.objects.create(budget=self.budget, year=2024, month=3)
+        month2 = BudgetMonth.objects.create(budget=self.budget, year=2024, month=3)
 
         # Create month in different budget
         budget2 = Budget.objects.create(name="Budget 2", start_date=date.today())
-        Month.objects.create(budget=budget2, year=2024, month=5)
+        BudgetMonth.objects.create(budget=budget2, year=2024, month=5)
 
         # Most recent for specific budget
-        most_recent = Month.get_most_recent(budget=self.budget)
+        most_recent = BudgetMonth.get_most_recent(budget=self.budget)
         self.assertEqual(most_recent, month2)

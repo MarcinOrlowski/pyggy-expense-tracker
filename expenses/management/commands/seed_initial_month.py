@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand
 from django.db import transaction
-from expenses.models import Month, Budget
+from expenses.models import BudgetMonth, Budget
 from expenses.services import process_new_month
 
 
@@ -26,7 +26,7 @@ class Command(BaseCommand):
         month = options["month"]
 
         # Check if any months already exist
-        if Month.objects.exists():
+        if BudgetMonth.objects.exists():
             self.stdout.write(
                 self.style.ERROR(
                     "Months already exist in the system. Initial seeding is not allowed."

@@ -131,7 +131,7 @@ class Expense(models.Model):
         6. Only recurring with end date can have end_date
         """
         # Import here to avoid circular imports
-        from .month import Month
+        from .month import BudgetMonth
 
         # Validate total_parts field
         if self.expense_type == self.TYPE_SPLIT_PAYMENT and self.total_parts <= 0:
@@ -178,7 +178,7 @@ class Expense(models.Model):
 
         # Validate start date is not earlier than current month for this budget
         if self.start_date and self.budget_id:
-            most_recent_month = Month.get_most_recent(budget=self.budget)
+            most_recent_month = BudgetMonth.get_most_recent(budget=self.budget)
             if most_recent_month:
                 # Get first day of the most recent month
                 current_month_start = date(
@@ -250,7 +250,7 @@ class Expense(models.Model):
     def can_edit_date(self) -> bool:
         """Check if the start date can be edited based on current date restrictions"""
         # Import here to avoid circular imports
-        from .month import Month
+        from .month import BudgetMonth
 
         # First check if expense can be edited at all
         if not self.can_be_edited():
@@ -262,7 +262,7 @@ class Expense(models.Model):
 
         # For other expense types, check if current expense date is not earlier than next month
         if self.start_date and self.budget_id:
-            most_recent_month = Month.get_most_recent(budget=self.budget)
+            most_recent_month = BudgetMonth.get_most_recent(budget=self.budget)
             if most_recent_month:
                 # Calculate next month start date
                 if most_recent_month.month == 12:
@@ -281,12 +281,12 @@ class Expense(models.Model):
     def get_next_month_date(self) -> Optional[date]:
         """Calculate next month start date for this expense's budget"""
         # Import here to avoid circular imports
-        from .month import Month
+        from .month import BudgetMonth
 
         if not self.budget_id:
             return None
 
-        most_recent_month = Month.get_most_recent(budget=self.budget)
+        most_recent_month = BudgetMonth.get_most_recent(budget=self.budget)
         if not most_recent_month:
             return None
 
