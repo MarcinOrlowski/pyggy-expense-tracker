@@ -48,7 +48,7 @@ def dashboard(request, budget_id):
         if current_month_items:
             current_month_key = f"{current_month.year}-{current_month.month:02d}"
             grouped_expense_items[current_month_key] = list(current_month_items)
-            month_totals[current_month_key] = sum(item.get_display_amount() for item in current_month_items)
+            month_totals[current_month_key] = sum(item.get_remaining_amount() for item in current_month_items)
 
         # Add past months with pending items (already ordered by year/month desc)
         for item in past_pending_items:
@@ -57,7 +57,7 @@ def dashboard(request, budget_id):
                 grouped_expense_items[month_key] = []
                 month_totals[month_key] = 0
             grouped_expense_items[month_key].append(item)
-            month_totals[month_key] += item.get_display_amount()
+            month_totals[month_key] += item.get_remaining_amount()
 
         # Keep as QuerySet for backward compatibility with template
         all_expense_items = current_month_items
@@ -66,8 +66,8 @@ def dashboard(request, budget_id):
         pending_items = [item for item in current_month_items if item.status == ExpenseItem.STATUS_PENDING]
         paid_items = [item for item in current_month_items if item.status == ExpenseItem.STATUS_PAID]
 
-        total_pending = sum(item.get_display_amount() for item in pending_items)
-        total_paid = sum(item.get_display_amount() for item in paid_items)
+        total_pending = sum(item.get_remaining_amount() for item in pending_items)
+        total_paid = sum(item.get_remaining_amount() for item in paid_items)
         total_month = total_pending + total_paid
 
         # Calendar data

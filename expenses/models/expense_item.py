@@ -107,18 +107,6 @@ class ExpenseItem(models.Model):
         """Calculate remaining amount to be paid (negative = still owed, positive = overpaid)"""
         return self.get_total_paid() - self.amount
 
-    def get_display_amount(self) -> Decimal:
-        """
-        Get the amount to display in templates.
-        For pending items: shows absolute remaining amount (what's still owed)
-        For paid items: shows total paid amount  
-        """
-        if self.status == self.STATUS_PAID:
-            return self.get_total_paid()
-        else:
-            # For pending items, show absolute value of remaining (what's still owed)
-            remaining = self.get_remaining_amount()
-            return abs(remaining) if remaining < 0 else remaining
 
     def get_payment_count(self) -> int:
         """Get the number of payments made for this expense item"""

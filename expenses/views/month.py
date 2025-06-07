@@ -40,9 +40,9 @@ def month_detail(request, budget_id, year, month):
         "expense", "expense__payee"
     )
 
-    total_amount = sum(item.get_display_amount() for item in expense_items)
-    paid_amount = sum(item.get_display_amount() for item in expense_items if item.status == ExpenseItem.STATUS_PAID)
-    pending_amount = sum(item.get_display_amount() for item in expense_items if item.status == ExpenseItem.STATUS_PENDING)
+    total_amount = sum(item.get_remaining_amount() for item in expense_items)
+    paid_amount = sum(item.get_remaining_amount() for item in expense_items if item.status == ExpenseItem.STATUS_PAID)
+    pending_amount = sum(item.get_remaining_amount() for item in expense_items if item.status == ExpenseItem.STATUS_PENDING)
 
     # Create normalized summary data for the include
     month_summary = {
