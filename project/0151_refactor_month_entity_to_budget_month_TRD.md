@@ -5,7 +5,12 @@
 
 ## Technical Approach
 
-This refactoring will rename the Month model to BudgetMonth throughout the Django application using a systematic find-and-replace approach. The implementation will update all Python code references, create a database migration to rename the table from `expenses_month` to `expenses_budgetmonth`, and update Django admin, forms, views, and templates. Since this is purely a naming refactoring, no business logic changes are required.
+This refactoring will rename the Month model to BudgetMonth throughout the Django
+application using a systematic find-and-replace approach. The implementation will update
+all Python code references, create a database migration to rename the table from
+`expenses_month` to `expenses_budgetmonth`, and update Django admin, forms, views, and
+templates. Since this is purely a naming refactoring, no business logic changes are
+required.
 
 ## Data Model
 
@@ -28,6 +33,7 @@ class BudgetMonth(models.Model):
 ```
 
 **Database Changes:**
+
 - Table rename: `expenses_month` → `expenses_budgetmonth`
 - Foreign key references from other tables will be automatically handled by Django
 - All indexes and constraints remain functionally identical
@@ -82,7 +88,7 @@ No API endpoint changes are required since this is a model-level refactoring. Al
 
 - **Feature flag**: Not applicable - this is a model refactoring
 - **Key metrics**: Monitor for any 500 errors post-deployment, verify all Month-related pages load
-- **Rollback**: 
+- **Rollback**:
   1. Reverse migration: `python manage.py migrate expenses <previous_migration>`
   2. Git revert: `git revert <commit_hash>`
   3. Redeploy previous version if necessary
@@ -100,6 +106,7 @@ operations = [
 ```
 
 **Testing approach:**
+
 1. Create database backup before migration
 2. Test migration on copy of production data
 3. Verify all existing functionality after migration
