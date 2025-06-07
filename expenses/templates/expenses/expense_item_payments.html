@@ -33,36 +33,26 @@
                             <i class="fas {{ expense_item.expense.get_expense_type_icon }} {{ expense_item.expense.get_expense_type_icon_css_class }}" aria-label="{{ expense_item.expense.get_expense_type_display }}" title="{{ expense_item.expense.get_expense_type_display }}"></i>
                             {{ expense_item.expense.title }}
                         </td>
-                        {% if expense_item.expense.payee %}
-                        <th style="width: 12.5%;">Payee</th>
-                        <td style="width: 37.5%;">{{ expense_item.expense.payee.name }}</td>
-                        {% else %}
-                        <th style="width: 12.5%;">Month</th>
-                        <td style="width: 37.5%;">{{ expense_item.month }}</td>
-                        {% endif %}
+                        <th style="width: 12.5%;">Total Amount</th>
+                        <td style="width: 37.5%;">{{ expense_item.amount|amount_with_class }}</td>
                     </tr>
+                    {% if expense_item.expense.payee %}
                     <tr>
-                        {% if expense_item.expense.payee %}
-                        <th>Month</th>
-                        <td>{{ expense_item.month }}</td>
-                        <th>Due Date</th>
-                        <td>{{ expense_item.due_date|date:"Y-m-d" }}</td>
-                        {% else %}
-                        <th>Due Date</th>
-                        <td>{{ expense_item.due_date|date:"Y-m-d" }}</td>
-                        <th></th>
-                        <td></td>
-                        {% endif %}
-                    </tr>
-                    <tr>
-                        <th>Total Amount</th>
-                        <td>{{ expense_item.amount|amount_with_class }}</td>
+                        <th>Payee</th>
+                        <td>{{ expense_item.expense.payee.name }}</td>
                         <th>Amount Paid</th>
                         <td>{{ expense_item.get_total_paid|amount_with_class }}</td>
                     </tr>
+                    {% endif %}
                     <tr>
+                        <th>Month</th>
+                        <td>{{ expense_item.month }}</td>
                         <th>Remaining Balance</th>
                         <td>{{ expense_item.get_remaining_amount|amount_with_class }}</td>
+                    </tr>
+                    <tr>
+                        <th>Due Date</th>
+                        <td>{{ expense_item.due_date|date:"Y-m-d" }}</td>
                         <th>Status</th>
                         <td>
                             <span class="badge {% if expense_item.status == 'paid' %}bg-success{% else %}bg-warning{% endif %}">
