@@ -82,3 +82,20 @@ def expense_item_edit(request, budget_id, pk):
         "title": f"Edit Due Date: {expense_item.expense.title}",
     }
     return render(request, "expenses/expense_item_edit.html", context)
+
+
+def expense_item_payments(request, budget_id, pk):
+    """List all payments for a specific expense item"""
+    budget = get_object_or_404(Budget, id=budget_id)
+    expense_item = get_object_or_404(ExpenseItem, pk=pk, month__budget=budget)
+    
+    # Get all payments for this expense item, ordered by payment date
+    payments = expense_item.payment_set.select_related("payment_method").order_by("-payment_date")
+    
+    context = {
+        "budget": budget,
+        "expense_item": expense_item,
+        "payments": payments,
+        "title": f"Payments: {expense_item.expense.title}",
+    }
+    return render(request, "expenses/expense_item_payments.html", context)

@@ -65,6 +65,11 @@ urlpatterns = [
         views.expense_item_edit,
         name="expense_item_edit",
     ),
+    path(
+        "budgets/<int:budget_id>/expense-items/<int:pk>/payments/",
+        views.expense_item_payments,
+        name="expense_item_payments",
+    ),
     # Reference Data (no budget context needed)
     path("payees/", views.payee_list, name="payee_list"),
     path("payees/create/", views.payee_create, name="payee_create"),
