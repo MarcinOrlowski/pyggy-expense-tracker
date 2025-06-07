@@ -43,6 +43,51 @@
 </div>
 {% endif %}
 
+<!-- Quick Expense Form -->
+{% if has_any_months and current_month %}
+<div class="card mb-3">
+    <div class="card-header">
+        <i class="fas fa-plus-circle"></i> Quick Expense
+    </div>
+    <div class="card-body">
+        <form method="post" class="row g-3">
+            {% csrf_token %}
+            <div class="col-md-4">
+                <label for="{{ quick_expense_form.title.id_for_label }}" class="form-label">Description</label>
+                {{ quick_expense_form.title }}
+                {% if quick_expense_form.title.errors %}
+                    <div class="text-danger">{{ quick_expense_form.title.errors.0 }}</div>
+                {% endif %}
+            </div>
+            <div class="col-md-3">
+                <label for="{{ quick_expense_form.payee.id_for_label }}" class="form-label">Payee</label>
+                {{ quick_expense_form.payee }}
+                {% if quick_expense_form.payee.errors %}
+                    <div class="text-danger">{{ quick_expense_form.payee.errors.0 }}</div>
+                {% endif %}
+            </div>
+            <div class="col-md-2">
+                <label for="{{ quick_expense_form.amount.id_for_label }}" class="form-label">Amount</label>
+                {{ quick_expense_form.amount }}
+                {% if quick_expense_form.amount.errors %}
+                    <div class="text-danger">{{ quick_expense_form.amount.errors.0 }}</div>
+                {% endif %}
+            </div>
+            <div class="col-md-3 d-flex align-items-end">
+                <div class="form-check me-3">
+                    {{ quick_expense_form.mark_as_paid }}
+                    <label class="form-check-label" for="{{ quick_expense_form.mark_as_paid.id_for_label }}">
+                        Mark as paid
+                    </label>
+                </div>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> Add Expense
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endif %}
 
 <!-- Expenses List -->
 {% if has_any_months and current_month %}
