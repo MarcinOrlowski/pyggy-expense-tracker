@@ -43,6 +43,29 @@
 </div>
 {% endif %}
 
+<!-- Quick Expense Form -->
+{% if has_any_months and current_month %}
+<div class="card mb-3">
+    <div class="card-header">
+        Quick Expense
+    </div>
+    <div class="card-body">
+        <form method="post" class="quick-expense-form">
+            {% csrf_token %}
+            <div class="form-group">{{ quick_expense_form.title }}</div>
+            <div class="form-group">{{ quick_expense_form.amount }}</div>
+            <div class="form-group">{{ quick_expense_form.payee }}</div>
+            <div class="form-check-inline">
+                {{ quick_expense_form.mark_as_paid }}
+                <label for="{{ quick_expense_form.mark_as_paid.id_for_label }}">Mark as paid</label>
+            </div>
+            <button type="submit" class="btn">
+                <i class="fas fa-plus"></i> Add Expense
+            </button>
+        </form>
+    </div>
+</div>
+{% endif %}
 
 <!-- Expenses List -->
 {% if has_any_months and current_month %}

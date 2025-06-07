@@ -1,8 +1,12 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib import messages
 from django.db.models import Sum, Count, Q
-from datetime import date
+from django.db import transaction
+from datetime import date, datetime
 from collections import OrderedDict
-from ..models import ExpenseItem, BudgetMonth, Budget
+from ..models import ExpenseItem, BudgetMonth, Budget, Expense, Payment
+from ..forms import QuickExpenseForm
+from ..services import SettingsService
 
 
 def dashboard(request, budget_id):
@@ -11,6 +15,13 @@ def dashboard(request, budget_id):
 
     budget = get_object_or_404(Budget, id=budget_id)
     current_date = date.today()
+    
+    # Handle quick expense form submission
+    if request.method == "POST":
+        return handle_quick_expense(request, budget_id)
+    
+    # Initialize quick expense form for GET requests
+    quick_expense_form = QuickExpenseForm()
 
     # Check if any months exist in the budget
     has_any_months = BudgetMonth.objects.filter(budget=budget).exists()
@@ -173,5 +184,79 @@ def dashboard(request, budget_id):
         "display_year": display_year,
         # Relative time context
         "relative_time_text": relative_time_text,
+        # Quick expense form
+        "quick_expense_form": quick_expense_form,
     }
     return render(request, "expenses/dashboard.html", context)
+
+
+def handle_quick_expense(request, budget_id):
+    """Handle quick expense form submission"""
+    budget = get_object_or_404(Budget, id=budget_id)
+    form = QuickExpenseForm(request.POST)
+    
+    if form.is_valid():
+        try:
+            with transaction.atomic():
+                # Get or create current month
+                current_date = date.today()
+                current_month, created = BudgetMonth.objects.get_or_create(
+                    budget=budget,
+                    year=current_date.year,
+                    month=current_date.month,
+                    defaults={"initial_amount": budget.initial_amount}
+                )
+                
+                # Create one-time expense
+                expense = Expense.objects.create(
+                    budget=budget,
+                    payee=form.cleaned_data["payee"],
+                    title=form.cleaned_data["title"],
+                    expense_type=Expense.TYPE_ONE_TIME,
+                    amount=form.cleaned_data["amount"],
+                    start_date=current_date,
+                    day_of_month=current_date.day,
+                )
+                
+                # Create expense item
+                expense_item = ExpenseItem.objects.create(
+                    expense=expense,
+                    month=current_month,
+                    due_date=current_date,
+                    amount=form.cleaned_data["amount"],
+                )
+                
+                # Create payment if requested
+                if form.cleaned_data["mark_as_paid"]:
+                    Payment.objects.create(
+                        expense_item=expense_item,
+                        amount=form.cleaned_data["amount"],
+                        payment_date=datetime.now(),
+                    )
+                    # Check if expense should be completed
+                    from ..services import check_expense_completion
+                    check_expense_completion(expense)
+                    
+                    formatted_amount = SettingsService.format_currency(expense.amount)
+                    messages.success(
+                        request, 
+                        f'Quick expense "{expense.title}" ({formatted_amount}) created and marked as paid!'
+                    )
+                else:
+                    formatted_amount = SettingsService.format_currency(expense.amount)
+                    messages.success(
+                        request, 
+                        f'Quick expense "{expense.title}" ({formatted_amount}) created successfully!'
+                    )
+                
+        except Exception as e:
+            messages.error(request, f"Error creating expense: {str(e)}")
+    else:
+        # Form validation errors
+        error_messages = []
+        for field, errors in form.errors.items():
+            for error in errors:
+                error_messages.append(f"{field.title()}: {error}")
+        messages.error(request, f"Form errors: {'; '.join(error_messages)}")
+    
+    return redirect("dashboard", budget_id=budget_id)
