@@ -4,11 +4,19 @@
 
 ## Problem Statement
 
-Users cannot record partial payments for expenses, forcing them to either wait until they can pay the full amount or lose track of partial payments made. This creates inaccurate payment tracking and prevents users from properly managing cash flow and payment schedules. The current binary paid/unpaid system doesn't reflect real-world payment scenarios where users often make multiple payments toward a single expense.
+Users cannot record partial payments for expenses, forcing them to either wait until they can pay
+the full amount or lose track of partial payments made. This creates inaccurate payment tracking and
+prevents users from properly managing cash flow and payment schedules. The current binary
+paid/unpaid system doesn't reflect real-world payment scenarios where users often make multiple
+payments toward a single expense.
 
 ## Solution Overview
 
-Enable users to record multiple partial payments against a single expense item until the total payments equal the due amount. The system will track individual payment records, prevent overpayments by capping payment amounts at the remaining balance, and automatically mark expenses as fully paid when total payments reach the due amount. Users can continue using the existing payment workflow with enhanced capability to make partial payments.
+Enable users to record multiple partial payments against a single expense item until the total
+payments equal the due amount. The system will track individual payment records, prevent
+overpayments by capping payment amounts at the remaining balance, and automatically mark expenses as
+fully paid when total payments reach the due amount. Users can continue using the existing payment
+workflow with enhanced capability to make partial payments.
 
 ## User Stories
 

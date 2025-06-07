@@ -5,11 +5,18 @@
 
 ## Technical Approach
 
-Currently, ExpenseItem stores payment data directly on the model (payment_date, payment_method, payment_id, status) allowing only one payment per expense item. We'll create a new Payment model with a many-to-one relationship to ExpenseItem, enabling multiple payments per item. ExpenseItem will be refactored to calculate payment status dynamically from the sum of associated Payment amounts. The existing payment form workflow currently updates ExpenseItem fields directly and will be modified to create Payment entries while preserving the same user interface and validation to prevent overpayments.
+Currently, ExpenseItem stores payment data directly on the model (payment_date, payment_method,
+payment_id, status) allowing only one payment per expense item. We'll create a new Payment model
+with a many-to-one relationship to ExpenseItem, enabling multiple payments per item. ExpenseItem
+will be refactored to calculate payment status dynamically from the sum of associated Payment
+amounts. The existing payment form workflow currently updates ExpenseItem fields directly and will
+be modified to create Payment entries while preserving the same user interface and validation to
+prevent overpayments.
 
 ## Data Model
 
 New Payment model:
+
 ```python
 class Payment(models.Model):
     expense_item = models.ForeignKey(ExpenseItem, on_delete=models.CASCADE)
@@ -22,6 +29,7 @@ class Payment(models.Model):
 ```
 
 Updated ExpenseItem methods:
+
 ```python
 def get_total_paid(self):
     return self.payment_set.aggregate(Sum('amount'))['amount__sum'] or Decimal('0.00')
@@ -56,9 +64,12 @@ Error: ValidationError if amount exceeds remaining balance
 
 ## Technical Risks & Mitigations
 
-1. **Risk**: Migration complexity with existing payment data → **Mitigation**: Two-step migration preserving ExpenseItem payment fields temporarily
-2. **Risk**: Decimal precision issues in payment calculations → **Mitigation**: Use Decimal type throughout, avoid float arithmetic
-3. **Risk**: Performance impact from payment aggregation queries → **Mitigation**: Database-level SUM aggregation, add index on expense_item_id
+1. **Risk**: Migration complexity with existing payment data → **Mitigation**: Two-step migration
+   preserving ExpenseItem payment fields temporarily
+1. **Risk**: Decimal precision issues in payment calculations → **Mitigation**: Use Decimal type
+   throughout, avoid float arithmetic
+1. **Risk**: Performance impact from payment aggregation queries → **Mitigation**: Database-level
+   SUM aggregation, add index on expense_item_id
 
 ## Implementation Plan
 
