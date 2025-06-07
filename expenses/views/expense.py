@@ -3,7 +3,7 @@ from django.contrib import messages
 from datetime import date
 from collections import OrderedDict
 from typing import List
-from ..models import Expense, ExpenseItem, Month, Payee, Budget
+from ..models import Expense, ExpenseItem, BudgetMonth, Payee, Budget
 from ..forms import ExpenseForm
 
 
@@ -69,7 +69,7 @@ def expense_create(request, budget_id):
     else:
         # Set default start date to current month's first day for this budget
         most_recent_month = (
-            Month.objects.filter(budget=budget).order_by("-year", "-month").first()
+            BudgetMonth.objects.filter(budget=budget).order_by("-year", "-month").first()
         )
         if most_recent_month:
             default_date = date(most_recent_month.year, most_recent_month.month, 1)

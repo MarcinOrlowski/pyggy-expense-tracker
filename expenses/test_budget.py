@@ -5,7 +5,7 @@ from django.db.models import ProtectedError
 from django.utils import timezone
 from decimal import Decimal
 from datetime import date
-from expenses.models import Budget, Month, Expense, ExpenseItem, Payee, PaymentMethod, Payment
+from expenses.models import Budget, BudgetMonth, Expense, ExpenseItem, Payee, PaymentMethod, Payment
 from expenses.services import process_new_month
 
 
@@ -125,17 +125,17 @@ class BudgetMonthRelationshipTest(TestCase):
             start_date=date(2024, 1, 1),
             initial_amount=Decimal("1000.00"),
         )
-        self.month = Month.objects.create(year=2024, month=1, budget=self.budget)
+        self.month = BudgetMonth.objects.create(year=2024, month=1, budget=self.budget)
 
     def test_month_requires_budget(self):
         """Test that month must have a budget."""
         with self.assertRaises(IntegrityError):
-            Month.objects.create(year=2024, month=2, budget=None)  # type: ignore[misc]
+            BudgetMonth.objects.create(year=2024, month=2, budget=None)  # type: ignore[misc]
 
     def test_budget_month_relationship(self):
         """Test that budget can access its months."""
-        self.assertEqual(self.budget.month_set.count(), 1)
-        self.assertEqual(self.budget.month_set.first(), self.month)
+        self.assertEqual(self.budget.budgetmonth_set.count(), 1)
+        self.assertEqual(self.budget.budgetmonth_set.first(), self.month)
 
     def test_budget_deletion_cascades(self):
         """Test that budget deletion cascades to months."""
@@ -143,7 +143,7 @@ class BudgetMonthRelationshipTest(TestCase):
         self.budget.delete()
         # Budget and month should both be deleted
         self.assertEqual(Budget.objects.filter(id=self.budget.id).count(), 0)
-        self.assertEqual(Month.objects.filter(id=month_id).count(), 0)
+        self.assertEqual(BudgetMonth.objects.filter(id=month_id).count(), 0)
 
     def test_month_budget_access(self):
         """Test that month can access its budget."""
@@ -161,12 +161,12 @@ class BudgetRelationshipTest(TestCase):
             start_date=date(2024, 1, 1),
             initial_amount=Decimal("1000.00"),
         )
-        self.month1 = Month.objects.create(year=2024, month=1, budget=self.budget)
-        self.month2 = Month.objects.create(year=2024, month=2, budget=self.budget)
+        self.month1 = BudgetMonth.objects.create(year=2024, month=1, budget=self.budget)
+        self.month2 = BudgetMonth.objects.create(year=2024, month=2, budget=self.budget)
 
     def test_budget_has_months(self):
         """Test that budget can access its months."""
-        months = self.budget.month_set.all()
+        months = self.budget.budgetmonth_set.all()
         self.assertEqual(months.count(), 2)
         self.assertIn(self.month1, months)
         self.assertIn(self.month2, months)
@@ -190,12 +190,12 @@ class BudgetRelationshipTest(TestCase):
             start_date=date(2024, 1, 1),
             initial_amount=Decimal("500.00"),
         )
-        month3 = Month.objects.create(year=2024, month=3, budget=budget2)
+        month3 = BudgetMonth.objects.create(year=2024, month=3, budget=budget2)
 
         # Check that months are properly separated
-        self.assertEqual(self.budget.month_set.count(), 2)
-        self.assertEqual(budget2.month_set.count(), 1)
-        self.assertEqual(budget2.month_set.first(), month3)
+        self.assertEqual(self.budget.budgetmonth_set.count(), 2)
+        self.assertEqual(budget2.budgetmonth_set.count(), 1)
+        self.assertEqual(budget2.budgetmonth_set.first(), month3)
 
 
 class ProcessNewMonthWithBudgetTest(TestCase):
@@ -258,7 +258,7 @@ class ProcessNewMonthWithBudgetTest(TestCase):
         )
 
         # Create a month with budget
-        month = Month.objects.create(year=2024, month=1, budget=budget)
+        month = BudgetMonth.objects.create(year=2024, month=1, budget=budget)
 
         # Process the same month again
         processed_month = process_new_month(2024, 1, budget)
@@ -295,7 +295,7 @@ class BudgetBalanceTest(TestCase):
             start_date=date(2024, 1, 1),
             initial_amount=Decimal("1000.00"),
         )
-        self.month = Month.objects.create(year=2024, month=1, budget=self.budget)
+        self.month = BudgetMonth.objects.create(year=2024, month=1, budget=self.budget)
         self.payee = Payee.objects.create(name="Test Payee")
 
     def test_get_current_balance_no_expenses(self):
@@ -466,7 +466,7 @@ class BudgetBalanceTest(TestCase):
         self.assertEqual(balance, Decimal("0.00"))
 
         # Create month and expense for zero budget
-        zero_month = Month.objects.create(year=2024, month=2, budget=zero_budget)
+        zero_month = BudgetMonth.objects.create(year=2024, month=2, budget=zero_budget)
 
         expense = Expense.objects.create(
             title="Test Expense",
@@ -498,7 +498,7 @@ class BudgetBalanceTest(TestCase):
             initial_amount=Decimal("500.00"),
         )
 
-        other_month = Month.objects.create(year=2024, month=2, budget=other_budget)
+        other_month = BudgetMonth.objects.create(year=2024, month=2, budget=other_budget)
 
         # Create expense in original budget
         expense1 = Expense.objects.create(
@@ -573,7 +573,7 @@ class BudgetListViewTest(TestCase):
     def test_budget_list_view_with_expenses(self):
         """Test that budget list view calculates balance correctly with expenses."""
         # Create some test data
-        month = Month.objects.create(year=2024, month=1, budget=self.budget)
+        month = BudgetMonth.objects.create(year=2024, month=1, budget=self.budget)
         payee = Payee.objects.create(name="Test Payee")
 
         expense = Expense.objects.create(

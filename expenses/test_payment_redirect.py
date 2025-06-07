@@ -3,7 +3,7 @@ from django.urls import reverse
 from datetime import date
 from decimal import Decimal
 from django.utils import timezone
-from .models import Budget, Month, Expense, ExpenseItem, Payee, PaymentMethod, Payment
+from .models import Budget, BudgetMonth, Expense, ExpenseItem, Payee, PaymentMethod, Payment
 
 
 class PaymentRedirectTest(TestCase):
@@ -19,7 +19,7 @@ class PaymentRedirectTest(TestCase):
         )
 
         # Create month
-        self.month = Month.objects.create(
+        self.month = BudgetMonth.objects.create(
             budget=self.budget, year=date.today().year, month=date.today().month
         )
 

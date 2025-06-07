@@ -3,7 +3,7 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from typing import Optional, Dict, Union
 
 
-class Month(models.Model):
+class BudgetMonth(models.Model):
     budget = models.ForeignKey("Budget", on_delete=models.CASCADE)
     year = models.PositiveSmallIntegerField(
         validators=[MinValueValidator(2020), MaxValueValidator(2099)]
@@ -31,7 +31,7 @@ class Month(models.Model):
         return not self.has_paid_expenses()
 
     @classmethod
-    def get_most_recent(cls, budget=None) -> Optional["Month"]:
+    def get_most_recent(cls, budget=None) -> Optional["BudgetMonth"]:
         """Get the most recent month in the system or for a specific budget"""
         if budget:
             return cls.objects.filter(budget=budget).first()

@@ -1,7 +1,7 @@
 from django import forms
 from django.core.exceptions import ValidationError
 from datetime import date
-from ..models import Expense, Month, Payee
+from ..models import Expense, BudgetMonth, Payee
 from ..fields import SanitizedDecimalField
 
 
@@ -196,7 +196,7 @@ class ExpenseForm(forms.ModelForm):
                 if start_date and start_date != self.original_start_date:
                     # For one-time expenses, allow moving back to the most recent month
                     if self.instance.expense_type == self.instance.TYPE_ONE_TIME:
-                        most_recent_month = Month.get_most_recent(
+                        most_recent_month = BudgetMonth.get_most_recent(
                             budget=self.instance.budget
                         )
                         if most_recent_month:
@@ -258,7 +258,7 @@ class ExpenseForm(forms.ModelForm):
 
         # Validate start date is not earlier than currently active month for this budget
         if start_date and self.budget:
-            most_recent_month = Month.get_most_recent(budget=self.budget)
+            most_recent_month = BudgetMonth.get_most_recent(budget=self.budget)
             if most_recent_month:
                 # Get first day of the most recent month for this budget
                 current_month_start = date(

@@ -7,10 +7,10 @@ from datetime import date, datetime
 from typing import List, Optional, Union
 from babel.numbers import format_currency as babel_format_currency
 from babel.core import Locale
-from .models import Expense, ExpenseItem, Month, Settings, Budget
+from .models import Expense, ExpenseItem, BudgetMonth, Settings, Budget
 
 
-def process_new_month(year: int, month: int, budget: Budget) -> Month:
+def process_new_month(year: int, month: int, budget: Budget) -> BudgetMonth:
     """
     Create new month and generate expense items for active expenses.
 
@@ -20,7 +20,7 @@ def process_new_month(year: int, month: int, budget: Budget) -> Month:
         budget: The budget to create the month in
 
     Returns:
-        Month: Created or existing month instance
+        BudgetMonth: Created or existing month instance
 
     Raises:
         ValidationError: If month already processed
@@ -33,7 +33,7 @@ def process_new_month(year: int, month: int, budget: Budget) -> Month:
         raise ValueError("Month must be between 1 and 12")
 
     with transaction.atomic():
-        month_obj, created = Month.objects.get_or_create(
+        month_obj, created = BudgetMonth.objects.get_or_create(
             budget=budget, year=year, month=month
         )
 
@@ -49,7 +49,7 @@ def process_new_month(year: int, month: int, budget: Budget) -> Month:
         return month_obj
 
 
-def create_expense_items_for_month(expense: Expense, month: Month) -> List[ExpenseItem]:
+def create_expense_items_for_month(expense: Expense, month: BudgetMonth) -> List[ExpenseItem]:
     """
     Generate appropriate expense items for given expense and month.
 
@@ -174,7 +174,7 @@ def handle_new_expense(expense: Expense, budget: Budget) -> None:
         budget: The budget to use for finding the most recent month (should match expense.budget)
     """
     most_recent_month = (
-        Month.objects.filter(budget=expense.budget).order_by("-year", "-month").first()
+        BudgetMonth.objects.filter(budget=expense.budget).order_by("-year", "-month").first()
     )
     if not most_recent_month:
         return  # No months exist yet in this budget
