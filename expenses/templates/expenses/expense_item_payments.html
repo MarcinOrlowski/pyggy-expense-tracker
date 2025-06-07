@@ -26,42 +26,30 @@
         </div>
         <div class="card-body">
             <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th>Expense Title</th>
+                        {% if expense_item.expense.payee %}<th>Payee</th>{% endif %}
+                        <th>Month</th>
+                        <th>Due Date</th>
+                        <th>Total Amount</th>
+                        <th>Amount Paid</th>
+                        <th>Remaining Balance</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
                 <tbody>
                     <tr>
-                        <th style="width: 20%;">Expense Title</th>
                         <td>
                             <i class="fas {{ expense_item.expense.get_expense_type_icon }} {{ expense_item.expense.get_expense_type_icon_css_class }}" aria-label="{{ expense_item.expense.get_expense_type_display }}" title="{{ expense_item.expense.get_expense_type_display }}"></i>
                             {{ expense_item.expense.title }}
                         </td>
-                    </tr>
-                    {% if expense_item.expense.payee %}
-                    <tr>
-                        <th>Payee</th>
-                        <td>{{ expense_item.expense.payee.name }}</td>
-                    </tr>
-                    {% endif %}
-                    <tr>
-                        <th>Month</th>
+                        {% if expense_item.expense.payee %}<td>{{ expense_item.expense.payee.name }}</td>{% endif %}
                         <td>{{ expense_item.month }}</td>
-                    </tr>
-                    <tr>
-                        <th>Due Date</th>
                         <td>{{ expense_item.due_date|date:"Y-m-d" }}</td>
-                    </tr>
-                    <tr>
-                        <th>Total Amount</th>
                         <td>{{ expense_item.amount|amount_with_class }}</td>
-                    </tr>
-                    <tr>
-                        <th>Amount Paid</th>
                         <td>{{ expense_item.get_total_paid|amount_with_class }}</td>
-                    </tr>
-                    <tr>
-                        <th>Remaining Balance</th>
                         <td>{{ expense_item.get_remaining_amount|amount_with_class }}</td>
-                    </tr>
-                    <tr>
-                        <th>Status</th>
                         <td>
                             <span class="badge {% if expense_item.status == 'paid' %}bg-success{% else %}bg-warning{% endif %}">
                                 {{ expense_item.status|title }}
