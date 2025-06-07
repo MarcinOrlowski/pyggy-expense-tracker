@@ -31,7 +31,12 @@
                                 {{ item.days_until_due }}
                             {% endif %}
                         </td>
-                        <td class="amount-column">{{ item.get_display_amount|amount_with_class }}</td>
+                        <td class="amount-column">
+                            {{ item.get_display_amount|amount_with_class }}
+                            {% if item.get_payment_count > 0 and item.status == 'pending' %}
+                                <small class="text-muted">({{ item.get_payment_count }})</small>
+                            {% endif %}
+                        </td>
                         <td>
                             <i class="fas {{ item.expense.get_expense_type_icon }} {{ item.expense.get_expense_type_icon_css_class }}" aria-label="{{ item.expense.get_expense_type_display }}" title="{{ item.expense.get_expense_type_display }}"></i>
                             {{ item.expense.title }}

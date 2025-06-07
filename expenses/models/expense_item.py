@@ -118,6 +118,10 @@ class ExpenseItem(models.Model):
         else:
             return self.get_remaining_amount()
 
+    def get_payment_count(self) -> int:
+        """Get the number of payments made for this expense item"""
+        return self.payment_set.count()
+
     @property
     def status(self) -> str:
         """Calculate payment status based on total payments"""
