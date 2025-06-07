@@ -16,9 +16,18 @@ from .create_date import create_date
 # Create a new register for the combined library
 register = template.Library()
 
+# Dictionary lookup filter
+@register.filter
+def dict_lookup(dictionary, key):
+    """Get value from dictionary by key"""
+    if dictionary and isinstance(dictionary, dict) and key in dictionary:
+        return dictionary[key]
+    return None
+
 # Register all imported tags and filters
 register.filter('currency', currency)
 register.simple_tag(currency_symbol)
 register.simple_tag(format_amount)
 register.filter('amount_with_class', amount_with_class)
 register.simple_tag(create_date)
+register.filter('dict_lookup', dict_lookup)
