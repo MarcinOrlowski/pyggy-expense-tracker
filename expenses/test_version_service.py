@@ -73,20 +73,6 @@ class VersionServiceTest(TestCase):
         expected = f"v{service.get_next_milestone_version()}"
         self.assertEqual(next_version_string, expected)
 
-    def test_get_version_progress_display(self):
-        """Test that get_version_progress_display returns correct format."""
-        service = VersionService()
-        progress = service.get_version_progress_display()
-        
-        # Should return "Current: v1.1.0 → Next: v1.2" format (patch stripped from next)
-        expected = "Current: v1.1.0 → Next: v1.2"
-        self.assertEqual(progress, expected)
-        
-        # Should contain arrow character
-        self.assertIn('→', progress)
-        self.assertIn('Current:', progress)
-        self.assertIn('Next:', progress)
-
     def test_get_github_issues_url(self):
         """Test that get_github_issues_url generates correct milestone filter URL."""
         service = VersionService()
@@ -112,12 +98,10 @@ class VersionServiceTest(TestCase):
         # Should return dict with all required keys
         self.assertIsInstance(context, dict)
         self.assertIn('app_version', context)
-        self.assertIn('version_progress', context)
         self.assertIn('github_issues_url', context)
         
-        # Should contain correct values (patch stripped from next version)
+        # Should contain correct values
         self.assertEqual(context['app_version'], 'v1.1.0')
-        self.assertEqual(context['version_progress'], 'Current: v1.1.0 → Next: v1.2')
         self.assertIn('milestone%3A1.2', context['github_issues_url'])
 
     def test_template_renders_version_correctly(self):

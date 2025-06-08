@@ -35,6 +35,5 @@ def app_version_context(request):
     version_service = VersionService()
     return {
         "app_version": version_service.get_version_string(),
-        "version_progress": version_service.get_version_progress_display(),
         "github_issues_url": version_service.get_github_issues_url(),
     }
