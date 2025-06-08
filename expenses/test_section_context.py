@@ -75,7 +75,7 @@ class SectionContextProcessorTest(TestCase):
         class MockResolverMatch:
             def __init__(self):
                 self.url_name = 'unknown_url_name'
-        request.resolver_match = MockResolverMatch()
+        request.resolver_match = MockResolverMatch()  # type: ignore[assignment]
         result = section_context(request)
         self.assertEqual(result['section_class'], '')
     

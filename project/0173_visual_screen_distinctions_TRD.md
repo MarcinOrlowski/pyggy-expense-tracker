@@ -15,6 +15,7 @@ JavaScript modifications.
 ## Visual Design System
 
 ### Color Coding Scheme
+
 Using existing terminal theme colors with 20% opacity for subtle distinction:
 
 ```scss
@@ -30,6 +31,7 @@ Using existing terminal theme colors with 20% opacity for subtle distinction:
 ```
 
 ### Implementation Strategy
+
 1. **Body Class Assignment**: Use Django template context to add section-specific classes
 2. **Header Border Accents**: 3px colored top border on navigation header using section colors
 3. **Card Header Gradients**: Linear gradient (135deg) from base color to section color
@@ -38,12 +40,14 @@ Using existing terminal theme colors with 20% opacity for subtle distinction:
 ## Template Structure Changes
 
 ### Base Template Modifications
+
 ```html
 <!-- In expenses/templates/expenses/base.html -->
 <body class="{% if section_class %}{{ section_class }}{% endif %}">
 ```
 
 ### Context Processor Implementation
+
 ```python
 # In expenses/context_processors.py
 def section_context(request):
@@ -77,6 +81,7 @@ def section_context(request):
 ## SCSS Implementation
 
 ### Section-Specific Styling
+
 ```scss
 // In src/scss/_components.scss
 
