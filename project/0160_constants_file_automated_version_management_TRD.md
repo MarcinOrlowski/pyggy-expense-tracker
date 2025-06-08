@@ -5,7 +5,11 @@
 
 ## Technical Approach
 
-We'll implement a `VersionService` class in `expenses/services/version_service.py` following Django's service layer pattern. The service will provide version information through `get_version()` and `get_full_version_string()` methods, initially returning hardcoded values but designed for future automation. A Django context processor will make version data available in all templates via an `app_version` variable, replacing the hardcoded "v1.0.0" in the footer template.
+We'll implement a `VersionService` class in `expenses/services/version_service.py` following
+Django's service layer pattern. The service will provide version information through `get_version()`
+and `get_full_version_string()` methods, initially returning hardcoded values but designed for
+future automation. A Django context processor will make version data available in all templates via
+an `app_version` variable, replacing the hardcoded "v1.0.0" in the footer template.
 
 ## Data Model
 
@@ -49,7 +53,7 @@ TEMPLATES = [
 
 ## File Structure
 
-```
+```text
 expenses/
 ├── services/
 │   ├── __init__.py
@@ -86,8 +90,10 @@ pyggy/
 
 ## Technical Risks & Mitigations
 
-1. **Risk**: Context processor adds overhead to every template render → **Mitigation**: Lightweight service with no I/O operations, cached result if needed
-2. **Risk**: Future automation might require file I/O on every request → **Mitigation**: Service design supports caching strategies and lazy loading
+1. **Risk**: Context processor adds overhead to every template render → **Mitigation**: Lightweight
+   service with no I/O operations, cached result if needed
+1. **Risk**: Future automation might require file I/O on every request → **Mitigation**: Service
+   design supports caching strategies and lazy loading
 
 ## Implementation Plan
 

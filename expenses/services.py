@@ -138,7 +138,7 @@ def check_expense_completion(expense: Expense) -> bool:
     - recurring_with_end: Manual completion only
     """
     from .models import Payment
-    
+
     if expense.closed_at:
         return True  # Already completed
 
@@ -272,7 +272,7 @@ class SettingsService:
 class VersionService:
     """
     Service for managing application version information.
-    
+
     Currently returns hardcoded version but designed for future
     automation options:
     - Parse version from CHANGES.md current development section
@@ -281,11 +281,11 @@ class VersionService:
     - Environment variable override (VERSION_OVERRIDE)
     - CI/CD integration for automated bumping
     """
-    
+
     def get_version(self) -> str:
         """
         Returns semantic version string (e.g., '1.1.0').
-        
+
         Future implementations could:
         - Check environment variable first
         - Parse CHANGES.md for current version
@@ -293,7 +293,7 @@ class VersionService:
         - Default to hardcoded version
         """
         return "1.1.0"
-    
+
     def get_version_string(self) -> str:
         """Returns formatted version string (e.g., 'v1.1.0')"""
         return f"v{self.get_version()}"

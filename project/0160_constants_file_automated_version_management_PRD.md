@@ -4,11 +4,18 @@
 
 ## Problem Statement
 
-The application currently has hardcoded version information scattered across templates, creating version synchronization issues. The footer template displays "v1.0.0" while CHANGES.md indicates the current development version is "v1.1", leading to inconsistent version display. Manual version updates are error-prone and require remembering to update multiple locations.
+The application currently has hardcoded version information scattered across templates, creating
+version synchronization issues. The footer template displays "v1.0.0" while CHANGES.md indicates the
+current development version is "v1.1", leading to inconsistent version display. Manual version
+updates are error-prone and require remembering to update multiple locations.
 
 ## Solution Overview
 
-Create a centralized version service that provides application version information through a clean API that can be easily extended later. Initially returns hardcoded version but designed for future automation (git tags, file parsing, environment variables). This service will be accessible throughout the application via Django context processors, ensuring consistent version display while maintaining flexibility for future enhancements.
+Create a centralized version service that provides application version information through a clean
+API that can be easily extended later. Initially returns hardcoded version but designed for future
+automation (git tags, file parsing, environment variables). This service will be accessible
+throughout the application via Django context processors, ensuring consistent version display while
+maintaining flexibility for future enhancements.
 
 ## User Stories
 
