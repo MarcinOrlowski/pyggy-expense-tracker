@@ -38,8 +38,6 @@ class BudgetForm(forms.ModelForm):
         }
 
     def __init__(self, *args, **kwargs):
-        instance = kwargs.get("instance")
-        self.instance_pk = instance.pk if instance and hasattr(instance, "pk") else None
         super().__init__(*args, **kwargs)
 
         # Disable start_date field if budget has existing months
@@ -51,11 +49,10 @@ class BudgetForm(forms.ModelForm):
 
     def clean_start_date(self):
         start_date = self.cleaned_data.get("start_date")
-        if start_date and start_date < date.today():
-            # Allow past dates only if this budget has no months
-            if self.instance_pk:
-                if self.instance.budgetmonth_set.exists():
-                    raise ValidationError(
-                        "Start date cannot be in the past when budget has existing months"
-                    )
+        # For existing budgets with months, start_date cannot be changed at all
+        if self.instance and self.instance.pk:
+            if start_date != self.instance.start_date and self.instance.budgetmonth_set.exists():
+                raise ValidationError(
+                    "Start date cannot be changed when budget has existing months"
+                )
         return start_date

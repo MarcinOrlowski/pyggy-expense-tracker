@@ -19,13 +19,13 @@ class Budget(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def clean(self) -> None:
-        if self.start_date and self.start_date < date.today():
-            # Allow past dates only if this budget has no months
-            if hasattr(self, "pk") and self.pk:
-                if self.budgetmonth_set.exists():
-                    raise ValidationError(
-                        "Start date cannot be in the past when budget has existing months"
-                    )
+        # For existing budgets with months, start_date cannot be changed at all
+        if hasattr(self, "pk") and self.pk and not self._state.adding:
+            original_budget = Budget.objects.get(pk=self.pk)
+            if self.start_date != original_budget.start_date and self.budgetmonth_set.exists():
+                raise ValidationError(
+                    "Start date cannot be changed when budget has existing months"
+                )
 
     def can_be_deleted(self) -> bool:
         """Check if this budget can be deleted (no associated months)"""
