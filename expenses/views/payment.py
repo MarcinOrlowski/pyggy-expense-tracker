@@ -102,3 +102,27 @@ def expense_item_payments(request, budget_id, pk):
         "title": f"Payments: {expense_item.expense.title}",
     }
     return render(request, "expenses/expense_item_payments.html", context)
+
+
+def expense_item_delete(request, budget_id, pk):
+    """Delete expense item and its parent one-time expense if allowed"""
+    budget = get_object_or_404(Budget, id=budget_id)
+    expense_item = get_object_or_404(ExpenseItem, pk=pk, month__budget=budget)
+    
+    # Check if item can be deleted
+    if not expense_item.can_be_deleted():
+        messages.error(request, "Cannot delete this expense item. It must be a one-time expense from the current month with no payments recorded.")
+        return redirect("dashboard", budget_id=budget_id)
+    
+    if request.method == "POST":
+        expense_title = expense_item.expense.title
+        # Delete the parent one-time expense (which will cascade delete the expense item)
+        expense_item.expense.delete()
+        messages.success(request, f'Expense "{expense_title}" and its item have been deleted successfully.')
+        return redirect("dashboard", budget_id=budget_id)
+    
+    context = {
+        "budget": budget,
+        "expense_item": expense_item,
+    }
+    return render(request, "expenses/expense_item_confirm_delete.html", context)

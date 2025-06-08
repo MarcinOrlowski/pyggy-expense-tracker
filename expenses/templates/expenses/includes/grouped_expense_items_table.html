@@ -69,6 +69,9 @@
                                 {% if item.expense.can_be_edited %}
                                     <a href="{% url 'expense_item_edit' budget.id item.pk %}" class="btn btn-sm" title="Edit Item" aria-label="Edit Item"><i class="fas fa-pencil"></i></a>
                                 {% endif %}
+                                {% if item.can_be_deleted %}
+                                    <a href="{% url 'expense_item_delete' budget.id item.pk %}" class="btn btn-danger btn-sm" title="Delete Item" aria-label="Delete Item"><i class="fas fa-trash-can"></i></a>
+                                {% endif %}
                             </td>
                         </tr>
                         {% endfor %}
