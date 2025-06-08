@@ -31,5 +31,10 @@ def testing_context(request):
 
 
 def app_version_context(request):
-    """Make app_version available in all templates."""
-    return {"app_version": VersionService().get_version_string()}
+    """Make app_version and milestone info available in all templates."""
+    version_service = VersionService()
+    return {
+        "app_version": version_service.get_version_string(),
+        "version_progress": version_service.get_version_progress_display(),
+        "github_issues_url": version_service.get_github_issues_url(),
+    }
