@@ -302,10 +302,11 @@ class VersionService:
         """
         Calculate next milestone version by incrementing minor version.
         
-        Logic: current + 0.1 (e.g., 1.1.0 -> 1.2.0)
+        Logic: Strip patch version and increment minor (e.g., 1.1.0 -> 1.2)
+        This matches GitHub milestone naming conventions (major.minor format).
         
         Returns:
-            Next milestone version string (e.g., '1.2.0')
+            Next milestone version string (e.g., '1.2')
         """
         current = self.get_version()
         parts = current.split('.')
@@ -314,18 +315,18 @@ class VersionService:
             major = int(parts[0])
             minor = int(parts[1])
             next_minor = minor + 1
-            return f"{major}.{next_minor}.0"
+            return f"{major}.{next_minor}"
         
         # Fallback for malformed version
         return current
 
     def get_next_milestone_version_string(self) -> str:
-        """Returns formatted next milestone version string (e.g., 'v1.2.0')"""
+        """Returns formatted next milestone version string (e.g., 'v1.2')"""
         return f"v{self.get_next_milestone_version()}"
 
     def get_version_progress_display(self) -> str:
         """
-        Returns version progress display in format 'Current: v1.1.0 → Next: v1.2.0'
+        Returns version progress display in format 'Current: v1.1.0 → Next: v1.2'
         """
         current = self.get_version_string()
         next_milestone = self.get_next_milestone_version_string()
