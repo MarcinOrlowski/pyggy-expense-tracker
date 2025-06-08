@@ -40,19 +40,85 @@ class VersionServiceTest(TestCase):
         expected = f"v{service.get_version()}"
         self.assertEqual(version_string, expected)
 
-    def test_context_processor_adds_app_version(self):
-        """Test that app_version_context processor adds version to template context."""
+    def test_get_next_milestone_version(self):
+        """Test that get_next_milestone_version increments minor version correctly."""
+        service = VersionService()
+        next_version = service.get_next_milestone_version()
+        
+        # Should increment minor version from 1.1.0 to 1.2.0
+        self.assertEqual(next_version, "1.2.0")
+        
+        # Should be a string
+        self.assertIsInstance(next_version, str)
+        
+        # Should follow semantic versioning pattern
+        parts = next_version.split('.')
+        self.assertEqual(len(parts), 3)
+        self.assertEqual(parts[0], "1")  # major unchanged
+        self.assertEqual(parts[1], "2")  # minor incremented
+        self.assertEqual(parts[2], "0")  # patch reset to 0
+
+    def test_get_next_milestone_version_string(self):
+        """Test that get_next_milestone_version_string returns formatted next version."""
+        service = VersionService()
+        next_version_string = service.get_next_milestone_version_string()
+        
+        # Should return formatted next version with 'v' prefix
+        self.assertEqual(next_version_string, "v1.2.0")
+        
+        # Should start with 'v'
+        self.assertTrue(next_version_string.startswith('v'))
+        
+        # Should be formatted version of get_next_milestone_version()
+        expected = f"v{service.get_next_milestone_version()}"
+        self.assertEqual(next_version_string, expected)
+
+    def test_get_version_progress_display(self):
+        """Test that get_version_progress_display returns correct format."""
+        service = VersionService()
+        progress = service.get_version_progress_display()
+        
+        # Should return "Current: v1.1.0 → Next: v1.2.0" format
+        expected = "Current: v1.1.0 → Next: v1.2.0"
+        self.assertEqual(progress, expected)
+        
+        # Should contain arrow character
+        self.assertIn('→', progress)
+        self.assertIn('Current:', progress)
+        self.assertIn('Next:', progress)
+
+    def test_get_github_issues_url(self):
+        """Test that get_github_issues_url generates correct milestone filter URL."""
+        service = VersionService()
+        url = service.get_github_issues_url()
+        
+        # Should contain base GitHub issues URL
+        self.assertIn('https://github.com/MarcinOrlowski/pyggy-expense-tracker/issues', url)
+        
+        # Should contain milestone filter for next version (1.2.0)
+        self.assertIn('milestone%3A1.2.0', url)
+        
+        # Should contain issue query parameter
+        self.assertIn('?q=', url)
+        self.assertIn('is%3Aissue', url)
+
+    def test_context_processor_adds_all_version_info(self):
+        """Test that app_version_context processor adds all version info to template context."""
         factory = RequestFactory()
         request = factory.get('/')
         
         context = app_version_context(request)
         
-        # Should return dict with app_version key
+        # Should return dict with all required keys
         self.assertIsInstance(context, dict)
         self.assertIn('app_version', context)
+        self.assertIn('version_progress', context)
+        self.assertIn('github_issues_url', context)
         
-        # Should contain formatted version string
+        # Should contain correct values
         self.assertEqual(context['app_version'], 'v1.1.0')
+        self.assertEqual(context['version_progress'], 'Current: v1.1.0 → Next: v1.2.0')
+        self.assertIn('milestone%3A1.2.0', context['github_issues_url'])
 
     def test_template_renders_version_correctly(self):
         """Test that version is accessible in templates via context processor."""

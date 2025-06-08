@@ -297,3 +297,48 @@ class VersionService:
     def get_version_string(self) -> str:
         """Returns formatted version string (e.g., 'v1.1.0')"""
         return f"v{self.get_version()}"
+
+    def get_next_milestone_version(self) -> str:
+        """
+        Calculate next milestone version by incrementing minor version.
+        
+        Logic: current + 0.1 (e.g., 1.1.0 -> 1.2.0)
+        
+        Returns:
+            Next milestone version string (e.g., '1.2.0')
+        """
+        current = self.get_version()
+        parts = current.split('.')
+        
+        if len(parts) >= 2:
+            major = int(parts[0])
+            minor = int(parts[1])
+            next_minor = minor + 1
+            return f"{major}.{next_minor}.0"
+        
+        # Fallback for malformed version
+        return current
+
+    def get_next_milestone_version_string(self) -> str:
+        """Returns formatted next milestone version string (e.g., 'v1.2.0')"""
+        return f"v{self.get_next_milestone_version()}"
+
+    def get_version_progress_display(self) -> str:
+        """
+        Returns version progress display in format 'Current: v1.1.0 → Next: v1.2.0'
+        """
+        current = self.get_version_string()
+        next_milestone = self.get_next_milestone_version_string()
+        return f"Current: {current} → Next: {next_milestone}"
+
+    def get_github_issues_url(self) -> str:
+        """
+        Generate GitHub issues URL filtered by next milestone.
+        
+        Returns:
+            GitHub issues URL with milestone filter for next version
+        """
+        next_version = self.get_next_milestone_version()
+        base_url = "https://github.com/MarcinOrlowski/pyggy-expense-tracker/issues"
+        milestone_filter = f"is%3Aissue+milestone%3A{next_version}"
+        return f"{base_url}?q={milestone_filter}"
