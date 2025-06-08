@@ -6,6 +6,7 @@
 
 ## @dev
 
+- [#0181] Created universal development helper script (dev.sh) unifying all development tasks with auto-detection of containerized vs local workflows
 - [#0169] Enhanced amount display for paid expense items in dashboard to show full due amount with strikethrough formatting for better historical context
 - [#0175] Improved budget currency editing with preselected currency dropdown (PLN, EUR, USD) replacing case-sensitive text input to prevent validation errors
 - [#0176] Fixed budget date validation preventing form submission when start date unchanged during editing
