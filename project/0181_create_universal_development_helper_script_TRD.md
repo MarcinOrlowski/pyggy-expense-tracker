@@ -46,9 +46,12 @@ dev.sh
 
 ## Technical Risks & Mitigations
 
-1. **Risk**: Docker commands fail if daemon not running → **Mitigation**: Docker availability check with clear error messages
-2. **Risk**: Virtual environment activation fails → **Mitigation**: Explicit venv validation and setup instructions
-3. **Risk**: Script becomes complex and hard to maintain → **Mitigation**: Modular function design with clear separation of concerns
+1. **Risk**: Docker commands fail if daemon not running → **Mitigation**: Docker availability check
+   with clear error messages
+1. **Risk**: Virtual environment activation fails → **Mitigation**: Explicit venv validation and
+   setup instructions
+1. **Risk**: Script becomes complex and hard to maintain → **Mitigation**: Modular function design
+   with clear separation of concerns
 
 ## Implementation Plan
 
@@ -65,5 +68,6 @@ Dependencies: None (uses existing Docker, Python, and bash installations)
 
 - **Feature flag**: Not applicable (script-based tool)
 - **Key metrics**: Script execution success rate, command completion time
-- **Rollback**: Keep existing scattered scripts for backward compatibility; developers can continue using old scripts if needed
+- **Rollback**: Keep existing scattered scripts for backward compatibility; developers can continue
+  using old scripts if needed
 - **Validation**: Test all commands in both container and local modes before deployment
