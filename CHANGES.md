@@ -6,6 +6,7 @@
 
 ## @dev
 
+- [#0159] Implemented expense item deletion functionality allowing removal of unpaid one-time expense items from current month with automatic parent expense cleanup
 - [#0161] Implemented dynamic GitHub issues filtering by milestone with version progress display showing "Current: v1.1.0 → Next: v1.2.0" format
 - [#0163] Fixed mypy warning about undefined lgz74f240 variable by escaping dollar signs in Docker Compose SECRET_KEY
 - [#0160] Implemented centralized version management system with VersionService class, enabling consistent version display and future automation options

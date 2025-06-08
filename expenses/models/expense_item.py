@@ -121,6 +121,32 @@ class ExpenseItem(models.Model):
         """Check if expense item is fully paid"""
         return self.get_total_paid() >= self.amount
 
+    def can_be_deleted(self) -> bool:
+        """Check if expense item can be deleted.
+        
+        Returns True if:
+        - No payment records exist (get_payment_count() == 0)
+        - Expense is one-time type
+        - Item belongs to current month
+        """
+        # Import here to avoid circular imports
+        from .month import BudgetMonth
+        
+        # Must have no payment records
+        if self.get_payment_count() > 0:
+            return False
+            
+        # Must be a one-time expense
+        if self.expense.expense_type != self.expense.TYPE_ONE_TIME:
+            return False
+            
+        # Must be from current (most recent) month
+        current_month = BudgetMonth.get_most_recent(budget=self.expense.budget)
+        if not current_month or self.month != current_month:
+            return False
+            
+        return True
+
     def __str__(self) -> str:
         return f"{self.expense.title} - {self.month} - {self.status}"
 
