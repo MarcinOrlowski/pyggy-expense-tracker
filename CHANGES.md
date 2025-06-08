@@ -6,6 +6,7 @@
 
 ## @dev
 
+- [#0163] Fixed mypy warning about undefined lgz74f240 variable by escaping dollar signs in Docker Compose SECRET_KEY
 - [#0113] Enforced minimum 2 total installments validation for split payments to ensure split payment concept integrity
 - [#0149] Added quick expense form to dashboard for streamlined one-time expense creation with optional immediate payment marking
 - [#0151] Refactored Month entity to BudgetMonth for better semantic clarity and improved code self-documentation
