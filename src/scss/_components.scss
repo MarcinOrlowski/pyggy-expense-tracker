@@ -848,6 +848,7 @@ body[class*="section-"]::before {
     background-repeat: repeat;
     background-size: 120px 120px;
     background-position: 20px 20px; // Offset to create more natural spacing
+    transform: rotate(15deg);
 }
 
 .section-budgets::before {
