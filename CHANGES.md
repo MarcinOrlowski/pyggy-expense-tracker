@@ -6,6 +6,7 @@
 
 ## @dev
 
+- [#0179] Fixed incorrect calculations in month details page summary panel showing proper total, paid, and pending amounts
 - [#0181] Created universal development helper script (dev.sh) unifying all development tasks with auto-detection of containerized vs local workflows
 - [#0169] Enhanced amount display for paid expense items in dashboard to show full due amount with strikethrough formatting for better historical context
 - [#0175] Improved budget currency editing with preselected currency dropdown (PLN, EUR, USD) replacing case-sensitive text input to prevent validation errors
