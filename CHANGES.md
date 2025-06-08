@@ -6,6 +6,7 @@
 
 ## @dev
 
+- [#0171] Simplified footer version display by removing debug progress text and showing only current version
 - [#0167] Fixed version-to-milestone mapping to strip patch version and use GitHub-standard format (1.2.3 → 1.2 for milestone filtering)
 - [#0159] Implemented expense item deletion functionality allowing removal of unpaid one-time expense items from current month with automatic parent expense cleanup
 - [#0161] Implemented dynamic GitHub issues filtering by milestone with version progress display

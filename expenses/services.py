@@ -324,14 +324,6 @@ class VersionService:
         """Returns formatted next milestone version string (e.g., 'v1.2')"""
         return f"v{self.get_next_milestone_version()}"
 
-    def get_version_progress_display(self) -> str:
-        """
-        Returns version progress display in format 'Current: v1.1.0 → Next: v1.2'
-        """
-        current = self.get_version_string()
-        next_milestone = self.get_next_milestone_version_string()
-        return f"Current: {current} → Next: {next_milestone}"
-
     def get_github_issues_url(self) -> str:
         """
         Generate GitHub issues URL filtered by next milestone.
