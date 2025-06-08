@@ -1,6 +1,7 @@
 import os
 import sys
 from .models import Budget
+from .services import VersionService
 
 
 def current_budget(request):
@@ -27,3 +28,8 @@ def testing_context(request):
         "test" in sys.argv or "pytest" in sys.modules or "GITHUB_ACTIONS" in os.environ
     )
     return {"testing": testing}
+
+
+def app_version_context(request):
+    """Make app_version available in all templates."""
+    return {"app_version": VersionService().get_version_string()}

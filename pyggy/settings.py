@@ -68,6 +68,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'expenses.context_processors.current_budget',
                 'expenses.context_processors.testing_context',
+                'expenses.context_processors.app_version_context',
             ],
         },
     },
