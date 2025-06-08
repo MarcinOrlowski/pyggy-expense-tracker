@@ -718,6 +718,14 @@ footer {
     font-weight: 500;
 }
 
+.amount-paid-strikethrough {
+    color: var(--text-muted);
+    font-weight: 500;
+    text-decoration: line-through;
+    text-decoration-color: var(--color-red);
+    text-decoration-thickness: 2px;
+}
+
 // Expense Type Icon Colors
 .expense-type-icon-endless-recurring {
     color: var(--color-blue) !important;
