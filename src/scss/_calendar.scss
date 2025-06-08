@@ -98,13 +98,13 @@
     right: 3px;
     width: 6px;
     height: 6px;
-    background: var(--color-green);  // Future due = green
+    background: var(--color-success);  // Future due = green
     border-radius: 50%;
 }
 
 // Due today shows orange/yellow
 .calendar-day--has-due.calendar-day--today::before {
-    background: var(--color-orange);
+    background: var(--color-accent);
 }
 
 .calendar-day--has-due.calendar-day--today {
@@ -150,6 +150,6 @@
 
 // Legend
 .calendar-indicator-legend {
-    color: var(--color-orange);
+    color: var(--color-accent);
     font-size: 0.75rem;
 }
