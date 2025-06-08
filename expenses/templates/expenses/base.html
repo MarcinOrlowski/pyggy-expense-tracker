@@ -26,7 +26,7 @@
         </style>
     {% endif %}
 </head>
-<body>
+<body{% if section_class %} class="{{ section_class }}"{% endif %}>
     <header>
         <div class="container">
             <nav>
@@ -36,16 +36,16 @@
                 </a>
                 <div class="nav-actions">
                   {% if current_budget_id %}
-                    <a href="{% url 'dashboard' current_budget_id %}" class="btn btn-icon" title="View Dashboard" aria-label="Go to Dashboard"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a>
-                    <a href="{% url 'month_list' current_budget_id %}" class="btn btn-icon" title="View Months" aria-label="View Processed Months"><i class="fas fa-calendar-alt"></i><span>Months</span></a>
-                    <a href="{% url 'expense_list' current_budget_id %}" class="btn btn-icon" title="View Expenses" aria-label="View Expenses List"><i class="fas fa-receipt"></i><span>Expenses</span></a>
-                    <a href="{% url 'expense_create' current_budget_id %}" class="btn btn-icon" title="Add New Expense" aria-label="Create New Expense"><i class="fas fa-plus"></i><span>Add Expense</span></a>
+                    <a href="{% url 'dashboard' current_budget_id %}" class="btn btn-icon{% if section_class == 'section-dashboard' %} nav-active{% endif %}" title="View Dashboard" aria-label="Go to Dashboard"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a>
+                    <a href="{% url 'month_list' current_budget_id %}" class="btn btn-icon{% if section_class == 'section-months' %} nav-active{% endif %}" title="View Months" aria-label="View Processed Months"><i class="fas fa-calendar-alt"></i><span>Months</span></a>
+                    <a href="{% url 'expense_list' current_budget_id %}" class="btn btn-icon{% if section_class == 'section-expenses' %} nav-active{% endif %}" title="View Expenses" aria-label="View Expenses List"><i class="fas fa-receipt"></i><span>Expenses</span></a>
+                    <a href="{% url 'expense_create' current_budget_id %}" class="btn btn-icon{% if section_class == 'section-expenses' %} nav-active{% endif %}" title="Add New Expense" aria-label="Create New Expense"><i class="fas fa-plus"></i><span>Add Expense</span></a>
                   {% else %}
-                     <a href="{% url 'budget_list' %}" class="btn btn-icon" title="View Budgets" aria-label="View Budgets List"><i class="fas fa-wallet"></i><span>Budgets</span></a>
-                     <a href="{% url 'payee_list' %}" class="btn btn-icon" title="View Payees" aria-label="View Payees List"><i class="fas fa-users"></i><span>Payees</span></a>
-                     <a href="{% url 'payment_method_list' %}" class="btn btn-icon" title="View Payment Methods" aria-label="View Payment Methods List"><i class="fas fa-credit-card"></i><span>Methods</span></a>
+                     <a href="{% url 'budget_list' %}" class="btn btn-icon{% if section_class == 'section-budgets' %} nav-active{% endif %}" title="View Budgets" aria-label="View Budgets List"><i class="fas fa-wallet"></i><span>Budgets</span></a>
+                     <a href="{% url 'payee_list' %}" class="btn btn-icon{% if section_class == 'section-payees' %} nav-active{% endif %}" title="View Payees" aria-label="View Payees List"><i class="fas fa-users"></i><span>Payees</span></a>
+                     <a href="{% url 'payment_method_list' %}" class="btn btn-icon{% if section_class == 'section-payment-methods' %} nav-active{% endif %}" title="View Payment Methods" aria-label="View Payment Methods List"><i class="fas fa-credit-card"></i><span>Methods</span></a>
                   {% endif %}
-                  <a href="{% url 'help_index' %}" class="btn btn-icon" title="Help & Documentation" aria-label="View Help Documentation"><i class="fas fa-question-circle"></i><span>Help</span></a>
+                  <a href="{% url 'help_index' %}" class="btn btn-icon{% if section_class == 'section-help' %} nav-active{% endif %}" title="Help & Documentation" aria-label="View Help Documentation"><i class="fas fa-question-circle"></i><span>Help</span></a>
                 </div>
             </nav>
         </div>

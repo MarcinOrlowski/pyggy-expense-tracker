@@ -11,11 +11,12 @@ management, expense tracking, and payment screens within the budget-scoped conte
 
 ## Solution Overview
 
-Implement visual distinction system using color coding, subtle background elements, and enhanced
-navigation indicators to help users immediately recognize their current location within the
-application. The solution will focus on the existing dark terminal theme while adding contextual
-visual cues that maintain the application's cohesive design. Success means users can identify their
-current screen context within 1-2 seconds without reading page content.
+Implement visual distinction system using color coding with 20% opacity overlays, gradient card
+headers, and enhanced navigation indicators to help users immediately recognize their current
+location within the application. The solution will focus on the existing dark terminal theme while
+adding contextual visual cues through header border accents and subtle background gradients that
+maintain the application's cohesive design. Success means users can identify their current screen
+context within 1-2 seconds without reading page content.
 
 ## User Stories
 
