@@ -1,6 +1,7 @@
 from django.test import TestCase, RequestFactory
 from django.template import Context, Template
 from django.template.context_processors import request as request_processor
+from unittest.mock import patch
 from expenses.services import VersionService
 from expenses.context_processors import app_version_context
 
@@ -157,31 +158,25 @@ class VersionServiceTest(TestCase):
         """Test that milestone version calculation handles various version formats."""
         service = VersionService()
         
-        # Test with different version formats by temporarily mocking get_version
-        original_get_version = service.get_version
-        
         # Test case 1: Version with patch (normal case)
-        service.get_version = lambda: "2.3.5"
-        self.assertEqual(service.get_next_milestone_version(), "2.4")
+        with patch.object(service, 'get_version', return_value="2.3.5"):
+            self.assertEqual(service.get_next_milestone_version(), "2.4")
         
         # Test case 2: Version at 9 minor (should increment to 10)
-        service.get_version = lambda: "1.9.2"
-        self.assertEqual(service.get_next_milestone_version(), "1.10")
+        with patch.object(service, 'get_version', return_value="1.9.2"):
+            self.assertEqual(service.get_next_milestone_version(), "1.10")
         
         # Test case 3: Version without patch (should still work)
-        service.get_version = lambda: "3.1"
-        self.assertEqual(service.get_next_milestone_version(), "3.2")
+        with patch.object(service, 'get_version', return_value="3.1"):
+            self.assertEqual(service.get_next_milestone_version(), "3.2")
         
         # Test case 4: Malformed version (fallback behavior)
-        service.get_version = lambda: "invalid"
-        self.assertEqual(service.get_next_milestone_version(), "invalid")
+        with patch.object(service, 'get_version', return_value="invalid"):
+            self.assertEqual(service.get_next_milestone_version(), "invalid")
         
         # Test case 5: Single number version (fallback behavior)
-        service.get_version = lambda: "5"
-        self.assertEqual(service.get_next_milestone_version(), "5")
-        
-        # Restore original method
-        service.get_version = original_get_version
+        with patch.object(service, 'get_version', return_value="5"):
+            self.assertEqual(service.get_next_milestone_version(), "5")
 
     def test_github_url_milestone_format_matches_expectations(self):
         """Test that GitHub URL uses correct milestone format (major.minor without patch)."""
