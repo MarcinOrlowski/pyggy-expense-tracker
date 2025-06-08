@@ -834,6 +834,60 @@ footer {
     border-top: 3px solid var(--section-help);
 }
 
+// Section background icons - subtle watermarks
+.section-budgets::before,
+.section-dashboard::before,
+.section-expenses::before,
+.section-months::before,
+.section-payees::before,
+.section-payments::before,
+.section-payment-methods::before,
+.section-help::before {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    font-size: 15vw; // Responsive size based on viewport
+    opacity: 0.1; // Temporarily more visible for debugging
+    z-index: -1;
+    pointer-events: none;
+    color: var(--color-purple);
+}
+
+.section-budgets::before {
+    content: "\f555"; // fa-wallet icon
+}
+
+.section-dashboard::before {
+    content: "\f3fd"; // fa-tachometer-alt icon
+}
+
+.section-expenses::before {
+    content: "\f543"; // fa-receipt icon
+}
+
+.section-months::before {
+    content: "\f073"; // fa-calendar-alt icon
+}
+
+.section-payees::before {
+    content: "\f0c0"; // fa-users icon
+}
+
+.section-payments::before {
+    content: "\f53d"; // fa-money-check-alt icon
+}
+
+.section-payment-methods::before {
+    content: "\f09d"; // fa-credit-card icon
+}
+
+.section-help::before {
+    content: "\f059"; // fa-question-circle icon
+}
+
 // Card header highlights with subtle section colors
 .section-budgets .card-header {
     background: linear-gradient(135deg, var(--bg-secondary), var(--section-budgets));
