@@ -25,6 +25,16 @@
     --color-blue-muted: #8be9fd33;
     --color-purple-muted: #bd93f933;
     
+    // Section-specific color variables (20% opacity for subtle distinction)
+    --section-budgets: rgba(189, 147, 249, 0.2);     // Purple - primary brand color
+    --section-dashboard: rgba(139, 233, 253, 0.2);   // Cyan - active/current state
+    --section-expenses: rgba(255, 184, 108, 0.2);    // Orange - transaction focus
+    --section-months: rgba(80, 250, 123, 0.2);       // Green - success/completion
+    --section-payees: rgba(241, 250, 140, 0.2);      // Yellow - contacts/people
+    --section-payments: rgba(255, 85, 85, 0.2);      // Red - payment/money flow
+    --section-payment-methods: rgba(255, 85, 85, 0.15); // Lighter red for payment methods
+    --section-help: rgba(189, 147, 249, 0.15);       // Lighter purple for help
+    
     // Calendar-specific colors
     --calendar-today-bg: #5849a6;  // Darker purple for today
     --calendar-today-hover: #473580;  // Even darker on hover

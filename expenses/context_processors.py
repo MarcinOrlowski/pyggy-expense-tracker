@@ -37,3 +37,31 @@ def app_version_context(request):
         "app_version": version_service.get_version_string(),
         "github_issues_url": version_service.get_github_issues_url(),
     }
+
+
+def section_context(request):
+    """Add section-specific CSS class based on URL name patterns."""
+    if not request.resolver_match or not request.resolver_match.url_name:
+        return {'section_class': ''}
+
+    url_name = request.resolver_match.url_name
+
+    # Simple mapping based on URL name prefixes
+    # Order matters - more specific patterns first
+    section_map = {
+        'budget': 'section-budgets',
+        'dashboard': 'section-dashboard',
+        'expense_item': 'section-payments',  # Must come before 'expense'
+        'expense': 'section-expenses',
+        'month': 'section-months',
+        'payee': 'section-payees',
+        'payment_method': 'section-payment-methods',
+        'help': 'section-help',
+    }
+
+    # Find matching section by checking URL name prefix
+    for prefix, section_class in section_map.items():
+        if url_name.startswith(prefix):
+            return {'section_class': section_class}
+
+    return {'section_class': ''}

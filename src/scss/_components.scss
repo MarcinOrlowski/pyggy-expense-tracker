@@ -800,3 +800,111 @@ footer {
     margin: 0;
 }
 
+// Section-Specific Visual Distinctions
+// Header border accents for each section
+.section-budgets header {
+    border-top: 3px solid var(--section-budgets);
+}
+
+.section-dashboard header {
+    border-top: 3px solid var(--section-dashboard);
+}
+
+.section-expenses header {
+    border-top: 3px solid var(--section-expenses);
+}
+
+.section-months header {
+    border-top: 3px solid var(--section-months);
+}
+
+.section-payees header {
+    border-top: 3px solid var(--section-payees);
+}
+
+.section-payments header {
+    border-top: 3px solid var(--section-payments);
+}
+
+.section-payment-methods header {
+    border-top: 3px solid var(--section-payment-methods);
+}
+
+.section-help header {
+    border-top: 3px solid var(--section-help);
+}
+
+// Card header highlights with subtle section colors
+.section-budgets .card-header {
+    background: linear-gradient(135deg, var(--bg-secondary), var(--section-budgets));
+}
+
+.section-dashboard .card-header {
+    background: linear-gradient(135deg, var(--bg-secondary), var(--section-dashboard));
+}
+
+.section-expenses .card-header {
+    background: linear-gradient(135deg, var(--bg-secondary), var(--section-expenses));
+}
+
+.section-months .card-header {
+    background: linear-gradient(135deg, var(--bg-secondary), var(--section-months));
+}
+
+.section-payees .card-header {
+    background: linear-gradient(135deg, var(--bg-secondary), var(--section-payees));
+}
+
+.section-payments .card-header {
+    background: linear-gradient(135deg, var(--bg-secondary), var(--section-payments));
+}
+
+.section-payment-methods .card-header {
+    background: linear-gradient(135deg, var(--bg-secondary), var(--section-payment-methods));
+}
+
+.section-help .card-header {
+    background: linear-gradient(135deg, var(--bg-secondary), var(--section-help));
+}
+
+// Navigation active state enhancements with section-specific glows
+.section-budgets .nav-active {
+    box-shadow: 0 0 8px var(--section-budgets);
+    background-color: var(--section-budgets);
+}
+
+.section-dashboard .nav-active {
+    box-shadow: 0 0 8px var(--section-dashboard);
+    background-color: var(--section-dashboard);
+}
+
+.section-expenses .nav-active {
+    box-shadow: 0 0 8px var(--section-expenses);
+    background-color: var(--section-expenses);
+}
+
+.section-months .nav-active {
+    box-shadow: 0 0 8px var(--section-months);
+    background-color: var(--section-months);
+}
+
+.section-payees .nav-active {
+    box-shadow: 0 0 8px var(--section-payees);
+    background-color: var(--section-payees);
+}
+
+.section-payments .nav-active {
+    box-shadow: 0 0 8px var(--section-payments);
+    background-color: var(--section-payments);
+}
+
+.section-payment-methods .nav-active {
+    box-shadow: 0 0 8px var(--section-payment-methods);
+    background-color: var(--section-payment-methods);
+}
+
+.section-help .nav-active {
+    box-shadow: 0 0 8px var(--section-help);
+    background-color: var(--section-help);
+}
+

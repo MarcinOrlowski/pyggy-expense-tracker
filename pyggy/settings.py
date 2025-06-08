@@ -69,6 +69,7 @@ TEMPLATES = [
                 'expenses.context_processors.current_budget',
                 'expenses.context_processors.testing_context',
                 'expenses.context_processors.app_version_context',
+                'expenses.context_processors.section_context',
             ],
         },
     },
