@@ -5,9 +5,16 @@ from decimal import Decimal
 
 
 class Budget(models.Model):
+    CURRENCY_CHOICES = [
+        ('PLN', 'PLN'),
+        ('EUR', 'EUR'),
+        ('USD', 'USD'),
+    ]
+    
     name = models.CharField(max_length=100)
     start_date = models.DateField()
     initial_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    currency = models.CharField(max_length=3, choices=CURRENCY_CHOICES, default='PLN')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

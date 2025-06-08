@@ -43,6 +43,14 @@
                 {% endif %}
             </div>
 
+            <div class="form-group">
+                <label for="{{ form.currency.id_for_label }}">{{ form.currency.label }}:</label>
+                {{ form.currency }}
+                {% if form.currency.errors %}
+                    <div class="message error">{{ form.currency.errors }}</div>
+                {% endif %}
+            </div>
+
             <div class="form-actions">
                 <button type="submit" class="btn"><i class="fas fa-floppy-disk icon-left"></i>Save Budget</button>
                 <a href="{% url 'budget_list' %}" class="btn btn-secondary"><i class="fas fa-xmark icon-left"></i>Cancel</a>

@@ -86,6 +86,7 @@ class BudgetModelTest(TestCase):
             "name": "Test Negative Budget",
             "start_date": "2024-06-01",
             "initial_amount": "-250.50",
+            "currency": "PLN",
         }
 
         form = BudgetForm(data=form_data)
@@ -104,6 +105,7 @@ class BudgetModelTest(TestCase):
             "name": "Test Default Budget",
             "start_date": "2024-06-01",
             "initial_amount": "0",
+            "currency": "EUR",
         }
 
         form = BudgetForm(data=form_data)
