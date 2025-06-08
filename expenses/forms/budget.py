@@ -27,10 +27,13 @@ class BudgetForm(forms.ModelForm):
 
     class Meta:
         model = Budget
-        fields = ["name", "start_date", "initial_amount"]
+        fields = ["name", "start_date", "initial_amount", "currency"]
         widgets = {
             "name": forms.TextInput(
                 attrs={"placeholder": "Enter budget name", "class": "form-control"}
+            ),
+            "currency": forms.Select(
+                attrs={"class": "form-control"}
             ),
         }
 

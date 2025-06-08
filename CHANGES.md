@@ -6,6 +6,7 @@
 
 ## @dev
 
+- [#0175] Improved budget currency editing with preselected currency dropdown (PLN, EUR, USD) replacing case-sensitive text input to prevent validation errors
 - [#0176] Fixed budget date validation preventing form submission when start date unchanged during editing
 - [#0173] Add visual screen distinctions to improve user navigation with section-specific color coding, header accents, card gradients, and subtle background icon patterns
 - [#0171] Simplified footer version display by removing debug progress text and showing only current version

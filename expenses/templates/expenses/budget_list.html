@@ -20,6 +20,7 @@
                     <tr>
                         <th>Name</th>
                         <th>Start Date</th>
+                        <th>Currency</th>
                         <th class="text-right">Balance</th>
                         <th class="text-right">Actions</th>
                     </tr>
@@ -29,6 +30,7 @@
                         <tr class="clickable-row" data-href="{% url 'dashboard' budget.pk %}" style="cursor: pointer;">
                             <td>{{ budget.name }}</td>
                             <td>{{ budget.start_date|date:"Y-m-d" }}</td>
+                            <td>{{ budget.currency }}</td>
                             <td class="text-right">
                                 {{ budget.current_balance|amount_with_class }}
                             </td>
