@@ -1,4 +1,4 @@
-![PyGGy Logo](img/logo.png)
+![PyGGy Logo](docs/img/logo.png)
 
 # PyGGy Changelog
 
