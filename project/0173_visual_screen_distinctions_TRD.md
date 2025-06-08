@@ -6,10 +6,11 @@
 ## Technical Approach
 
 We'll implement visual screen distinctions through SCSS enhancements to the existing dark terminal
-theme, using CSS custom properties for section-specific color coding and adding subtle visual
-elements to the base template structure. The solution leverages Django's URL namespacing and
-template context to apply section-specific CSS classes to the body element, enabling targeted
-styling without affecting the existing component architecture or requiring JavaScript modifications.
+theme, using CSS custom properties for section-specific color coding with 20% opacity and adding
+subtle visual elements to the base template structure. The solution leverages Django's URL name
+patterns and a custom context processor to apply section-specific CSS classes to the body element,
+enabling targeted styling without affecting the existing component architecture or requiring
+JavaScript modifications.
 
 ## Visual Design System
 
@@ -17,20 +18,22 @@ styling without affecting the existing component architecture or requiring JavaS
 Using existing terminal theme colors with 20% opacity for subtle distinction:
 
 ```scss
-// Section-specific color variables
-$section-budgets: rgba(189, 147, 249, 0.2);    // Purple - primary brand color
-$section-dashboard: rgba(139, 233, 253, 0.2);  // Cyan - active/current state
-$section-expenses: rgba(255, 184, 108, 0.2);   // Orange - transaction focus
-$section-months: rgba(80, 250, 123, 0.2);      // Green - success/completion
-$section-payees: rgba(241, 250, 140, 0.2);     // Yellow - contacts/people
-$section-payments: rgba(255, 85, 85, 0.2);     // Red - payment/money flow
+// Section-specific color variables (added to _variables.scss)
+--section-budgets: rgba(189, 147, 249, 0.2);     // Purple - primary brand color
+--section-dashboard: rgba(139, 233, 253, 0.2);   // Cyan - active/current state
+--section-expenses: rgba(255, 184, 108, 0.2);    // Orange - transaction focus
+--section-months: rgba(80, 250, 123, 0.2);       // Green - success/completion
+--section-payees: rgba(241, 250, 140, 0.2);      // Yellow - contacts/people
+--section-payments: rgba(255, 85, 85, 0.2);      // Red - payment/money flow
+--section-payment-methods: rgba(255, 85, 85, 0.15); // Lighter red for payment methods
+--section-help: rgba(189, 147, 249, 0.15);       // Lighter purple for help
 ```
 
 ### Implementation Strategy
 1. **Body Class Assignment**: Use Django template context to add section-specific classes
-2. **Header Border Accents**: 3px colored border on navigation header
-3. **Card Header Highlights**: Subtle background tint on card headers within sections
-4. **Navigation Icon Glow**: CSS box-shadow on active section navigation items
+2. **Header Border Accents**: 3px colored top border on navigation header using section colors
+3. **Card Header Gradients**: Linear gradient (135deg) from base color to section color
+4. **Navigation Active States**: Section-colored background and box-shadow glow on active nav items
 
 ## Template Structure Changes
 
@@ -40,24 +43,33 @@ $section-payments: rgba(255, 85, 85, 0.2);     // Red - payment/money flow
 <body class="{% if section_class %}{{ section_class }}{% endif %}">
 ```
 
-### Context Processor Addition
+### Context Processor Implementation
 ```python
 # In expenses/context_processors.py
 def section_context(request):
-    """Add section-specific CSS class based on URL namespace"""
+    """Add section-specific CSS class based on URL name patterns."""
+    if not request.resolver_match or not request.resolver_match.url_name:
+        return {'section_class': ''}
+    
+    url_name = request.resolver_match.url_name
+    
+    # Simple mapping based on URL name prefixes
+    # Order matters - more specific patterns first
     section_map = {
-        'expenses:budget_list': 'section-budgets',
-        'expenses:dashboard': 'section-dashboard', 
-        'expenses:expense_list': 'section-expenses',
-        'expenses:month_list': 'section-months',
-        'expenses:payee_list': 'section-payees',
-        'expenses:payment_method_list': 'section-payments',
+        'budget': 'section-budgets',
+        'dashboard': 'section-dashboard',
+        'expense_item': 'section-payments',  # Must come before 'expense'
+        'expense': 'section-expenses',
+        'month': 'section-months',
+        'payee': 'section-payees',
+        'payment_method': 'section-payment-methods',
+        'help': 'section-help',
     }
     
-    resolver_match = request.resolver_match
-    if resolver_match:
-        url_name = f"{resolver_match.namespace}:{resolver_match.url_name}"
-        return {'section_class': section_map.get(url_name, '')}
+    # Find matching section by checking URL name prefix
+    for prefix, section_class in section_map.items():
+        if url_name.startswith(prefix):
+            return {'section_class': section_class}
     
     return {'section_class': ''}
 ```
@@ -68,23 +80,25 @@ def section_context(request):
 ```scss
 // In src/scss/_components.scss
 
-// Header border accents
-.section-budgets .header-nav { border-top: 3px solid $section-budgets; }
-.section-dashboard .header-nav { border-top: 3px solid $section-dashboard; }
-.section-expenses .header-nav { border-top: 3px solid $section-expenses; }
-.section-months .header-nav { border-top: 3px solid $section-months; }
-.section-payees .header-nav { border-top: 3px solid $section-payees; }
-.section-payments .header-nav { border-top: 3px solid $section-payments; }
+// Section-Specific Visual Distinctions
+// Header border accents for each section
+.section-budgets header {
+    border-top: 3px solid var(--section-budgets);
+}
+// ... (similar for all sections)
 
-// Card header highlights  
-.section-budgets .card-header { background: linear-gradient(135deg, $card-header-bg, $section-budgets); }
-.section-dashboard .card-header { background: linear-gradient(135deg, $card-header-bg, $section-dashboard); }
-// ... (similar for other sections)
+// Card header highlights with subtle section colors
+.section-budgets .card-header {
+    background: linear-gradient(135deg, var(--bg-secondary), var(--section-budgets));
+}
+// ... (similar for all sections)
 
-// Navigation active state enhancement
-.section-budgets .nav-link.active { box-shadow: 0 0 8px $section-budgets; }
-.section-dashboard .nav-link.active { box-shadow: 0 0 8px $section-dashboard; }
-// ... (similar for other sections)
+// Navigation active state enhancements with section-specific glows
+.section-budgets .nav-active {
+    box-shadow: 0 0 8px var(--section-budgets);
+    background-color: var(--section-budgets);
+}
+// ... (similar for all sections)
 ```
 
 ## Security & Performance
@@ -97,10 +111,10 @@ def section_context(request):
 ## Technical Risks & Mitigations
 
 1. **Risk**: Color changes may conflict with existing theme → **Mitigation**: Use rgba transparency
-   and test against all existing components
-1. **Risk**: URL namespace changes could break section detection → **Mitigation**: Fallback to empty
-   string for unknown URLs, no visual impact
-1. **Risk**: Mobile responsiveness could be affected → **Mitigation**: Test all breakpoints and use
+   at 20% opacity and test against all existing components
+2. **Risk**: URL name pattern changes could break section detection → **Mitigation**: Simple prefix
+   matching with fallback to empty string for unknown patterns
+3. **Risk**: Mobile responsiveness could be affected → **Mitigation**: Test all breakpoints and use
    existing responsive variables
 
 ## Implementation Plan
@@ -117,5 +131,6 @@ def section_context(request):
 
 - **Feature flag**: CSS classes can be easily disabled by commenting out context processor
 - **Key metrics**: Page load time monitoring, no degradation expected
-- **Rollback**: Remove context processor from settings.py and recompile SCSS without section styles
+- **Rollback**: Remove `section_context` from TEMPLATES context_processors in settings.py
 - **Testing**: Visual regression testing on all main application screens before deployment
+- **Unit tests**: Comprehensive test coverage in `test_section_context.py`
