@@ -1,6 +1,6 @@
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
-from typing import Optional, Dict, Union
+from typing import Optional, Dict
 
 
 class BudgetMonth(models.Model):

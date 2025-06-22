@@ -1,4 +1,3 @@
-from django.core.exceptions import ValidationError
 from django.utils import timezone
 from django.db import transaction
 from django.core.cache import cache
@@ -6,7 +5,6 @@ from decimal import Decimal
 from datetime import date
 from typing import List, Optional, Union
 from babel.numbers import format_currency as babel_format_currency
-from babel.core import Locale
 from .models import Expense, ExpenseItem, BudgetMonth, Settings, Budget
 
 
@@ -139,8 +137,6 @@ def check_expense_completion(expense: Expense) -> bool:
     - endless_recurring: Manual completion only
     - recurring_with_end: Manual completion only
     """
-    from .models import Payment
-
     if expense.closed_at:
         return True  # Already completed
 
@@ -267,7 +263,7 @@ class SettingsService:
                 format_type="standard" if include_symbol else "accounting",
             )
             return formatted
-        except Exception as e:
+        except Exception:
             # Fallback to basic formatting if babel fails
             return f"{settings.currency} {amount:.2f}"
 

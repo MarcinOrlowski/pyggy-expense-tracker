@@ -5,7 +5,7 @@ into a single library that can be loaded with {% load currency_tags %}.
 """
 
 from django import template
-from decimal import Decimal, InvalidOperation
+from decimal import InvalidOperation
 from django.utils.safestring import mark_safe
 from ..services import SettingsService
 

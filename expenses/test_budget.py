@@ -1,7 +1,5 @@
-from django.test import TestCase, TransactionTestCase
-from django.core.exceptions import ValidationError
-from django.db import IntegrityError, transaction
-from django.db.models import ProtectedError
+from django.test import TestCase
+from django.db import IntegrityError
 from django.utils import timezone
 from decimal import Decimal
 from datetime import date
@@ -11,7 +9,6 @@ from expenses.models import (
     Expense,
     ExpenseItem,
     Payee,
-    PaymentMethod,
     Payment,
 )
 from expenses.services import process_new_month
@@ -437,7 +434,7 @@ class BudgetBalanceTest(TestCase):
             [Decimal("100.00"), Decimal("250.00"), Decimal("75.50")]
         ):
             expense = Expense.objects.create(
-                title=f"Expense {i+1}",
+                title=f"Expense {i + 1}",
                 amount=amount,
                 expense_type="one_time",
                 start_date=date(2024, 1, 10 + i),
@@ -618,7 +615,6 @@ class BudgetListViewTest(TestCase):
 
     def test_budget_list_template_rendering(self):
         """Test that budget list template can render with balance data."""
-        from django.test import RequestFactory
         from django.template import Context, Template
 
         # Add balance to budget (simulating what the view does)
