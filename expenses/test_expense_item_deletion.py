@@ -1,6 +1,7 @@
 from django.test import TestCase, Client
 from django.urls import reverse
 from django.contrib.auth.models import User
+from django.utils import timezone
 from decimal import Decimal
 from datetime import date, timedelta
 from .models import (
@@ -92,7 +93,7 @@ class ExpenseItemDeletionTestCase(TestCase):
         Payment.objects.create(
             expense_item=expense_item,
             amount=Decimal("50.00"),
-            payment_date=date.today(),
+            payment_date=timezone.now(),
             payment_method=self.payment_method,
         )
 
