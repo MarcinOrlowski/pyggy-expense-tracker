@@ -63,7 +63,7 @@ class PayeeModelTest(TestCase):
     def test_can_be_deleted_with_expenses(self):
         """Test can_be_deleted when payee has expenses."""
         budget = Budget.objects.create(name="Test Budget", start_date=date.today())
-        _expense = Expense.objects.create(
+        Expense.objects.create(
             budget=budget,
             title="Test Expense",
             payee=self.payee,

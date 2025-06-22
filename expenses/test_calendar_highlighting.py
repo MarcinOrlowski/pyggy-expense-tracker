@@ -25,7 +25,7 @@ class CalendarHighlightingTest(TestCase):
 
         # Create test budget
         self.budget = Budget.objects.create(
-            name="Test Budget", start_date=date(2024, 1, 1), initial_amount=1000.00
+            name="Test Budget", start_date=date(2024, 1, 1), initial_amount=1000
         )
 
         # Create test month
@@ -253,7 +253,7 @@ class DashboardCalendarIntegrationTest(TestCase):
 
         # Create test budget
         self.budget = Budget.objects.create(
-            name="Test Budget", start_date=date(2024, 1, 1), initial_amount=1000.00
+            name="Test Budget", start_date=date(2024, 1, 1), initial_amount=1000
         )
 
         self.client = Client()
