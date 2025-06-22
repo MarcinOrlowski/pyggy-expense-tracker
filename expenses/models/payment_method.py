@@ -14,4 +14,6 @@ class PaymentMethod(models.Model):
         return not self.payment_set.exists()
 
     class Meta:
+        """Meta configuration for PaymentMethod model."""
+
         ordering = ["name"]

@@ -19,4 +19,6 @@ class Payee(models.Model):
         return not self.expense_set.exists() and not self.is_hidden
 
     class Meta:
+        """Meta configuration for Payee model."""
+
         ordering = ["name"]

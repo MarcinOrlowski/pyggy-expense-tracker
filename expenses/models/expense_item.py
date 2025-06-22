@@ -1,7 +1,7 @@
 from django.db import models
+from django.db.models import Sum  # noqa: WPS458
 from django.core.validators import MinValueValidator
 from django.core.exceptions import ValidationError
-from django.db.models import Sum
 from datetime import date
 from typing import Tuple
 from decimal import Decimal
@@ -154,4 +154,6 @@ class ExpenseItem(models.Model):
         return f"{self.expense.title} - {self.month} - {self.status}"
 
     class Meta:
+        """Meta configuration for ExpenseItem model."""
+
         ordering = ["due_date", "-created_at"]

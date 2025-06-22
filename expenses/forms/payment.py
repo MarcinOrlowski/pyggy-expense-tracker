@@ -43,6 +43,8 @@ class PaymentForm(forms.ModelForm):
     )
 
     class Meta:
+        """Form configuration for Payment model."""
+
         model = Payment
         fields = ["amount", "payment_date", "payment_method", "transaction_id"]
 
@@ -106,6 +108,8 @@ class ExpenseItemEditForm(forms.ModelForm):
     )
 
     class Meta:
+        """Form configuration for ExpenseItem model."""
+
         model = ExpenseItem
         fields = ["amount", "due_date"]
 

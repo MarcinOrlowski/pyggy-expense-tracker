@@ -4,6 +4,8 @@ from ..models import Payee
 
 class PayeeForm(forms.ModelForm):
     class Meta:
+        """Form configuration for Payee model."""
+
         model = Payee
         fields = ["name"]
         widgets = {

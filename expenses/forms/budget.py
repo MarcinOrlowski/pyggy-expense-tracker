@@ -25,6 +25,8 @@ class BudgetForm(forms.ModelForm):
     )
 
     class Meta:
+        """Form configuration for Budget model."""
+
         model = Budget
         fields = ["name", "start_date", "initial_amount", "currency"]
         widgets = {

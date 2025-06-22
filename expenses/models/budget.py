@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Sum  # noqa: WPS458
 from django.core.exceptions import ValidationError
 from decimal import Decimal
 
@@ -40,9 +41,6 @@ class Budget(models.Model):
         Returns:
             Decimal: Current balance (positive = remaining, negative = overcommitted)
         """
-        # Decimal already imported at module level
-        from django.db.models import Sum
-
         # Import here to avoid circular imports
         from .expense_item import ExpenseItem
 
@@ -58,4 +56,6 @@ class Budget(models.Model):
         return self.name
 
     class Meta:
+        """Meta configuration for Budget model."""
+
         ordering = ["name", "created_at"]

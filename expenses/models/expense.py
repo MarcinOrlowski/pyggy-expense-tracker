@@ -5,7 +5,11 @@ from django.utils import timezone
 from datetime import date
 from decimal import Decimal
 from typing import Dict, List, Optional, Union
+
 import calendar
+
+# Type aliases for complex annotations
+EditRestrictions = Dict[str, Union[bool, List[str]]]
 
 
 class Expense(models.Model):
@@ -300,9 +304,9 @@ class Expense(models.Model):
         else:
             return date(most_recent_month.year, most_recent_month.month + 1, 1)
 
-    def get_edit_restrictions(self) -> Dict[str, Union[bool, List[str]]]:
+    def get_edit_restrictions(self) -> EditRestrictions:
         """Get detailed information about edit restrictions"""
-        restrictions: Dict[str, Union[bool, List[str]]] = {
+        restrictions: EditRestrictions = {
             "can_edit": self.can_be_edited(),
             "can_edit_amount": self.can_edit_amount(),
             "can_edit_date": self.can_edit_date(),
@@ -394,4 +398,6 @@ class Expense(models.Model):
         return self.title
 
     class Meta:
+        """Meta configuration for Expense model."""
+
         ordering = ["-created_at"]

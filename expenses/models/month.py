@@ -15,6 +15,8 @@ class BudgetMonth(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
+        """Meta configuration for BudgetMonth model."""
+
         unique_together = ["budget", "year", "month"]
         ordering = ["-year", "-month"]
 

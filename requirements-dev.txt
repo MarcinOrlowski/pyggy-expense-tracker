@@ -12,6 +12,7 @@ types-Markdown
 flake8
 flake8-noqa
 flake8-docstrings
+flake8-django
 mypy
 django-stubs
 types-Markdown

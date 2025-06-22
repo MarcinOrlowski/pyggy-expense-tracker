@@ -5,6 +5,7 @@ from datetime import date
 
 
 def create_default_budget_and_update_months(apps, schema_editor):
+    """Create default budget and update existing months."""
     Budget = apps.get_model("expenses", "Budget")
     Month = apps.get_model("expenses", "Month")
 
@@ -18,6 +19,7 @@ def create_default_budget_and_update_months(apps, schema_editor):
 
 
 def reverse_migration(apps, schema_editor):
+    """Reverse the default budget creation."""
     Month = apps.get_model("expenses", "Month")
     Budget = apps.get_model("expenses", "Budget")
 

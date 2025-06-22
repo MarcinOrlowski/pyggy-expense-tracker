@@ -39,4 +39,6 @@ class Payment(models.Model):
         return f"Payment {self.amount} for {self.expense_item.expense.title} on {self.payment_date.date()}"
 
     class Meta:
+        """Meta configuration for Payment model."""
+
         ordering = ["-payment_date", "-created_at"]

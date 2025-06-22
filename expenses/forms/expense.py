@@ -56,6 +56,8 @@ class ExpenseForm(forms.ModelForm):
     )
 
     class Meta:
+        """Form configuration for Expense model."""
+
         model = Expense
         fields = [
             "payee",
