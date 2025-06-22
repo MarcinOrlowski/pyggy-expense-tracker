@@ -23,9 +23,6 @@ class SanitizedDecimalField(forms.DecimalField):
     - "12,34 zł" → "12.34"
     """
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
     def to_python(self, value):
         """
         Sanitize the input value before converting to Decimal.

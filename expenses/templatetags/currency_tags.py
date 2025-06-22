@@ -64,7 +64,9 @@ def paid_amount_display(expense_item):
 
             return mark_safe(f'<span class="{css_class}">{formatted_currency}</span>')
 
-    except (ValueError, TypeError, InvalidOperation, AttributeError):
+    except (ValueError, TypeError):
+        return ""
+    except (InvalidOperation, AttributeError):
         return ""
 
 

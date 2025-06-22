@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
-from django.db.models import Q
+from django.db.models import Q as QueryFilter
 from django.db import transaction
 from datetime import date, datetime
 from collections import OrderedDict
@@ -42,8 +42,8 @@ def dashboard(request, budget_id):
         # Get all pending expense items from past months
         all_past_items = (
             ExpenseItem.objects.filter(
-                Q(month__budget=budget, month__year__lt=current_month.year)
-                | Q(
+                QueryFilter(month__budget=budget, month__year__lt=current_month.year)
+                | QueryFilter(
                     month__budget=budget,
                     month__year=current_month.year,
                     month__month__lt=current_month.month,

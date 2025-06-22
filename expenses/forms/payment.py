@@ -55,9 +55,8 @@ class PaymentForm(forms.ModelForm):
             remaining = self.expense_item.get_remaining_amount()
             # remaining is negative when money is still owed
             amount_still_owed = abs(remaining) if remaining < 0 else Decimal("0.00")
-            self.fields["amount"].widget.attrs[
-                "placeholder"
-            ] = f"Max: {amount_still_owed}"
+            amount_widget = self.fields["amount"].widget
+            amount_widget.attrs["placeholder"] = f"Max: {amount_still_owed}"
             self.fields["amount"].help_text = (
                 f"Payment amount (max: {amount_still_owed})"
             )

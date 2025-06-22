@@ -99,7 +99,8 @@ class ExpenseForm(forms.ModelForm):
                 self.fields["start_date"].initial = date.today()
 
         # Update amount field attributes for split payments
-        self.fields["amount"].widget.attrs.update(
+        amount_widget = self.fields["amount"].widget
+        amount_widget.attrs.update(
             {
                 "data-split-label": "Installment Amount",
                 "data-split-help": "Amount for each installment",
