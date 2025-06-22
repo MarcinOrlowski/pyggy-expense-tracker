@@ -3,7 +3,15 @@ from django.urls import reverse
 from datetime import date
 from decimal import Decimal
 from django.utils import timezone
-from .models import Budget, BudgetMonth, Expense, ExpenseItem, Payee, PaymentMethod, Payment
+from .models import (
+    Budget,
+    BudgetMonth,
+    Expense,
+    ExpenseItem,
+    Payee,
+    PaymentMethod,
+    Payment,
+)
 
 
 class PaymentRedirectTest(TestCase):

@@ -14,7 +14,7 @@ def create_paid_expense_item_payment(expense_item, amount=None, payment_date=Non
         payment_date = timezone.now()
     if amount is None:
         amount = expense_item.amount
-    
+
     return Payment.objects.create(
         expense_item=expense_item,
         amount=amount,
@@ -100,7 +100,9 @@ class InitialInstallmentModelTest(TestCase):
         )
         with self.assertRaises(ValidationError) as cm:
             expense.full_clean()
-        self.assertIn("Split payments must have at least 2 total installments", str(cm.exception))
+        self.assertIn(
+            "Split payments must have at least 2 total installments", str(cm.exception)
+        )
 
     def test_split_payment_zero_total_parts_invalid(self):
         """Test split payment with 0 total_parts fails validation."""
@@ -116,7 +118,9 @@ class InitialInstallmentModelTest(TestCase):
         )
         with self.assertRaises(ValidationError) as cm:
             expense.full_clean()
-        self.assertIn("Split payments must have at least 2 total installments", str(cm.exception))
+        self.assertIn(
+            "Split payments must have at least 2 total installments", str(cm.exception)
+        )
 
     def test_split_payment_edge_case_remaining_one_installment_valid(self):
         """Test split payment with remaining 1 installment but original total >= 2 is valid."""
@@ -126,7 +130,7 @@ class InitialInstallmentModelTest(TestCase):
             expense_type=Expense.TYPE_SPLIT_PAYMENT,
             amount=Decimal("100.00"),
             total_parts=2,  # Originally 2 installments (valid)
-            skip_parts=1,   # Skipped 1, leaving 1 remaining
+            skip_parts=1,  # Skipped 1, leaving 1 remaining
             start_date=date.today(),
             day_of_month=date.today().day,
         )
@@ -141,13 +145,15 @@ class InitialInstallmentModelTest(TestCase):
             expense_type=Expense.TYPE_SPLIT_PAYMENT,
             amount=Decimal("100.00"),
             total_parts=2,  # Originally 2 installments (valid total)
-            skip_parts=2,   # But skipping all of them (invalid)
+            skip_parts=2,  # But skipping all of them (invalid)
             start_date=date.today(),
             day_of_month=date.today().day,
         )
         with self.assertRaises(ValidationError) as cm:
             expense.full_clean()
-        self.assertIn("Skip parts must be less than total parts count", str(cm.exception))
+        self.assertIn(
+            "Skip parts must be less than total parts count", str(cm.exception)
+        )
 
     def test_split_payment_skip_parts_negative_invalid(self):
         """Test split payment with negative skip_parts fails validation."""
@@ -297,7 +303,10 @@ class InitialInstallmentServiceTest(TestCase):
 
         # Pay the last item - should be complete
         all_items = ExpenseItem.objects.filter(expense=expense)
-        remaining_item = next((item for item in all_items if item.status == ExpenseItem.STATUS_PENDING), None)
+        remaining_item = next(
+            (item for item in all_items if item.status == ExpenseItem.STATUS_PENDING),
+            None,
+        )
         self.assertIsNotNone(remaining_item)
         if remaining_item is not None:
             create_paid_expense_item_payment(remaining_item)

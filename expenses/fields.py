@@ -88,7 +88,6 @@ class SanitizedDecimalField(forms.DecimalField):
         if decimal_match:
             # Found a potential decimal separator
             decimal_pos = decimal_match.start()
-            decimal_separator = value[decimal_pos]
 
             # Everything before the decimal separator
             integer_part = value[:decimal_pos]

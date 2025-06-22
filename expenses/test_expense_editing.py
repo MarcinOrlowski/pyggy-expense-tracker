@@ -1,7 +1,7 @@
 from django.test import TestCase, Client
 from django.urls import reverse
 from django.contrib.auth.models import User
-from datetime import date, datetime
+from datetime import date
 from decimal import Decimal
 from django.utils import timezone
 from .models import Budget, BudgetMonth, Expense, ExpenseItem, Payee, Payment
@@ -11,7 +11,7 @@ def create_paid_expense_item(expense, month, due_date, amount, payment_date=None
     """Helper function to create a paid ExpenseItem with Payment record."""
     if payment_date is None:
         payment_date = timezone.now()
-    
+
     expense_item = ExpenseItem.objects.create(
         expense=expense,
         month=month,

@@ -1,20 +1,19 @@
 from django.db import models
 from django.core.exceptions import ValidationError
-from datetime import date
 from decimal import Decimal
 
 
 class Budget(models.Model):
     CURRENCY_CHOICES = [
-        ('PLN', 'PLN'),
-        ('EUR', 'EUR'),
-        ('USD', 'USD'),
+        ("PLN", "PLN"),
+        ("EUR", "EUR"),
+        ("USD", "USD"),
     ]
-    
+
     name = models.CharField(max_length=100)
     start_date = models.DateField()
     initial_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    currency = models.CharField(max_length=3, choices=CURRENCY_CHOICES, default='PLN')
+    currency = models.CharField(max_length=3, choices=CURRENCY_CHOICES, default="PLN")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -22,7 +21,10 @@ class Budget(models.Model):
         # For existing budgets with months, start_date cannot be changed at all
         if hasattr(self, "pk") and self.pk and not self._state.adding:
             original_budget = Budget.objects.get(pk=self.pk)
-            if self.start_date != original_budget.start_date and self.budgetmonth_set.exists():
+            if (
+                self.start_date != original_budget.start_date
+                and self.budgetmonth_set.exists()
+            ):
                 raise ValidationError(
                     "Start date cannot be changed when budget has existing months"
                 )

@@ -1,6 +1,5 @@
 from django import forms
 from django.core.exceptions import ValidationError
-from datetime import date
 from ..models import Budget
 from ..fields import SanitizedDecimalField
 
@@ -32,16 +31,18 @@ class BudgetForm(forms.ModelForm):
             "name": forms.TextInput(
                 attrs={"placeholder": "Enter budget name", "class": "form-control"}
             ),
-            "currency": forms.Select(
-                attrs={"class": "form-control"}
-            ),
+            "currency": forms.Select(attrs={"class": "form-control"}),
         }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         # Disable start_date field if budget has existing months
-        if self.instance and self.instance.pk and self.instance.budgetmonth_set.exists():
+        if (
+            self.instance
+            and self.instance.pk
+            and self.instance.budgetmonth_set.exists()
+        ):
             self.fields["start_date"].disabled = True
             self.fields["start_date"].help_text = (
                 "Cannot change start date when months exist"
@@ -51,7 +52,10 @@ class BudgetForm(forms.ModelForm):
         start_date = self.cleaned_data.get("start_date")
         # For existing budgets with months, start_date cannot be changed at all
         if self.instance and self.instance.pk:
-            if start_date != self.instance.start_date and self.instance.budgetmonth_set.exists():
+            if (
+                start_date != self.instance.start_date
+                and self.instance.budgetmonth_set.exists()
+            ):
                 raise ValidationError(
                     "Start date cannot be changed when budget has existing months"
                 )

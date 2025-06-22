@@ -11,7 +11,7 @@ import calendar
 class ExpenseItem(models.Model):
     STATUS_PENDING = "pending"
     STATUS_PAID = "paid"
-    
+
     STATUS_CHOICES = [
         (STATUS_PENDING, "Pending"),
         (STATUS_PAID, "Paid"),
@@ -100,13 +100,12 @@ class ExpenseItem(models.Model):
 
     def get_total_paid(self) -> Decimal:
         """Calculate total amount paid from all Payment records"""
-        total = self.payment_set.aggregate(Sum('amount'))['amount__sum']
-        return total or Decimal('0.00')
+        total = self.payment_set.aggregate(Sum("amount"))["amount__sum"]
+        return total or Decimal("0.00")
 
     def get_remaining_amount(self) -> Decimal:
         """Calculate remaining amount to be paid (negative = still owed, positive = overpaid)"""
         return self.get_total_paid() - self.amount
-
 
     def get_payment_count(self) -> int:
         """Get the number of payments made for this expense item"""
@@ -115,7 +114,11 @@ class ExpenseItem(models.Model):
     @property
     def status(self) -> str:
         """Calculate payment status based on total payments"""
-        return self.STATUS_PAID if self.get_total_paid() >= self.amount else self.STATUS_PENDING
+        return (
+            self.STATUS_PAID
+            if self.get_total_paid() >= self.amount
+            else self.STATUS_PENDING
+        )
 
     def is_fully_paid(self) -> bool:
         """Check if expense item is fully paid"""
@@ -123,7 +126,7 @@ class ExpenseItem(models.Model):
 
     def can_be_deleted(self) -> bool:
         """Check if expense item can be deleted.
-        
+
         Returns True if:
         - No payment records exist (get_payment_count() == 0)
         - Expense is one-time type
@@ -131,20 +134,20 @@ class ExpenseItem(models.Model):
         """
         # Import here to avoid circular imports
         from .month import BudgetMonth
-        
+
         # Must have no payment records
         if self.get_payment_count() > 0:
             return False
-            
+
         # Must be a one-time expense
         if self.expense.expense_type != self.expense.TYPE_ONE_TIME:
             return False
-            
+
         # Must be from current (most recent) month
         current_month = BudgetMonth.get_most_recent(budget=self.expense.budget)
         if not current_month or self.month != current_month:
             return False
-            
+
         return True
 
     def __str__(self) -> str:

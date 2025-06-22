@@ -1,6 +1,4 @@
 from django import forms
-from django.core.exceptions import ValidationError
-from datetime import date
 from typing import cast
 from ..models import Payee
 from ..fields import SanitizedDecimalField
@@ -18,14 +16,14 @@ class QuickExpenseForm(forms.Form):
         ),
         help_text="Brief description of the expense",
     )
-    
+
     payee = forms.ModelChoiceField(
         queryset=Payee.objects.filter(hidden_at__isnull=True),
         required=False,
         empty_label="Select payee (optional)",
         widget=forms.Select(attrs={"class": "form-control"}),
     )
-    
+
     amount = SanitizedDecimalField(
         max_digits=13,
         decimal_places=2,
@@ -39,7 +37,7 @@ class QuickExpenseForm(forms.Form):
         ),
         help_text="Expense amount",
     )
-    
+
     mark_as_paid = forms.BooleanField(
         required=False,
         initial=False,
@@ -51,4 +49,6 @@ class QuickExpenseForm(forms.Form):
         super().__init__(*args, **kwargs)
         # Only show non-hidden payees in the dropdown
         payee_field = cast(forms.ModelChoiceField, self.fields["payee"])
-        payee_field.queryset = Payee.objects.filter(hidden_at__isnull=True).order_by("name")
+        payee_field.queryset = Payee.objects.filter(hidden_at__isnull=True).order_by(
+            "name"
+        )

@@ -1,5 +1,13 @@
 from django.contrib import admin
-from .models import Payee, PaymentMethod, Payment, BudgetMonth, Expense, ExpenseItem, Settings
+from .models import (
+    Payee,
+    PaymentMethod,
+    Payment,
+    BudgetMonth,
+    Expense,
+    ExpenseItem,
+    Settings,
+)
 
 
 @admin.register(Payee)

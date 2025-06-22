@@ -5,7 +5,15 @@ from django.db.models import ProtectedError
 from django.utils import timezone
 from decimal import Decimal
 from datetime import date
-from expenses.models import Budget, BudgetMonth, Expense, ExpenseItem, Payee, PaymentMethod, Payment
+from expenses.models import (
+    Budget,
+    BudgetMonth,
+    Expense,
+    ExpenseItem,
+    Payee,
+    PaymentMethod,
+    Payment,
+)
 from expenses.services import process_new_month
 
 
@@ -13,7 +21,7 @@ def create_paid_expense_item(expense, month, due_date, amount, payment_date=None
     """Helper function to create a paid ExpenseItem with Payment record."""
     if payment_date is None:
         payment_date = timezone.now()
-    
+
     expense_item = ExpenseItem.objects.create(
         expense=expense,
         month=month,
@@ -500,7 +508,9 @@ class BudgetBalanceTest(TestCase):
             initial_amount=Decimal("500.00"),
         )
 
-        other_month = BudgetMonth.objects.create(year=2024, month=2, budget=other_budget)
+        other_month = BudgetMonth.objects.create(
+            year=2024, month=2, budget=other_budget
+        )
 
         # Create expense in original budget
         expense1 = Expense.objects.create(

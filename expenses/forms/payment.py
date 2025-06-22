@@ -35,7 +35,9 @@ class PaymentForm(forms.ModelForm):
         max_length=255,
         required=False,
         widget=forms.TextInput(
-            attrs={"placeholder": "Optional transaction reference (e.g., bank transfer ID, check number)"}
+            attrs={
+                "placeholder": "Optional transaction reference (e.g., bank transfer ID, check number)"
+            }
         ),
         help_text="Optional transaction reference (e.g., bank transfer ID, check number, receipt number)",
     )
@@ -45,28 +47,34 @@ class PaymentForm(forms.ModelForm):
         fields = ["amount", "payment_date", "payment_method", "transaction_id"]
 
     def __init__(self, *args, **kwargs):
-        self.expense_item = kwargs.pop('expense_item', None)
+        self.expense_item = kwargs.pop("expense_item", None)
         super().__init__(*args, **kwargs)
-        
+
         if self.expense_item:
             # Set remaining amount as placeholder and default
             remaining = self.expense_item.get_remaining_amount()
             # remaining is negative when money is still owed
-            amount_still_owed = abs(remaining) if remaining < 0 else Decimal('0.00')
-            self.fields['amount'].widget.attrs['placeholder'] = f"Max: {amount_still_owed}"
-            self.fields['amount'].help_text = f"Payment amount (max: {amount_still_owed})"
-            if not self.initial.get('amount') and amount_still_owed > 0:
-                self.initial['amount'] = amount_still_owed
+            amount_still_owed = abs(remaining) if remaining < 0 else Decimal("0.00")
+            self.fields["amount"].widget.attrs[
+                "placeholder"
+            ] = f"Max: {amount_still_owed}"
+            self.fields["amount"].help_text = (
+                f"Payment amount (max: {amount_still_owed})"
+            )
+            if not self.initial.get("amount") and amount_still_owed > 0:
+                self.initial["amount"] = amount_still_owed
 
     def clean_amount(self):
-        amount = self.cleaned_data.get('amount')
+        amount = self.cleaned_data.get("amount")
         if amount and self.expense_item:
             remaining = self.expense_item.get_remaining_amount()
             # remaining is negative when money is still owed
             # Convert to positive amount still owed for validation
-            amount_still_owed = abs(remaining) if remaining < 0 else Decimal('0.00')
+            amount_still_owed = abs(remaining) if remaining < 0 else Decimal("0.00")
             if amount > amount_still_owed:
-                raise ValidationError(f"Payment amount cannot exceed remaining balance of {amount_still_owed}")
+                raise ValidationError(
+                    f"Payment amount cannot exceed remaining balance of {amount_still_owed}"
+                )
         return amount
 
     def save(self, commit=True):

@@ -1,7 +1,7 @@
 from django.test import TestCase, Client
 from django.contrib.auth.models import User
 from django.template import Context, Template
-from datetime import date, datetime
+from datetime import date
 from unittest.mock import patch
 from expenses.models import Budget, BudgetMonth, Expense, ExpenseItem, Payee, Settings
 from expenses.services import SettingsService

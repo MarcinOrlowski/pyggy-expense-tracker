@@ -1,7 +1,7 @@
 from django.test import TestCase, Client
 from django.urls import reverse
 from django.core.exceptions import ValidationError
-from datetime import date, datetime
+from datetime import date
 from decimal import Decimal
 from django.utils import timezone
 import calendar
@@ -66,7 +66,9 @@ class ExpenseItemDateEditingTest(TestCase):
             day_of_month=15,
         )
 
-        february_month = BudgetMonth.objects.create(budget=self.budget, year=2024, month=2)
+        february_month = BudgetMonth.objects.create(
+            budget=self.budget, year=2024, month=2
+        )
 
         expense_item = ExpenseItem.objects.create(
             expense=expense,
@@ -290,7 +292,9 @@ class ExpenseItemDateEditingTest(TestCase):
         )
 
         # Create March month - this becomes the most recent month in budget
-        future_month = BudgetMonth.objects.create(budget=self.budget, year=2024, month=3)
+        future_month = BudgetMonth.objects.create(
+            budget=self.budget, year=2024, month=3
+        )
 
         future_expense_item = ExpenseItem.objects.create(
             expense=future_expense,
@@ -326,7 +330,9 @@ class ExpenseItemDateEditingTest(TestCase):
         march_month.delete()
 
         # Create February month first to make it most recent
-        february_month = BudgetMonth.objects.create(budget=self.budget, year=2024, month=2)
+        february_month = BudgetMonth.objects.create(
+            budget=self.budget, year=2024, month=2
+        )
 
         # Now create March month
         march_month = BudgetMonth.objects.create(budget=self.budget, year=2024, month=3)
@@ -369,7 +375,9 @@ class ExpenseItemDateEditingTest(TestCase):
             day_of_month=15,
         )
 
-        february_month = BudgetMonth.objects.create(budget=self.budget, year=2024, month=2)
+        february_month = BudgetMonth.objects.create(
+            budget=self.budget, year=2024, month=2
+        )
 
         recurring_item = ExpenseItem.objects.create(
             expense=recurring_expense,

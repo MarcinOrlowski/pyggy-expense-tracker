@@ -2,7 +2,7 @@ from django.test import TestCase
 from django.utils import timezone
 from django.core.exceptions import ValidationError
 from decimal import Decimal
-from datetime import date, datetime, timedelta
+from datetime import date, timedelta
 from expenses.models import (
     Budget,
     Payee,
@@ -19,7 +19,7 @@ def create_paid_expense_item(expense, month, due_date, amount, payment_date=None
     """Helper function to create a paid ExpenseItem with Payment record."""
     if payment_date is None:
         payment_date = timezone.now()
-    
+
     expense_item = ExpenseItem.objects.create(
         expense=expense,
         month=month,
@@ -64,7 +64,7 @@ class PayeeModelTest(TestCase):
     def test_can_be_deleted_with_expenses(self):
         """Test can_be_deleted when payee has expenses."""
         budget = Budget.objects.create(name="Test Budget", start_date=date.today())
-        expense = Expense.objects.create(
+        _expense = Expense.objects.create(
             budget=budget,
             title="Test Expense",
             payee=self.payee,
@@ -179,7 +179,6 @@ class ExpenseItemModelTest(TestCase):
             month=self.month,
             amount=Decimal("100.00"),
             due_date=date.today(),
-
         )
         expected = f"Test Expense - {self.month} - pending"
         self.assertEqual(str(item), expected)
@@ -192,7 +191,6 @@ class ExpenseItemModelTest(TestCase):
             month=self.month,
             amount=Decimal("100.00"),
             due_date=future_date,
-
         )
         self.assertEqual(item.days_until_due, 10)
 
@@ -203,7 +201,6 @@ class ExpenseItemModelTest(TestCase):
             month=self.month,
             amount=Decimal("100.00"),
             due_date=date.today(),
-
         )
         self.assertEqual(item.days_until_due, 0)
 
@@ -215,7 +212,6 @@ class ExpenseItemModelTest(TestCase):
             month=self.month,
             amount=Decimal("100.00"),
             due_date=past_date,
-
         )
         self.assertEqual(item.days_until_due, -5)
 
@@ -305,7 +301,6 @@ class BudgetMonthModelTest(TestCase):
             month=self.month,
             amount=Decimal("100.00"),
             due_date=date.today(),
-
         )
         self.assertFalse(self.month.has_paid_expenses())
 
@@ -326,7 +321,6 @@ class BudgetMonthModelTest(TestCase):
             month=self.month,
             amount=Decimal("100.00"),
             due_date=date.today(),
-
         )
         self.assertTrue(self.month.can_be_deleted())
 

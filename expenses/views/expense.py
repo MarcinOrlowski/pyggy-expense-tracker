@@ -12,9 +12,11 @@ def expense_list(request, budget_id):
     budget = get_object_or_404(Budget, id=budget_id)
 
     # Get expenses that belong directly to this budget, ordered by start_date desc
-    expenses = Expense.objects.filter(
-        closed_at__isnull=True, budget=budget
-    ).select_related("payee").order_by("-start_date", "-created_at")
+    expenses = (
+        Expense.objects.filter(closed_at__isnull=True, budget=budget)
+        .select_related("payee")
+        .order_by("-start_date", "-created_at")
+    )
 
     # Simple filtering
     expense_type = request.GET.get("type")
@@ -69,7 +71,9 @@ def expense_create(request, budget_id):
     else:
         # Set default start date to current month's first day for this budget
         most_recent_month = (
-            BudgetMonth.objects.filter(budget=budget).order_by("-year", "-month").first()
+            BudgetMonth.objects.filter(budget=budget)
+            .order_by("-year", "-month")
+            .first()
         )
         if most_recent_month:
             default_date = date(most_recent_month.year, most_recent_month.month, 1)

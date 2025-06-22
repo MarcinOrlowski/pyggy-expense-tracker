@@ -46,7 +46,7 @@ def help_index(request):
                 },
             )
 
-        except (OSError, UnicodeDecodeError) as e:
+        except (OSError, UnicodeDecodeError):
             # Fall through to show file listing with error
             pass
 
