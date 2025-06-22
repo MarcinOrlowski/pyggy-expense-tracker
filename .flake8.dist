@@ -19,15 +19,21 @@ exclude =
 # This contains our built documentation
     build,
     dist,
-    venv
+    venv,
+# Django migrations are auto-generated
+    ./expenses/migrations/
 
 # it's not a bug that we aren't using all of hacking
 
 ignore =
+    # D100 Missing docstring in public module
+    D100,
     # D101 Missing docstring in public class
     D101,
     # D102 Missing docstring in public method
     D102,
+    # D105 Missing docstring in magic method
+    D105,
     # D107 Missing docstring in __init__
     D107,
     # D200 One-line docstring should fit on one line with quotes
@@ -160,10 +166,16 @@ ignore =
     WPS448,
     WPS504,
     WPS506,
-    WPS529
+    WPS529,
+    # Django model ordering - not critical for functionality
+    DJ12,
+    # Django string field null=True - sometimes needed for backward compatibility
+    DJ01,
+    # Django missing __str__ method - not required for all models
+    DJ08
 
-#per-file-ignores =
-#    # WPS420 Found wrong keyword: pass
-#    # WPS604 Found incorrect node inside `class` body
-#    transtool/report/error.py: WPS420, WPS604,
-#    transtool/report/warn.py: WPS420, WPS604,
+per-file-ignores =
+    # E501 line too long (179 > 132 characters)
+    expenses/test_calendar_highlighting.py: E501
+    # Django migrations - ignore style issues in auto-generated files
+    expenses/migrations/*.py: WPS102,WPS301,WPS458,DJ01

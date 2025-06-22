@@ -114,7 +114,8 @@ class SCSSSassProcessorTest(TestCase):
             css_content = f.read()
 
         # CSS should contain some basic CSS patterns
+        css_chars = ["{", "}", ":"]
         self.assertTrue(
-            any(char in css_content for char in ["{", "}", ":"]),
+            any(char in css_content for char in css_chars),
             "Compiled output should contain CSS syntax",
         )

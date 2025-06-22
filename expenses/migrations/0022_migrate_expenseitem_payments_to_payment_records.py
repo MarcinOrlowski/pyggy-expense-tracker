@@ -8,17 +8,16 @@ def migrate_expenseitem_payments_to_payment_records(apps, schema_editor):
     Migrate existing ExpenseItem payment data to Payment records.
     Only creates Payment records for ExpenseItems that have payment data.
     """
-    ExpenseItem = apps.get_model('expenses', 'ExpenseItem')
-    Payment = apps.get_model('expenses', 'Payment')
-    
+    ExpenseItem = apps.get_model("expenses", "ExpenseItem")
+    Payment = apps.get_model("expenses", "Payment")
+
     # Find all ExpenseItems that have payment information
     paid_expense_items = ExpenseItem.objects.filter(
-        payment_date__isnull=False,
-        status='paid'
+        payment_date__isnull=False, status="paid"
     )
-    
+
     payment_records_created = 0
-    
+
     for expense_item in paid_expense_items:
         # Create a Payment record from existing ExpenseItem payment data
         Payment.objects.create(
@@ -29,8 +28,10 @@ def migrate_expenseitem_payments_to_payment_records(apps, schema_editor):
             payment_id=expense_item.payment_id,
         )
         payment_records_created += 1
-    
-    print(f"Created {payment_records_created} Payment records from existing ExpenseItem data")
+
+    print(
+        f"Created {payment_records_created} Payment records from existing ExpenseItem data"
+    )
 
 
 def reverse_migration(apps, schema_editor):
@@ -38,7 +39,7 @@ def reverse_migration(apps, schema_editor):
     Reverse migration: Delete all Payment records.
     Note: This will lose payment history data if run.
     """
-    Payment = apps.get_model('expenses', 'Payment')
+    Payment = apps.get_model("expenses", "Payment")
     count = Payment.objects.count()
     Payment.objects.all().delete()
     print(f"Deleted {count} Payment records")

@@ -1,6 +1,6 @@
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
-from typing import Optional, Dict, Union
+from typing import Optional, Dict
 
 
 class BudgetMonth(models.Model):
@@ -15,6 +15,8 @@ class BudgetMonth(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
+        """Meta configuration for BudgetMonth model."""
+
         unique_together = ["budget", "year", "month"]
         ordering = ["-year", "-month"]
 
@@ -24,6 +26,7 @@ class BudgetMonth(models.Model):
     def has_paid_expenses(self) -> bool:
         """Check if this month has any paid expense items"""
         from .payment import Payment
+
         return Payment.objects.filter(expense_item__month=self).exists()
 
     def can_be_deleted(self) -> bool:

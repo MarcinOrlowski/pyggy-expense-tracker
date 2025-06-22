@@ -23,9 +23,6 @@ class SanitizedDecimalField(forms.DecimalField):
     - "12,34 zł" → "12.34"
     """
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
     def to_python(self, value):
         """
         Sanitize the input value before converting to Decimal.
@@ -88,7 +85,6 @@ class SanitizedDecimalField(forms.DecimalField):
         if decimal_match:
             # Found a potential decimal separator
             decimal_pos = decimal_match.start()
-            decimal_separator = value[decimal_pos]
 
             # Everything before the decimal separator
             integer_part = value[:decimal_pos]

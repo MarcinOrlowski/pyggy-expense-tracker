@@ -4,8 +4,12 @@ from django.core.exceptions import ValidationError
 from django.utils import timezone
 from datetime import date
 from decimal import Decimal
-from typing import Dict, List, Optional, Any, Union
+from typing import Dict, List, Optional, Union
+
 import calendar
+
+# Type aliases for complex annotations
+EditRestrictions = Dict[str, Union[bool, List[str]]]
 
 
 class Expense(models.Model):
@@ -135,7 +139,9 @@ class Expense(models.Model):
 
         # Validate total_parts field
         if self.expense_type == self.TYPE_SPLIT_PAYMENT and self.total_parts < 2:
-            raise ValidationError("Split payments must have at least 2 total installments")
+            raise ValidationError(
+                "Split payments must have at least 2 total installments"
+            )
 
         if (
             self.expense_type
@@ -218,6 +224,7 @@ class Expense(models.Model):
     def can_be_deleted(self) -> bool:
         """Check if this expense can be deleted (no paid expense items)"""
         from .payment import Payment
+
         return not Payment.objects.filter(expense_item__expense=self).exists()
 
     def can_be_edited(self) -> bool:
@@ -241,6 +248,7 @@ class Expense(models.Model):
 
         # Cannot edit amount if any expense item is paid
         from .payment import Payment
+
         has_paid_items = Payment.objects.filter(expense_item__expense=self).exists()
         if has_paid_items:
             return False
@@ -296,9 +304,9 @@ class Expense(models.Model):
         else:
             return date(most_recent_month.year, most_recent_month.month + 1, 1)
 
-    def get_edit_restrictions(self) -> Dict[str, Union[bool, List[str]]]:
+    def get_edit_restrictions(self) -> EditRestrictions:
         """Get detailed information about edit restrictions"""
-        restrictions: Dict[str, Union[bool, List[str]]] = {
+        restrictions: EditRestrictions = {
             "can_edit": self.can_be_edited(),
             "can_edit_amount": self.can_edit_amount(),
             "can_edit_date": self.can_edit_date(),
@@ -318,6 +326,7 @@ class Expense(models.Model):
 
         if restrictions["can_edit"] and not restrictions["can_edit_amount"]:
             from .payment import Payment
+
             has_paid_items = Payment.objects.filter(expense_item__expense=self).exists()
             if has_paid_items:
                 reasons_list.append(
@@ -389,4 +398,6 @@ class Expense(models.Model):
         return self.title
 
     class Meta:
+        """Meta configuration for Expense model."""
+
         ordering = ["-created_at"]
