@@ -1,6 +1,5 @@
 from django.test import TestCase
 from django.utils import timezone
-from django.core.exceptions import ValidationError
 from decimal import Decimal
 from datetime import date, timedelta
 from expenses.models import (

@@ -265,7 +265,7 @@ class DashboardCalendarIntegrationTest(TestCase):
         mock_date.today.return_value = mock_today
 
         # Create a month for January 2024
-        month = BudgetMonth.objects.create(month=1, year=2024, budget=self.budget)
+        BudgetMonth.objects.create(month=1, year=2024, budget=self.budget)
 
         response = self.client.get(f"/budgets/{self.budget.id}/dashboard/")
 
@@ -289,7 +289,7 @@ class DashboardCalendarIntegrationTest(TestCase):
         mock_date.today.return_value = mock_today
 
         # Create a month for December 2023 (different from current month)
-        month = BudgetMonth.objects.create(month=12, year=2023, budget=self.budget)
+        BudgetMonth.objects.create(month=12, year=2023, budget=self.budget)
 
         response = self.client.get(f"/budgets/{self.budget.id}/dashboard/")
 

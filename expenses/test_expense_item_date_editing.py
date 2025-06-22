@@ -3,8 +3,6 @@ from django.urls import reverse
 from django.core.exceptions import ValidationError
 from datetime import date
 from decimal import Decimal
-from django.utils import timezone
-import calendar
 from .models import Budget, BudgetMonth, Expense, ExpenseItem, Payee
 from .forms import ExpenseItemEditForm
 
@@ -330,7 +328,7 @@ class ExpenseItemDateEditingTest(TestCase):
         march_month.delete()
 
         # Create February month first to make it most recent
-        february_month = BudgetMonth.objects.create(
+        BudgetMonth.objects.create(
             budget=self.budget, year=2024, month=2
         )
 

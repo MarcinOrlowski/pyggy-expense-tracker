@@ -1,6 +1,5 @@
 from django.test import TestCase, Client
 from django.urls import reverse
-from django.contrib.auth.models import User
 from datetime import date
 from decimal import Decimal
 from django.utils import timezone
