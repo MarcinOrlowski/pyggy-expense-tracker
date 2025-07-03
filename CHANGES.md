@@ -4,7 +4,7 @@
 
 ---
 
-## @dev
+## v1.2 (2025-07-03)
 
 - [#0185] Fixed Python code formatting issues identified by flake8 linter, adding missing docstrings, removing unused imports and variables, correcting whitespace, and improving code quality
 - [#0179] Fixed incorrect calculations in month details page summary panel showing proper total, paid, and pending amounts

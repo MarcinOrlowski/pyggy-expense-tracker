@@ -289,11 +289,85 @@ task_test() {
 
 task_scss() {
     log_info "Compiling SCSS files..."
+    
+    local scss_source="$PROJECT_ROOT/src/scss/main.scss"
+    local css_output="$PROJECT_ROOT/staticfiles/scss/main.css"
+    local css_map="$css_output.map"
+    
+    # Check if SCSS source exists
+    if [[ ! -f "$scss_source" ]]; then
+        log_error "SCSS source file not found: $scss_source"
+        return 1
+    fi
+    
+    # Ensure output directory exists
+    mkdir -p "$(dirname "$css_output")"
+    
     if is_docker_available && is_container_running; then
-        run_in_container python compile_scss.py
+        log_info "Compiling SCSS in container..."
+        run_in_container python -c "
+import sass
+from pathlib import Path
+
+scss_source = Path('src/scss/main.scss')
+css_output = Path('staticfiles/scss/main.css')
+
+print(f'Compiling {scss_source} -> {css_output}')
+try:
+    result = sass.compile(
+        filename=str(scss_source),
+        output_style='expanded',
+        source_map_filename=str(css_output) + '.map',
+        source_map_root='../../src/scss/'
+    )
+    
+    with open(css_output, 'w') as f:
+        f.write(result[0])
+    
+    if result[1]:
+        with open(str(css_output) + '.map', 'w') as f:
+            f.write(result[1])
+    
+    print('✓ SCSS compiled successfully')
+    print(f'  Output: {css_output}')
+    print(f'  Size: {css_output.stat().st_size} bytes')
+except Exception as e:
+    print(f'✗ SCSS compilation failed: {e}')
+    exit(1)
+"
     else
         activate_venv
-        python compile_scss.py
+        log_info "Compiling SCSS locally..."
+        python -c "
+import sass
+from pathlib import Path
+
+scss_source = Path('src/scss/main.scss')
+css_output = Path('staticfiles/scss/main.css')
+
+print(f'Compiling {scss_source} -> {css_output}')
+try:
+    result = sass.compile(
+        filename=str(scss_source),
+        output_style='expanded',
+        source_map_filename=str(css_output) + '.map',
+        source_map_root='../../src/scss/'
+    )
+    
+    with open(css_output, 'w') as f:
+        f.write(result[0])
+    
+    if result[1]:
+        with open(str(css_output) + '.map', 'w') as f:
+            f.write(result[1])
+    
+    print('✓ SCSS compiled successfully')
+    print(f'  Output: {css_output}')
+    print(f'  Size: {css_output.stat().st_size} bytes')
+except Exception as e:
+    print(f'✗ SCSS compilation failed: {e}')
+    exit(1)
+"
     fi
     log_success "SCSS compilation completed"
 }
