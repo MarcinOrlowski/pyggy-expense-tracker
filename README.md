@@ -23,3 +23,9 @@ expenses with monthly processing workflows.
 
 - **[Installation Guide](docs/installation.md)**: How to set up PyGGy
 - **[User Documentation](docs/README.md)**: User documentation for getting started, managing expenses, and understanding workflows
+- **[Changelog](CHANGES.md)**: Application development history and updates
+
+## Copyright and License
+
+- Written and copyrighted &copy;2025 by [Marcin Orlowski](https://marcinOrlowski.com/)
+- PyGGy is licensed under the [MIT license](http://opensource.org/licenses/MIT)

@@ -20,6 +20,8 @@ class Settings(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
+        """Meta configuration for Settings model."""
+
         verbose_name = "Settings"
         verbose_name_plural = "Settings"
 

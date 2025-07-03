@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
-from django.db.models import Sum, Count, Q
+from django.db.models import Q as QueryFilter
 from django.db import transaction
 from datetime import date, datetime
 from collections import OrderedDict
@@ -15,11 +15,11 @@ def dashboard(request, budget_id):
 
     budget = get_object_or_404(Budget, id=budget_id)
     current_date = date.today()
-    
+
     # Handle quick expense form submission
     if request.method == "POST":
         return handle_quick_expense(request, budget_id)
-    
+
     # Initialize quick expense form for GET requests
     quick_expense_form = QuickExpenseForm()
 
@@ -42,24 +42,32 @@ def dashboard(request, budget_id):
         # Get all pending expense items from past months
         all_past_items = (
             ExpenseItem.objects.filter(
-                Q(month__budget=budget, month__year__lt=current_month.year) |
-                Q(month__budget=budget, month__year=current_month.year, month__month__lt=current_month.month)
+                QueryFilter(month__budget=budget, month__year__lt=current_month.year)
+                | QueryFilter(
+                    month__budget=budget,
+                    month__year=current_month.year,
+                    month__month__lt=current_month.month,
+                )
             )
             .select_related("expense", "expense__payee", "month")
             .order_by("-month__year", "-month__month", "due_date")
         )
         # Filter to only pending items using property
-        past_pending_items = [item for item in all_past_items if item.status == ExpenseItem.STATUS_PENDING]
+        past_pending_items = [
+            item for item in all_past_items if item.status == ExpenseItem.STATUS_PENDING
+        ]
 
         # Group all items by month for display with totals
         grouped_expense_items = OrderedDict()
         month_totals = {}
-        
+
         # Add current month items first (newest)
         if current_month_items:
             current_month_key = f"{current_month.year}-{current_month.month:02d}"
             grouped_expense_items[current_month_key] = list(current_month_items)
-            month_totals[current_month_key] = sum(item.get_remaining_amount() for item in current_month_items)
+            month_totals[current_month_key] = sum(
+                item.get_remaining_amount() for item in current_month_items
+            )
 
         # Add past months with pending items (already ordered by year/month desc)
         for item in past_pending_items:
@@ -74,8 +82,16 @@ def dashboard(request, budget_id):
         all_expense_items = current_month_items
 
         # Separate current month items for counting and totals
-        pending_items = [item for item in current_month_items if item.status == ExpenseItem.STATUS_PENDING]
-        paid_items = [item for item in current_month_items if item.status == ExpenseItem.STATUS_PAID]
+        pending_items = [
+            item
+            for item in current_month_items
+            if item.status == ExpenseItem.STATUS_PENDING
+        ]
+        paid_items = [
+            item
+            for item in current_month_items
+            if item.status == ExpenseItem.STATUS_PAID
+        ]
 
         total_pending = sum(item.get_remaining_amount() for item in pending_items)
         total_paid = sum(item.get_remaining_amount() for item in paid_items)
@@ -85,7 +101,8 @@ def dashboard(request, budget_id):
         # Get days with unpaid items in current month
         all_current_items = current_month.expenseitem_set.filter(due_date__isnull=False)
         unpaid_days = [
-            item.due_date.day for item in all_current_items 
+            item.due_date.day
+            for item in all_current_items
             if item.due_date and item.status == ExpenseItem.STATUS_PENDING
         ]
         due_days = set(unpaid_days)
@@ -194,7 +211,7 @@ def handle_quick_expense(request, budget_id):
     """Handle quick expense form submission"""
     budget = get_object_or_404(Budget, id=budget_id)
     form = QuickExpenseForm(request.POST)
-    
+
     if form.is_valid():
         try:
             with transaction.atomic():
@@ -204,9 +221,9 @@ def handle_quick_expense(request, budget_id):
                     budget=budget,
                     year=current_date.year,
                     month=current_date.month,
-                    defaults={"initial_amount": budget.initial_amount}
+                    defaults={"initial_amount": budget.initial_amount},
                 )
-                
+
                 # Create one-time expense
                 expense = Expense.objects.create(
                     budget=budget,
@@ -217,7 +234,7 @@ def handle_quick_expense(request, budget_id):
                     start_date=current_date,
                     day_of_month=current_date.day,
                 )
-                
+
                 # Create expense item
                 expense_item = ExpenseItem.objects.create(
                     expense=expense,
@@ -225,7 +242,7 @@ def handle_quick_expense(request, budget_id):
                     due_date=current_date,
                     amount=form.cleaned_data["amount"],
                 )
-                
+
                 # Create payment if requested
                 if form.cleaned_data["mark_as_paid"]:
                     Payment.objects.create(
@@ -235,20 +252,21 @@ def handle_quick_expense(request, budget_id):
                     )
                     # Check if expense should be completed
                     from ..services import check_expense_completion
+
                     check_expense_completion(expense)
-                    
+
                     formatted_amount = SettingsService.format_currency(expense.amount)
                     messages.success(
-                        request, 
-                        f'Quick expense "{expense.title}" ({formatted_amount}) created and marked as paid!'
+                        request,
+                        f'Quick expense "{expense.title}" ({formatted_amount}) created and marked as paid!',
                     )
                 else:
                     formatted_amount = SettingsService.format_currency(expense.amount)
                     messages.success(
-                        request, 
-                        f'Quick expense "{expense.title}" ({formatted_amount}) created successfully!'
+                        request,
+                        f'Quick expense "{expense.title}" ({formatted_amount}) created successfully!',
                     )
-                
+
         except Exception as e:
             messages.error(request, f"Error creating expense: {str(e)}")
     else:
@@ -258,5 +276,5 @@ def handle_quick_expense(request, budget_id):
             for error in errors:
                 error_messages.append(f"{field.title()}: {error}")
         messages.error(request, f"Form errors: {'; '.join(error_messages)}")
-    
+
     return redirect("dashboard", budget_id=budget_id)

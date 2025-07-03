@@ -1,10 +1,27 @@
-![PyGGy Logo](img/logo.png)
+![PyGGy Logo](docs/img/logo.png)
 
 # PyGGy Changelog
 
 ---
 
-## @dev
+## v1.2 (2025-07-03)
+
+- [#0187] Replaced hardcoded application version with centralized configuration file approach, enabling easy version updates without code changes
+- [#0185] Fixed Python code formatting issues identified by flake8 linter, adding missing docstrings, removing unused imports and variables, correcting whitespace, and improving code quality
+- [#0179] Fixed incorrect calculations in month details page summary panel showing proper total, paid, and pending amounts
+- [#0181] Created universal development helper script (dev.sh) unifying all development tasks with auto-detection of containerized vs local workflows
+- [#0169] Enhanced amount display for paid expense items in dashboard to show full due amount with strikethrough formatting for better historical context
+- [#0175] Improved budget currency editing with preselected currency dropdown (PLN, EUR, USD) replacing case-sensitive text input to prevent validation errors
+- [#0176] Fixed budget date validation preventing form submission when start date unchanged during editing
+- [#0173] Add visual screen distinctions to improve user navigation with section-specific color coding, header accents, card gradients, and subtle background icon patterns
+- [#0171] Simplified footer version display by removing debug progress text and showing only current version
+- [#0167] Fixed version-to-milestone mapping to strip patch version and use GitHub-standard format (1.2.3 → 1.2 for milestone filtering)
+- [#0159] Implemented expense item deletion functionality allowing removal of unpaid one-time expense items from current month with automatic parent expense cleanup
+- [#0161] Implemented dynamic GitHub issues filtering by milestone with version progress display
+- [#0163] Fixed mypy warning about undefined lgz74f240 variable by escaping dollar signs in Docker Compose SECRET_KEY
+- [#0160] Implemented centralized version management system with VersionService class, enabling consistent version display and future automation options
+
+## v1.1 (2025-06-08)
 
 - [#0113] Enforced minimum 2 total installments validation for split payments to ensure split payment concept integrity
 - [#0149] Added quick expense form to dashboard for streamlined one-time expense creation with optional immediate payment marking

@@ -1,11 +1,16 @@
-from django.test import TestCase, TransactionTestCase
-from django.core.exceptions import ValidationError
-from django.db import IntegrityError, transaction
-from django.db.models import ProtectedError
+from django.test import TestCase
+from django.db import IntegrityError
 from django.utils import timezone
 from decimal import Decimal
 from datetime import date
-from expenses.models import Budget, BudgetMonth, Expense, ExpenseItem, Payee, PaymentMethod, Payment
+from expenses.models import (
+    Budget,
+    BudgetMonth,
+    Expense,
+    ExpenseItem,
+    Payee,
+    Payment,
+)
 from expenses.services import process_new_month
 
 
@@ -13,7 +18,7 @@ def create_paid_expense_item(expense, month, due_date, amount, payment_date=None
     """Helper function to create a paid ExpenseItem with Payment record."""
     if payment_date is None:
         payment_date = timezone.now()
-    
+
     expense_item = ExpenseItem.objects.create(
         expense=expense,
         month=month,
@@ -86,6 +91,7 @@ class BudgetModelTest(TestCase):
             "name": "Test Negative Budget",
             "start_date": "2024-06-01",
             "initial_amount": "-250.50",
+            "currency": "PLN",
         }
 
         form = BudgetForm(data=form_data)
@@ -104,6 +110,7 @@ class BudgetModelTest(TestCase):
             "name": "Test Default Budget",
             "start_date": "2024-06-01",
             "initial_amount": "0",
+            "currency": "EUR",
         }
 
         form = BudgetForm(data=form_data)
@@ -427,7 +434,7 @@ class BudgetBalanceTest(TestCase):
             [Decimal("100.00"), Decimal("250.00"), Decimal("75.50")]
         ):
             expense = Expense.objects.create(
-                title=f"Expense {i+1}",
+                title=f"Expense {i + 1}",
                 amount=amount,
                 expense_type="one_time",
                 start_date=date(2024, 1, 10 + i),
@@ -498,7 +505,9 @@ class BudgetBalanceTest(TestCase):
             initial_amount=Decimal("500.00"),
         )
 
-        other_month = BudgetMonth.objects.create(year=2024, month=2, budget=other_budget)
+        other_month = BudgetMonth.objects.create(
+            year=2024, month=2, budget=other_budget
+        )
 
         # Create expense in original budget
         expense1 = Expense.objects.create(
@@ -606,7 +615,6 @@ class BudgetListViewTest(TestCase):
 
     def test_budget_list_template_rendering(self):
         """Test that budget list template can render with balance data."""
-        from django.test import RequestFactory
         from django.template import Context, Template
 
         # Add balance to budget (simulating what the view does)

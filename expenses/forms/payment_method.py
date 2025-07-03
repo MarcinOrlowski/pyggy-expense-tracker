@@ -6,6 +6,8 @@ class PaymentMethodForm(forms.ModelForm):
     """Form for creating and editing payment methods"""
 
     class Meta:
+        """Form configuration for PaymentMethod model."""
+
         model = PaymentMethod
         fields = ["name"]
         widgets = {

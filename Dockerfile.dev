@@ -27,4 +27,4 @@ USER appuser
 EXPOSE 8000
 
 # Default command for development
-CMD ["sh", "-c", "python compile_scss.py && python manage.py collectstatic --noinput && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"]
+CMD ["sh", "-c", "./dev.sh scss && python manage.py collectstatic --noinput && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"]

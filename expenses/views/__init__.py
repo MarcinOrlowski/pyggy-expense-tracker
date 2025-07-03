@@ -1,4 +1,8 @@
-# Import all view functions for backward compatibility
+"""Views package for expense tracking application.
+
+Import all view functions for backward compatibility.
+"""
+
 from .dashboard import dashboard
 from .expense import (
     expense_list,
@@ -8,7 +12,13 @@ from .expense import (
     expense_delete,
 )
 from .month import month_list, month_detail, month_delete, month_process
-from .payment import expense_item_pay, expense_item_unpay, expense_item_edit, expense_item_payments
+from .payment import (
+    expense_item_pay,
+    expense_item_unpay,
+    expense_item_edit,
+    expense_item_payments,
+    expense_item_delete,
+)
 from .payee import (
     payee_list,
     payee_create,
@@ -47,6 +57,7 @@ __all__ = [
     "expense_item_unpay",
     "expense_item_edit",
     "expense_item_payments",
+    "expense_item_delete",
     # Payee views
     "payee_list",
     "payee_create",

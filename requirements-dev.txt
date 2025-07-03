@@ -4,10 +4,15 @@ wemake-python-styleguide
 pytest
 pytest-cov
 wheel
+build
 setuptools
 twine
 faker
+types-Markdown
 flake8
+flake8-noqa
+flake8-docstrings
+flake8-django
 mypy
 django-stubs
 types-Markdown

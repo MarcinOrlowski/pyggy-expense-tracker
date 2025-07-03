@@ -1,4 +1,8 @@
-# Import all form classes for backward compatibility
+"""Forms package for expense tracking application.
+
+Import all form classes for backward compatibility.
+"""
+
 from .expense import ExpenseForm
 from .payment import PaymentForm, ExpenseItemEditForm
 from .payee import PayeeForm

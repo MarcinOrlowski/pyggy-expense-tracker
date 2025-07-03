@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from datetime import datetime
-from ..models import ExpenseItem, Budget, Payment
+from ..models import ExpenseItem, Budget
 from ..forms import PaymentForm, ExpenseItemEditForm
 
 
@@ -16,16 +16,26 @@ def expense_item_pay(request, budget_id, pk):
             payment = form.save()
             # Check if expense should be completed
             from ..services import check_expense_completion
+
             check_expense_completion(expense_item.expense)
-            
+
             remaining = expense_item.get_remaining_amount()
             if remaining >= 0:
                 if remaining > 0:
-                    messages.success(request, f"Payment of {payment.amount} recorded. Overpaid by: {remaining}")
+                    messages.success(
+                        request,
+                        f"Payment of {payment.amount} recorded. Overpaid by: {remaining}",
+                    )
                 else:
-                    messages.success(request, f"Payment of {payment.amount} recorded. Expense is now fully paid!")
+                    messages.success(
+                        request,
+                        f"Payment of {payment.amount} recorded. Expense is now fully paid!",
+                    )
             else:
-                messages.success(request, f"Payment of {payment.amount} recorded. Still owed: {abs(remaining)}")
+                messages.success(
+                    request,
+                    f"Payment of {payment.amount} recorded. Still owed: {abs(remaining)}",
+                )
             return redirect("dashboard", budget_id=budget_id)
     else:
         form = PaymentForm(
@@ -52,7 +62,9 @@ def expense_item_unpay(request, budget_id, pk):
     if request.method == "POST":
         payment_count = expense_item.payment_set.count()
         expense_item.payment_set.all().delete()
-        messages.success(request, f"All payments ({payment_count}) removed successfully.")
+        messages.success(
+            request, f"All payments ({payment_count}) removed successfully."
+        )
         return redirect("dashboard", budget_id=budget_id)
 
     context = {
@@ -91,10 +103,12 @@ def expense_item_payments(request, budget_id, pk):
     """List all payments for a specific expense item"""
     budget = get_object_or_404(Budget, id=budget_id)
     expense_item = get_object_or_404(ExpenseItem, pk=pk, month__budget=budget)
-    
+
     # Get all payments for this expense item, ordered by payment date
-    payments = expense_item.payment_set.select_related("payment_method").order_by("-payment_date")
-    
+    payments = expense_item.payment_set.select_related("payment_method").order_by(
+        "-payment_date"
+    )
+
     context = {
         "budget": budget,
         "expense_item": expense_item,
@@ -102,3 +116,33 @@ def expense_item_payments(request, budget_id, pk):
         "title": f"Payments: {expense_item.expense.title}",
     }
     return render(request, "expenses/expense_item_payments.html", context)
+
+
+def expense_item_delete(request, budget_id, pk):
+    """Delete expense item and its parent one-time expense if allowed"""
+    budget = get_object_or_404(Budget, id=budget_id)
+    expense_item = get_object_or_404(ExpenseItem, pk=pk, month__budget=budget)
+
+    # Check if item can be deleted
+    if not expense_item.can_be_deleted():
+        messages.error(
+            request,
+            "Cannot delete this expense item. It must be a one-time expense from the current month with no payments recorded.",
+        )
+        return redirect("dashboard", budget_id=budget_id)
+
+    if request.method == "POST":
+        expense_title = expense_item.expense.title
+        # Delete the parent one-time expense (which will cascade delete the expense item)
+        expense_item.expense.delete()
+        messages.success(
+            request,
+            f'Expense "{expense_title}" and its item have been deleted successfully.',
+        )
+        return redirect("dashboard", budget_id=budget_id)
+
+    context = {
+        "budget": budget,
+        "expense_item": expense_item,
+    }
+    return render(request, "expenses/expense_item_confirm_delete.html", context)

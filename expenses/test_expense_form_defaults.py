@@ -10,7 +10,7 @@ class ExpenseFormDefaultsTestCase(TestCase):
     def setUp(self):
         """Set up test data"""
         self.budget = Budget.objects.create(
-            name="Test Budget", start_date=date.today(), initial_amount=1000.00
+            name="Test Budget", start_date=date.today(), initial_amount=1000
         )
 
     def test_new_expense_form_has_default_values(self):
@@ -38,7 +38,7 @@ class ExpenseFormDefaultsTestCase(TestCase):
             budget=self.budget,
             title="Test Expense",
             expense_type=Expense.TYPE_ENDLESS_RECURRING,
-            amount=100.00,
+            amount=100,
             start_date=date(2024, 1, 15),
             day_of_month=15,
         )

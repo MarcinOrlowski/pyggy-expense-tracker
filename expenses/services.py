@@ -1,12 +1,11 @@
-from django.core.exceptions import ValidationError
 from django.utils import timezone
 from django.db import transaction
 from django.core.cache import cache
+from django.conf import settings
 from decimal import Decimal
-from datetime import date, datetime
+from datetime import date
 from typing import List, Optional, Union
 from babel.numbers import format_currency as babel_format_currency
-from babel.core import Locale
 from .models import Expense, ExpenseItem, BudgetMonth, Settings, Budget
 
 
@@ -49,7 +48,9 @@ def process_new_month(year: int, month: int, budget: Budget) -> BudgetMonth:
         return month_obj
 
 
-def create_expense_items_for_month(expense: Expense, month: BudgetMonth) -> List[ExpenseItem]:
+def create_expense_items_for_month(
+    expense: Expense, month: BudgetMonth
+) -> List[ExpenseItem]:
     """
     Generate appropriate expense items for given expense and month.
 
@@ -137,15 +138,15 @@ def check_expense_completion(expense: Expense) -> bool:
     - endless_recurring: Manual completion only
     - recurring_with_end: Manual completion only
     """
-    from .models import Payment
-    
     if expense.closed_at:
         return True  # Already completed
 
     if expense.expense_type == expense.TYPE_ONE_TIME:
         # Complete when the single item is paid (has Payment records totaling full amount)
         expense_items = ExpenseItem.objects.filter(expense=expense)
-        paid_items = sum(1 for item in expense_items if item.status == ExpenseItem.STATUS_PAID)
+        paid_items = sum(
+            1 for item in expense_items if item.status == ExpenseItem.STATUS_PAID
+        )
         if paid_items > 0:
             expense.closed_at = timezone.now()
             expense.save()
@@ -154,7 +155,9 @@ def check_expense_completion(expense: Expense) -> bool:
     elif expense.expense_type == expense.TYPE_SPLIT_PAYMENT:
         # Complete when all remaining installments are paid
         expense_items = ExpenseItem.objects.filter(expense=expense)
-        paid_items = sum(1 for item in expense_items if item.status == ExpenseItem.STATUS_PAID)
+        paid_items = sum(
+            1 for item in expense_items if item.status == ExpenseItem.STATUS_PAID
+        )
         remaining_installments = expense.total_parts - expense.skip_parts
         if paid_items >= remaining_installments:
             expense.closed_at = timezone.now()
@@ -174,7 +177,9 @@ def handle_new_expense(expense: Expense, budget: Budget) -> None:
         budget: The budget to use for finding the most recent month (should match expense.budget)
     """
     most_recent_month = (
-        BudgetMonth.objects.filter(budget=expense.budget).order_by("-year", "-month").first()
+        BudgetMonth.objects.filter(budget=expense.budget)
+        .order_by("-year", "-month")
+        .first()
     )
     if not most_recent_month:
         return  # No months exist yet in this budget
@@ -259,7 +264,7 @@ class SettingsService:
                 format_type="standard" if include_symbol else "accounting",
             )
             return formatted
-        except Exception as e:
+        except Exception:
             # Fallback to basic formatting if babel fails
             return f"{settings.currency} {amount:.2f}"
 
@@ -267,3 +272,68 @@ class SettingsService:
     def clear_cache(cls) -> None:
         """Clear settings cache."""
         cache.delete(cls.CACHE_KEY)
+
+
+class VersionService:
+    """
+    Service for managing application version information.
+
+    Currently returns hardcoded version but designed for future
+    automation options:
+    - Parse version from CHANGES.md current development section
+    - Extract from git tags (git describe --tags)
+    - Read from VERSION file
+    - Environment variable override (VERSION_OVERRIDE)
+    - CI/CD integration for automated bumping
+    """
+
+    def get_version(self) -> str:
+        """
+        Returns semantic version string (e.g., '1.1.0').
+
+        Reads version from Django settings (loaded from app.yml).
+        Falls back to 'N/A' if settings unavailable.
+        """
+        return getattr(settings, 'APP_VERSION', 'N/A')
+
+    def get_version_string(self) -> str:
+        """Returns formatted version string (e.g., 'v1.1.0')"""
+        return f"v{self.get_version()}"
+
+    def get_next_milestone_version(self) -> str:
+        """
+        Calculate next milestone version by incrementing minor version.
+
+        Logic: Strip patch version and increment minor (e.g., 1.1.0 -> 1.2)
+        This matches GitHub milestone naming conventions (major.minor format).
+
+        Returns:
+            Next milestone version string (e.g., '1.2')
+        """
+        current = self.get_version()
+        parts = current.split(".")
+
+        if len(parts) >= 2:
+            major = int(parts[0])
+            minor = int(parts[1])
+            next_minor = minor + 1
+            return f"{major}.{next_minor}"
+
+        # Fallback for malformed version
+        return current
+
+    def get_next_milestone_version_string(self) -> str:
+        """Returns formatted next milestone version string (e.g., 'v1.2')"""
+        return f"v{self.get_next_milestone_version()}"
+
+    def get_github_issues_url(self) -> str:
+        """
+        Generate GitHub issues URL filtered by next milestone.
+
+        Returns:
+            GitHub issues URL with milestone filter for next version
+        """
+        next_version = self.get_next_milestone_version()
+        base_url = "https://github.com/MarcinOrlowski/pyggy-expense-tracker/issues"
+        milestone_filter = f"is%3Aissue+milestone%3A{next_version}"
+        return f"{base_url}?q={milestone_filter}"

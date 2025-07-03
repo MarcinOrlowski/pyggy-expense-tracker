@@ -4,6 +4,7 @@ from django.db import migrations, models
 
 
 def create_default_settings(apps, schema_editor):
+    """Create default settings instance."""
     Settings = apps.get_model("expenses", "Settings")
     Settings.objects.get_or_create(
         pk=1, defaults={"currency": "USD", "locale": "en_US"}
@@ -11,6 +12,7 @@ def create_default_settings(apps, schema_editor):
 
 
 def delete_default_settings(apps, schema_editor):
+    """Delete default settings instance."""
     Settings = apps.get_model("expenses", "Settings")
     Settings.objects.filter(pk=1).delete()
 

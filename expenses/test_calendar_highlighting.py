@@ -1,10 +1,11 @@
-from django.test import TestCase, Client
+from datetime import date
+from unittest.mock import patch
+
 from django.contrib.auth.models import User
 from django.template import Context, Template
-from datetime import date, datetime
-from unittest.mock import patch
-from expenses.models import Budget, BudgetMonth, Expense, ExpenseItem, Payee, Settings
-from expenses.services import SettingsService
+from django.test import TestCase, Client
+
+from expenses.models import Budget, BudgetMonth, Settings
 
 
 class CalendarHighlightingTest(TestCase):
@@ -24,7 +25,7 @@ class CalendarHighlightingTest(TestCase):
 
         # Create test budget
         self.budget = Budget.objects.create(
-            name="Test Budget", start_date=date(2024, 1, 1), initial_amount=1000.00
+            name="Test Budget", start_date=date(2024, 1, 1), initial_amount=1000
         )
 
         # Create test month
@@ -252,7 +253,7 @@ class DashboardCalendarIntegrationTest(TestCase):
 
         # Create test budget
         self.budget = Budget.objects.create(
-            name="Test Budget", start_date=date(2024, 1, 1), initial_amount=1000.00
+            name="Test Budget", start_date=date(2024, 1, 1), initial_amount=1000
         )
 
         self.client = Client()
@@ -265,7 +266,7 @@ class DashboardCalendarIntegrationTest(TestCase):
         mock_date.today.return_value = mock_today
 
         # Create a month for January 2024
-        month = BudgetMonth.objects.create(month=1, year=2024, budget=self.budget)
+        BudgetMonth.objects.create(month=1, year=2024, budget=self.budget)
 
         response = self.client.get(f"/budgets/{self.budget.id}/dashboard/")
 
@@ -289,7 +290,7 @@ class DashboardCalendarIntegrationTest(TestCase):
         mock_date.today.return_value = mock_today
 
         # Create a month for December 2023 (different from current month)
-        month = BudgetMonth.objects.create(month=12, year=2023, budget=self.budget)
+        BudgetMonth.objects.create(month=12, year=2023, budget=self.budget)
 
         response = self.client.get(f"/budgets/{self.budget.id}/dashboard/")
 

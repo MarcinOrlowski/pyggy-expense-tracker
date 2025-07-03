@@ -238,7 +238,7 @@ class FormatAmountTagTest(TestCase):
         # This might raise an error or return empty, depending on implementation
         with patch("expenses.services.SettingsService.format_currency") as mock_format:
             mock_format.return_value = ""
-            result = format_amount(None)
+            format_amount(None)
             mock_format.assert_called_once_with(None, include_symbol=True)
 
 

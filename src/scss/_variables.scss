@@ -9,21 +9,31 @@
     --text-secondary: #b3b3b3;  // Dimmed text
     --text-muted: #808080;      // Muted text
 
-    // Accent colors from the palette
-    --color-green: #50fa7b;     // Success, positive actions
-    --color-red: #ff5555;       // Danger, negative actions
-    --color-yellow: #f1fa8c;    // Warnings, highlights
-    --color-blue: #8be9fd;      // Info, links
-    --color-purple: #bd93f9;    // Primary actions
-    --color-cyan: #8be9fd;      // Secondary elements
-    --color-orange: #ffb86c;    // Accent elements
+    // Semantic color variables
+    --color-primary: #bd93f9;    // Primary brand color (purple)
+    --color-success: #50fa7b;    // Success states, positive actions (green)
+    --color-danger: #ff5555;     // Errors, danger, negative actions (red)
+    --color-warning: #f1fa8c;    // Warnings, highlights (yellow)
+    --color-info: #8be9fd;       // Information, links (cyan/blue)
+    --color-accent: #ffb86c;     // Secondary accent, emphasis (orange)
 
-    // Faint/muted versions
-    --color-green-muted: #50fa7b33;
-    --color-red-muted: #ff555533;
-    --color-yellow-muted: #f1fa8c33;
-    --color-blue-muted: #8be9fd33;
-    --color-purple-muted: #bd93f933;
+    // Semantic muted versions (33% opacity)
+    --color-primary-muted: #bd93f933;
+    --color-success-muted: #50fa7b33;
+    --color-danger-muted: #ff555533;
+    --color-warning-muted: #f1fa8c33;
+    --color-info-muted: #8be9fd33;
+    --color-accent-muted: #ffb86c33;
+    
+    // Section-specific color variables (using semantic colors with opacity)
+    --section-budgets: rgba(189, 147, 249, 0.2);     // Primary - budget management
+    --section-dashboard: rgba(139, 233, 253, 0.2);   // Info - active/current state
+    --section-expenses: rgba(255, 184, 108, 0.2);    // Accent - transaction focus
+    --section-months: rgba(80, 250, 123, 0.2);       // Success - completion
+    --section-payees: rgba(241, 250, 140, 0.2);      // Warning - contacts/people
+    --section-payments: rgba(255, 85, 85, 0.2);      // Danger - payment/money flow
+    --section-payment-methods: rgba(255, 85, 85, 0.15); // Danger (lighter) - payment methods
+    --section-help: rgba(189, 147, 249, 0.15);       // Primary (lighter) - help
     
     // Calendar-specific colors
     --calendar-today-bg: #5849a6;  // Darker purple for today
@@ -33,7 +43,7 @@
     --calendar-past-bg: var(--bg-secondary);
     --calendar-future-bg: rgba(88, 73, 166, 0.25);  // 25% of today color
     --calendar-future-weekend-bg: rgba(50, 40, 100, 0.5);  // Much darker purple for weekends
-    --calendar-indicator-due: var(--color-green);
-    --calendar-indicator-due-today: var(--color-orange);
+    --calendar-indicator-due: var(--color-success);
+    --calendar-indicator-due-today: var(--color-accent);
     --calendar-indicator-overdue: #ff2020;  // Brighter red for overdue
 }

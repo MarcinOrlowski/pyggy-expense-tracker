@@ -13,76 +13,100 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 import os
 import sys
 from pathlib import Path
+import yaml
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Load app configuration from app.yml
+try:
+    with open(BASE_DIR / "app.yml", "r") as config_file:
+        APP_CONFIG = yaml.safe_load(config_file)
+except FileNotFoundError:
+    # Fallback configuration if app.yml doesn't exist
+    APP_CONFIG = {
+        "app": {
+            "version": "N/A",
+            "name": "PyGGy Expense Tracker",
+            "url": "https://github.com/MarcinOrlowski/pyggy-expense-tracker",
+            "release_date": "N/A"
+        }
+    }
+
+# Extract app configuration for easy access
+APP_VERSION = APP_CONFIG["app"]["version"]
+APP_NAME = APP_CONFIG["app"]["name"]
+APP_URL = APP_CONFIG["app"]["url"]
+APP_RELEASE_DATE = APP_CONFIG["app"]["release_date"]
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-^@fe0-h81tzh3w#-mh$9$lgz74f240=2y_&0erqlb84q@%1tx3'
+SECRET_KEY = "django-insecure-^@fe0-h81tzh3w#-mh$9$lgz74f240=2y_&0erqlb84q@%1tx3"
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # Set to False to test user-friendly error pages (custom 404, help system errors, etc.)
 DEBUG = False
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'testserver', '*']
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", "testserver", "*"]
 
 
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'sass_processor',
-    'expenses',
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
+    "sass_processor",
+    "expenses",
 ]
 
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "django.middleware.security.SecurityMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.common.CommonMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-ROOT_URLCONF = 'pyggy.urls'
+ROOT_URLCONF = "pyggy.urls"
 
 TEMPLATES = [
     {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'expenses' / 'templates'],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-                'expenses.context_processors.current_budget',
-                'expenses.context_processors.testing_context',
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "DIRS": [BASE_DIR / "expenses" / "templates"],
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "context_processors": [
+                "django.template.context_processors.request",
+                "django.contrib.auth.context_processors.auth",
+                "django.contrib.messages.context_processors.messages",
+                "expenses.context_processors.current_budget",
+                "expenses.context_processors.testing_context",
+                "expenses.context_processors.app_version_context",
+                "expenses.context_processors.section_context",
             ],
         },
     },
 ]
 
-WSGI_APPLICATION = 'pyggy.wsgi.application'
+WSGI_APPLICATION = "pyggy.wsgi.application"
 
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
     }
 }
 
@@ -92,16 +116,16 @@ DATABASES = {
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
 
@@ -109,50 +133,52 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = "UTC"
 
 USE_I18N = True
 
 USE_TZ = True
 
 # Date formatting
-DATE_FORMAT = 'Y-m-d'
-DATETIME_FORMAT = 'Y-m-d H:i:s'
+DATE_FORMAT = "Y-m-d"
+DATETIME_FORMAT = "Y-m-d H:i:s"
 USE_L10N = False
-DATE_INPUT_FORMATS = ['%Y-%m-%d']
-DATETIME_INPUT_FORMATS = ['%Y-%m-%d %H:%M:%S', '%Y-%m-%dT%H:%M']
+DATE_INPUT_FORMATS = ["%Y-%m-%d"]
+DATETIME_INPUT_FORMATS = ["%Y-%m-%d %H:%M:%S", "%Y-%m-%dT%H:%M"]
 
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = 'static/'
-STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATIC_URL = "static/"
+STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_DIRS = [
-    BASE_DIR / 'static',
+    BASE_DIR / "static",
 ]
 
 STATICFILES_FINDERS = [
-    'django.contrib.staticfiles.finders.FileSystemFinder',
-    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-    'sass_processor.finders.CssFinder',
+    "django.contrib.staticfiles.finders.FileSystemFinder",
+    "django.contrib.staticfiles.finders.AppDirectoriesFinder",
+    "sass_processor.finders.CssFinder",
 ]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # SASS Processor settings
 SASS_PROCESSOR_ROOT = STATIC_ROOT
 SASS_PROCESSOR_INCLUDE_DIRS = [
-    BASE_DIR / 'src' / 'scss',
+    BASE_DIR / "src" / "scss",
 ]
 
 # Detect if we're in a test environment (GitHub Actions or local testing)
-TESTING = 'test' in sys.argv or 'pytest' in sys.modules or 'GITHUB_ACTIONS' in os.environ
+TESTING = (
+    "test" in sys.argv or "pytest" in sys.modules or "GITHUB_ACTIONS" in os.environ
+)
 
 # Configure SASS processor for different environments
 if TESTING:
@@ -167,9 +193,9 @@ else:
 # Development-specific SASS settings
 if DEBUG:
     # Enable source maps for development
-    SASS_PROCESSOR_OUTPUT_STYLE = 'expanded'
+    SASS_PROCESSOR_OUTPUT_STYLE = "expanded"
     # Disable caching to ensure changes are detected
     SASS_PROCESSOR_CACHE_TIMEOUT = 0
 else:
     # Production settings
-    SASS_PROCESSOR_OUTPUT_STYLE = 'compressed'
+    SASS_PROCESSOR_OUTPUT_STYLE = "compressed"

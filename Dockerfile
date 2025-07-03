@@ -29,7 +29,7 @@ RUN useradd -m -u 1000 appuser && \
 USER appuser
 
 # Compile SCSS and collect static files
-RUN python compile_scss.py && \
+RUN ./dev.sh scss && \
     python manage.py collectstatic --noinput
 
 # Expose port

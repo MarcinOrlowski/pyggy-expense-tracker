@@ -1,7 +1,5 @@
 from django.test import TestCase, Client
 from django.urls import reverse
-import os
-import tempfile
 
 
 class HelpViewsTest(TestCase):
