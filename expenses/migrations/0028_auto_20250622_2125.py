@@ -8,32 +8,32 @@ from datetime import datetime
 def fix_naive_payment_dates(apps, schema_editor):
     """Fix naive datetime objects in Payment.payment_date field."""
     Payment = apps.get_model("expenses", "Payment")
-    
+
     payments_to_update = []
     for payment in Payment.objects.all():
         if payment.payment_date and timezone.is_naive(payment.payment_date):
             # Convert naive datetime to timezone-aware
             payment.payment_date = timezone.make_aware(payment.payment_date)
             payments_to_update.append(payment)
-    
+
     if payments_to_update:
-        Payment.objects.bulk_update(payments_to_update, ['payment_date'])
+        Payment.objects.bulk_update(payments_to_update, ["payment_date"])
         print(f"Fixed {len(payments_to_update)} Payment records with naive datetimes")
 
 
 def reverse_fix_naive_payment_dates(apps, schema_editor):
     """Reverse operation - make payment dates naive again."""
     Payment = apps.get_model("expenses", "Payment")
-    
+
     payments_to_update = []
     for payment in Payment.objects.all():
         if payment.payment_date and timezone.is_aware(payment.payment_date):
             # Convert timezone-aware datetime to naive
             payment.payment_date = timezone.make_naive(payment.payment_date)
             payments_to_update.append(payment)
-    
+
     if payments_to_update:
-        Payment.objects.bulk_update(payments_to_update, ['payment_date'])
+        Payment.objects.bulk_update(payments_to_update, ["payment_date"])
 
 
 class Migration(migrations.Migration):

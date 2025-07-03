@@ -2,6 +2,7 @@
 
 Import all view functions for backward compatibility.
 """
+
 from .dashboard import dashboard
 from .expense import (
     expense_list,

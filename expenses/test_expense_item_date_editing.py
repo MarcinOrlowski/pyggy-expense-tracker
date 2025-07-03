@@ -328,9 +328,7 @@ class ExpenseItemDateEditingTest(TestCase):
         march_month.delete()
 
         # Create February month first to make it most recent
-        BudgetMonth.objects.create(
-            budget=self.budget, year=2024, month=2
-        )
+        BudgetMonth.objects.create(budget=self.budget, year=2024, month=2)
 
         # Now create March month
         march_month = BudgetMonth.objects.create(budget=self.budget, year=2024, month=3)

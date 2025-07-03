@@ -2,6 +2,7 @@
 
 Import all models for Django model discovery and backward compatibility.
 """
+
 from .budget import Budget
 from .payee import Payee
 from .payment_method import PaymentMethod
