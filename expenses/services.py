@@ -1,6 +1,7 @@
 from django.utils import timezone
 from django.db import transaction
 from django.core.cache import cache
+from django.conf import settings
 from decimal import Decimal
 from datetime import date
 from typing import List, Optional, Union
@@ -290,13 +291,10 @@ class VersionService:
         """
         Returns semantic version string (e.g., '1.1.0').
 
-        Future implementations could:
-        - Check environment variable first
-        - Parse CHANGES.md for current version
-        - Fall back to git tags if available
-        - Default to hardcoded version
+        Reads version from Django settings (loaded from app.yml).
+        Falls back to 'N/A' if settings unavailable.
         """
-        return "1.1.0"
+        return getattr(settings, 'APP_VERSION', 'N/A')
 
     def get_version_string(self) -> str:
         """Returns formatted version string (e.g., 'v1.1.0')"""

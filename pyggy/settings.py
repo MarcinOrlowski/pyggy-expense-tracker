@@ -13,9 +13,31 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 import os
 import sys
 from pathlib import Path
+import yaml
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Load app configuration from app.yml
+try:
+    with open(BASE_DIR / "app.yml", "r") as config_file:
+        APP_CONFIG = yaml.safe_load(config_file)
+except FileNotFoundError:
+    # Fallback configuration if app.yml doesn't exist
+    APP_CONFIG = {
+        "app": {
+            "version": "N/A",
+            "name": "PyGGy Expense Tracker",
+            "url": "https://github.com/MarcinOrlowski/pyggy-expense-tracker",
+            "release_date": "N/A"
+        }
+    }
+
+# Extract app configuration for easy access
+APP_VERSION = APP_CONFIG["app"]["version"]
+APP_NAME = APP_CONFIG["app"]["name"]
+APP_URL = APP_CONFIG["app"]["url"]
+APP_RELEASE_DATE = APP_CONFIG["app"]["release_date"]
 
 
 # Quick-start development settings - unsuitable for production
