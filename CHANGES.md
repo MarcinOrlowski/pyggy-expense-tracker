@@ -6,6 +6,7 @@
 
 ## v1.2 (2025-07-03)
 
+- [#0187] Replaced hardcoded application version with centralized configuration file approach, enabling easy version updates without code changes
 - [#0185] Fixed Python code formatting issues identified by flake8 linter, adding missing docstrings, removing unused imports and variables, correcting whitespace, and improving code quality
 - [#0179] Fixed incorrect calculations in month details page summary panel showing proper total, paid, and pending amounts
 - [#0181] Created universal development helper script (dev.sh) unifying all development tasks with auto-detection of containerized vs local workflows

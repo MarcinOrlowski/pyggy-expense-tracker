@@ -8,12 +8,13 @@ from expenses.context_processors import app_version_context
 class VersionServiceTest(TestCase):
     """Test cases for VersionService functionality."""
 
+    @patch('expenses.services.settings.APP_VERSION', '1.1.0')
     def test_get_version_returns_semantic_version(self):
         """Test that get_version returns a semantic version string."""
         service = VersionService()
         version = service.get_version()
 
-        # Should return current hardcoded version
+        # Should return mocked test version
         self.assertEqual(version, "1.1.0")
 
         # Should be a string
@@ -25,6 +26,7 @@ class VersionServiceTest(TestCase):
         for part in parts:
             self.assertTrue(part.isdigit())
 
+    @patch('expenses.services.settings.APP_VERSION', '1.1.0')
     def test_get_version_string_returns_formatted_version(self):
         """Test that get_version_string returns a formatted version with 'v' prefix."""
         service = VersionService()
@@ -40,6 +42,7 @@ class VersionServiceTest(TestCase):
         expected = f"v{service.get_version()}"
         self.assertEqual(version_string, expected)
 
+    @patch('expenses.services.settings.APP_VERSION', '1.1.0')
     def test_get_next_milestone_version(self):
         """Test that get_next_milestone_version increments minor version correctly and strips patch."""
         service = VersionService()
@@ -57,6 +60,7 @@ class VersionServiceTest(TestCase):
         self.assertEqual(parts[0], "1")  # major unchanged
         self.assertEqual(parts[1], "2")  # minor incremented
 
+    @patch('expenses.services.settings.APP_VERSION', '1.1.0')
     def test_get_next_milestone_version_string(self):
         """Test that get_next_milestone_version_string returns formatted next version."""
         service = VersionService()
@@ -72,6 +76,7 @@ class VersionServiceTest(TestCase):
         expected = f"v{service.get_next_milestone_version()}"
         self.assertEqual(next_version_string, expected)
 
+    @patch('expenses.services.settings.APP_VERSION', '1.1.0')
     def test_get_github_issues_url(self):
         """Test that get_github_issues_url generates correct milestone filter URL."""
         service = VersionService()
@@ -89,6 +94,7 @@ class VersionServiceTest(TestCase):
         self.assertIn("?q=", url)
         self.assertIn("is%3Aissue", url)
 
+    @patch('expenses.services.settings.APP_VERSION', '1.1.0')
     def test_context_processor_adds_all_version_info(self):
         """Test that app_version_context processor adds all version info to template context."""
         factory = RequestFactory()
@@ -105,6 +111,7 @@ class VersionServiceTest(TestCase):
         self.assertEqual(context["app_version"], "v1.1.0")
         self.assertIn("milestone%3A1.2", context["github_issues_url"])
 
+    @patch('expenses.services.settings.APP_VERSION', '1.1.0')
     def test_template_renders_version_correctly(self):
         """Test that version is accessible in templates via context processor."""
         # Create a simple template that uses app_version
@@ -163,14 +170,15 @@ class VersionServiceTest(TestCase):
         with patch.object(service, "get_version", return_value="5"):
             self.assertEqual(service.get_next_milestone_version(), "5")
 
+    @patch('expenses.services.settings.APP_VERSION', '1.1.0')
     def test_github_url_milestone_format_matches_expectations(self):
         """Test that GitHub URL uses correct milestone format (major.minor without patch)."""
         service = VersionService()
         url = service.get_github_issues_url()
 
         # Should NOT contain triple-digit version (with patch)
-        self.assertNotIn("milestone%3A1.2.0", url)
-        self.assertNotIn("1.2.0", url)
+        self.assertNotIn("milestone%3A1.1.0", url)
+        self.assertNotIn("1.1.0", url)
 
         # Should contain double-digit version (without patch)
         self.assertIn("milestone%3A1.2", url)
